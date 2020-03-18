@@ -4,8 +4,17 @@
 \alias{drdid_panel}
 \title{'Traditional' Doubly Robust Difference-in-Differences Estimator for the ATT, with Panel Data}
 \usage{
-drdid_panel(y1, y0, D, covariates, i.weights = NULL, boot = F,
-  boot.type = "weighted", nboot = NULL)
+drdid_panel(
+  y1,
+  y0,
+  D,
+  covariates,
+  i.weights = NULL,
+  boot = F,
+  boot.type = "weighted",
+  nboot = NULL,
+  inffunc = F
+)
 }
 \arguments{
 \item{y1}{An \eqn{n} x \eqn{1} vector of outcomes from the post-treatment period.}
@@ -18,12 +27,14 @@ drdid_panel(y1, y0, D, covariates, i.weights = NULL, boot = F,
 
 \item{i.weights}{An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.}
 
-\item{boot}{Logical argument to whether bootstrap should be used for inference. Deafault is FALSE.}
+\item{boot}{Logical argument to whether bootstrap should be used for inference. Default is FALSE.}
 
 \item{boot.type}{Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
 If boot==T, default is "weighted".}
 
-\item{nboot}{Number of bootstrap repetitions (not relevant if boot = FALSE). Deafault is 999 if boot = TRUE}
+\item{nboot}{Number of bootstrap repetitions (not relevant if boot = FALSE). Default is 999 if boot = TRUE}
+
+\item{inffunc}{Logical argument to whether influence function should be returned. Default is FALSE.}
 }
 \value{
 A list containing the following components:
@@ -32,6 +43,7 @@ A list containing the following components:
 \item{uci}{Estimate of the upper boudary of a 95\% CI for the ATT}
 \item{lci}{Estimate of the lower boudary of a 95\% CI for the ATT}
 \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
+ \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 }
 \description{
 'Traditional' Doubly Robust Difference-in-Differences Estimator for the ATT, with Panel Data

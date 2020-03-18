@@ -12,10 +12,11 @@ NULL
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).
 #' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the regression estimation
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.
-#' @param boot Logical argument to whether bootstrap should be used for inference. Deafault is FALSE.
+#' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
 #' @param boot.type Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
 #' If boot==T, default is "weighted".
-#' @param nboot Number of bootstrap repetitions (not relevant if boot = FALSE). Deafault is 999 if boot = TRUE.
+#' @param nboot Number of bootstrap repetitions (not relevant if boot = FALSE). Default is 999 if boot = TRUE.
+#' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
 #'
 #' @return A list containing the following components:
 #'  \item{ATT}{The TWFE DID point estimate}
@@ -23,20 +24,22 @@ NULL
 #'  \item{uci}{Estimate of the upper boudary of a 95\% CI for the TWFE parameter.}
 #'  \item{lci}{Estimate of the lower boudary of a 95\% CI for the TWFE parameter.}
 #'  \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
+#'  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 #'
 #' @export
 
 twfe_did_panel <-function(y1, y0, D, covariates,
-                         i.weights = NULL,
-                         boot = F,
-                         boot.type = "weighted",
-                         nboot = NULL){
+                          i.weights = NULL,
+                          boot = F,
+                          boot.type = "weighted",
+                          nboot = NULL,
+                          inffunc = F){
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
   # Sample size
   n <- length(D)
-    # Weights
+  # Weights
   if(is.null(i.weights)) {
     i.weights <- as.vector(rep(1, n))
   } else if(min(i.weights) < 0) stop("i.weights must be non-negative")
@@ -102,7 +105,7 @@ twfe_did_panel <-function(y1, y0, D, covariates,
     } else {
       # do weighted bootstrap
       twfe.boot <- unlist(lapply(1:nboot, wboot.twfe.panel,
-                                n = n, y = y, dd = dd, post = post, x = x, i.weights = i.weights))
+                                 n = n, y = y, dd = dd, post = post, x = x, i.weights = i.weights))
       # get bootstrap std errors based on IQR
       se.twfe.att <- stats::IQR((twfe.boot - twfe.att)) / (stats::qnorm(0.75) - stats::qnorm(0.25))
       # get symmtric critival values
@@ -116,10 +119,11 @@ twfe_did_panel <-function(y1, y0, D, covariates,
   }
 
 
-
+  if(inffunc==F) att.inf.func <- NULL
   return(list(ATT = twfe.att,
               se = se.twfe.att,
               uci = uci,
               lci = lci,
-              boots = twfe.boot))
+              boots = twfe.boot,
+              att.inf.func = att.inf.func))
 }

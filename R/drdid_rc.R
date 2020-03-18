@@ -10,10 +10,11 @@ NULL
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).
 #' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the propensity score and regression estimation
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.
-#' @param boot Logical argument to whether bootstrap should be used for inference. Deafault is FALSE.
+#' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
 #' @param boot.type Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
 #' If boot==T, default is "weighted".
-#' @param nboot Number of bootstrap repetitions (not relevant if boot = FALSE). Deafault is 999 if boot = TRUE
+#' @param nboot Number of bootstrap repetitions (not relevant if boot = FALSE). Default is 999 if boot = TRUE
+#' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
 #'
 #' @return A list containing the following components:
 #' \item{ATT}{The TR-DR DID point estimate}
@@ -21,14 +22,15 @@ NULL
 #' \item{uci}{Estimate of the upper boudary of a 95\% CI for the ATT}
 #' \item{lci}{Estimate of the lower boudary of a 95\% CI for the ATT}
 #' \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
-#'
+#'  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 #' @export
 
 drdid_rc <-function(y, post, D, covariates,
-                     i.weights = NULL,
-                     boot = F,
-                     boot.type =  "weighted",
-                     nboot = NULL){
+                    i.weights = NULL,
+                    boot = F,
+                    boot.type =  "weighted",
+                    nboot = NULL,
+                    inffunc = F){
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
@@ -53,13 +55,13 @@ drdid_rc <-function(y, post, D, covariates,
   ps.fit <- pmin(ps.fit, 1 - 1e-16)
   #Compute the Outcome regression for the control group at the pre-treatment period, using ols.
   reg.cont.coeff.pre <- stats::coef(stats::lm(y ~ -1 + int.cov,
-                                         subset = ((D==0) & (post==0)),
-                                         weights = i.weights))
+                                              subset = ((D==0) & (post==0)),
+                                              weights = i.weights))
   out.y.cont.pre <-   as.vector(tcrossprod(reg.cont.coeff.pre, int.cov))
   #Compute the Outcome regression for the control group at the post-treatment period, using ols.
   reg.cont.coeff.post <- stats::coef(stats::lm(y ~ -1 + int.cov,
-                                          subset = ((D==0) & (post==1)),
-                                          weights = i.weights))
+                                               subset = ((D==0) & (post==1)),
+                                               weights = i.weights))
   out.y.cont.post <-   as.vector(tcrossprod(reg.cont.coeff.post, int.cov))
   # Combine the ORs for control group
   out.y.cont <- post * out.y.cont.post + (1 - post) * out.y.cont.pre
@@ -67,13 +69,13 @@ drdid_rc <-function(y, post, D, covariates,
 
   #Compute the Outcome regression for the treated group at the pre-treatment period, using ols.
   reg.treat.coeff.pre <- stats::coef(stats::lm(y ~ -1 + int.cov,
-                                              subset = ((D==1) & (post==0)),
-                                              weights = i.weights))
+                                               subset = ((D==1) & (post==0)),
+                                               weights = i.weights))
   out.y.treat.pre <-   as.vector(tcrossprod(reg.treat.coeff.pre, int.cov))
   #Compute the Outcome regression for the treated group at the post-treatment period, using ols.
   reg.treat.coeff.post <- stats::coef(stats::lm(y ~ -1 + int.cov,
-                                               subset = ((D==1) & (post==1)),
-                                               weights = i.weights))
+                                                subset = ((D==1) & (post==1)),
+                                                weights = i.weights))
   out.y.treat.post <-   as.vector(tcrossprod(reg.treat.coeff.post, int.cov))
 
 
@@ -116,7 +118,7 @@ drdid_rc <-function(y, post, D, covariates,
 
   # ATT estimator
   dr.att <- (att.treat.post - att.treat.pre) - (att.cont.post - att.cont.pre) +
-            (att.d.post - att.dt1.post) - (att.d.pre - att.dt0.pre)
+    (att.d.post - att.dt1.post) - (att.d.pre - att.dt0.pre)
   #-----------------------------------------------------------------------------
   #get the influence function to compute standard error
   #-----------------------------------------------------------------------------
@@ -261,11 +263,11 @@ drdid_rc <-function(y, post, D, covariates,
     }
   }
 
-
-
+  if(inffunc==F) att.inf.func <- NULL
   return(list(ATT = dr.att,
               se = se.dr.att,
               uci = uci,
               lci = lci,
-              boots = dr.boot))
+              boots = dr.boot,
+              att.inf.func = att.inf.func))
 }

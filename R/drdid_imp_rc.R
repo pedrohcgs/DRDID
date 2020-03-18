@@ -10,10 +10,11 @@ NULL
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).
 #' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the propensity score and regression estimation
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.
-#' @param boot Logical argument to whether bootstrap should be used for inference. Deafault is FALSE.
+#' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
 #' @param boot.type Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
 #' If boot==T, default is "weighted".
-#' @param nboot Number of bootstrap repetitions (not relevant if boot = FALSE). Deafault is 999 if boot = TRUE
+#' @param nboot Number of bootstrap repetitions (not relevant if boot = FALSE). Default is 999 if boot = TRUE
+#' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
 #'
 #' @return A list containing the following components:
 #' \item{ATT}{The DR DID point estimate}
@@ -24,6 +25,7 @@ NULL
 #'  \item{ps.flag}{Convergence Flag for the propensity score estimation: =0 if \code{trust} algorithm converged,
 #'    =1 if IPW algorithm converged (in case it was used), =2 if GLM logit estimator was used (i.e., if both \code{trust} and IPT
 #'    did not converged).}
+#'  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 #'
 #'
 #' @export
@@ -32,7 +34,8 @@ drdid_imp_rc <- function(y, post, D, covariates,
                          i.weights = NULL,
                          boot = F,
                          boot.type =  "weighted",
-                         nboot = NULL){
+                         nboot = NULL,
+                         inffunc = F){
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
@@ -184,11 +187,12 @@ drdid_imp_rc <- function(y, post, D, covariates,
   }
 
 
-
+  if(inffunc==F) att.inf.func <- NULL
   return(list(ATT = dr.att,
               se = se.dr.att,
               uci = uci,
               lci = lci,
               boots = dr.boot,
-              ps.flag = pscore.ipt$flag))
+              ps.flag = pscore.ipt$flag,
+              att.inf.func = att.inf.func))
 }

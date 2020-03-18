@@ -10,10 +10,11 @@ NULL
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).
 #' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the regression estimation
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.
-#' @param boot Logical argument to whether bootstrap should be used for inference. Deafault is FALSE.
+#' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
 #' @param boot.type Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
 #' If boot==T, default is "weighted".
-#' @param nboot Number of bootstrap repetitions (not relevant if boot = FALSE). Deafault is 999 if boot = TRUE.
+#' @param nboot Number of bootstrap repetitions (not relevant if boot = FALSE). Default is 999 if boot = TRUE.
+#' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
 #'
 #' @return A list containing the following components:
 #'  \item{ATT}{The Reg DID point estimate}
@@ -21,14 +22,15 @@ NULL
 #'  \item{uci}{Estimate of the upper boudary of a 95\% CI for the ATT}
 #'  \item{lci}{Estimate of the lower boudary of a 95\% CI for the ATT}
 #'  \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
-#'
+#'  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 #' @export
 
 reg_did_rc <-function(y, post, D, covariates,
-                         i.weights = NULL,
-                         boot = F,
-                         boot.type = "weighted",
-                         nboot = NULL){
+                      i.weights = NULL,
+                      boot = F,
+                      boot.type = "weighted",
+                      nboot = NULL,
+                      inffunc = F){
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
@@ -49,14 +51,14 @@ reg_did_rc <-function(y, post, D, covariates,
   #-----------------------------------------------------------------------------
   #Compute the Outcome regression for the control group at the pre-treatment period, using ols.
   reg.coeff.pre <- stats::coef(stats::lm(y ~ -1 + int.cov,
-                                     subset = ((D==0) & (post==0)),
-                                     weights = i.weights))
+                                         subset = ((D==0) & (post==0)),
+                                         weights = i.weights))
   out.y.pre <-   as.vector(tcrossprod(reg.coeff.pre, int.cov))
   #-----------------------------------------------------------------------------
   #Compute the Outcome regression for the control group at the pre-treatment period, using ols.
   reg.coeff.post <- stats::coef(stats::lm(y ~ -1 + int.cov,
-                                         subset = ((D==0) & (post==1)),
-                                         weights = i.weights))
+                                          subset = ((D==0) & (post==1)),
+                                          weights = i.weights))
   out.y.post <-   as.vector(tcrossprod(reg.coeff.post, int.cov))
   #-----------------------------------------------------------------------------
   #Compute the OR DID estimators
@@ -156,10 +158,11 @@ reg_did_rc <-function(y, post, D, covariates,
   }
 
 
-
+  if(inffunc==F) att.inf.func <- NULL
   return(list(ATT = reg.att,
               se = se.reg.att,
               uci = uci,
               lci = lci,
-              boots = reg.boot))
+              boots = reg.boot,
+              att.inf.func = att.inf.func))
 }

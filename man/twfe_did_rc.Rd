@@ -5,8 +5,17 @@
 \title{Two-Way Fixed Effects DID estimator with Repeated Cross Section Data
 Two-Way Fixed Effects DID estimator with Repeated Cross Section}
 \usage{
-twfe_did_rc(y, post, D, covariates, i.weights = NULL, boot = F,
-  boot.type = "weighted", nboot = NULL)
+twfe_did_rc(
+  y,
+  post,
+  D,
+  covariates,
+  i.weights = NULL,
+  boot = F,
+  boot.type = "weighted",
+  nboot = NULL,
+  inffunc = F
+)
 }
 \arguments{
 \item{y}{An \eqn{n} x \eqn{1} vector of outcomes from the both pre and post-treatment periods.}
@@ -20,12 +29,14 @@ and post = 0 if observation belongs to pre-treatment period.)}
 
 \item{i.weights}{An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.}
 
-\item{boot}{Logical argument to whether bootstrap should be used for inference. Deafault is FALSE.}
+\item{boot}{Logical argument to whether bootstrap should be used for inference. Default is FALSE.}
 
 \item{boot.type}{Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
 If boot==T, default is "weighted".}
 
-\item{nboot}{Number of bootstrap repetitions (not relevant if boot = FALSE). Deafault is 999 if boot = TRUE.}
+\item{nboot}{Number of bootstrap repetitions (not relevant if boot = FALSE). Default is 999 if boot = TRUE.}
+
+\item{inffunc}{Logical argument to whether influence function should be returned. Default is FALSE.}
 }
 \value{
 A list containing the following components:
@@ -34,6 +45,7 @@ A list containing the following components:
  \item{uci}{Estimate of the upper boudary of a 95\% CI for the TWFE parameter.}
  \item{lci}{Estimate of the lower boudary of a 95\% CI for the TWFE parameter.}
  \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
+ \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 }
 \description{
 Two-Way Fixed Effects DID estimator with Repeated Cross Section Data
