@@ -9,7 +9,8 @@ NULL
 #' @param y1 An \eqn{n} x \eqn{1} vector of outcomes from the post-treatment period.
 #' @param y0 An \eqn{n} x \eqn{1} vector of outcomes from the pre-treatment period.
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).
-#' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the propensity score and regression estimation
+#' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the propensity score and regression estimation.
+#' If covariates = NULL, this leads to an unconditional DID estimator.
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
 #' @param boot.type Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
@@ -40,7 +41,11 @@ drdid_ie_panel <-function(y1, y0, D, covariates,
   # generate deltaY
   deltaY <- as.vector(y1 - y0)
   # Add constant to covariate vector
-  int.cov <- as.matrix(cbind(1, covariates))
+  if (is.null(covariates)){
+    int.cov <- as.matrix(rep(1,n))
+  } else {
+    int.cov <- as.matrix(cbind(1, covariates))
+  }
 
   # Weights
   if(is.null(i.weights)) {

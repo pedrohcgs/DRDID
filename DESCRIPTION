@@ -1,7 +1,7 @@
 Package: DRDID
 Type: Package
 Title: Doubly Robust Difference-in-Difference Estimators
-Version: 0.1.1.900
+Version: 0.1.1.901
 Author: Pedro H. C. Sant'Anna <pedro.h.santanna@vanderbilt.edu>, Jun B. Zhao
     <jun.zhao@vanderbilt.edu>
 Maintainer: Pedro H. C. Sant'Anna <pedro.h.santanna@vanderbilt.edu>
@@ -25,4 +25,4 @@ Imports:
     stats,
     trust
 RoxygenNote: 7.1.0
-Date: 2019-08-28 18:00
+Date: 2020-04-01 18:00

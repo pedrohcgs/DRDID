@@ -8,7 +8,8 @@ NULL
 #' @param post An \eqn{n} x \eqn{1} vector of Post-Treatment dummies (post = 1 if observation belongs to post-tretment period,
 #'             and post = 0 if observation belongs to pre-treatment period.)
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).
-#' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the regression estimation
+#' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the regression estimation.
+#' If covariates = NULL, this leads to an unconditional DID estimator.
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
 #' @param boot.type Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
@@ -41,7 +42,11 @@ reg_did_rc <-function(y, post, D, covariates,
   # outcome of interested
   y <- as.vector(y)
   # Add constant to covariate vector
-  int.cov <- as.matrix(cbind(1, covariates))
+  if (is.null(covariates)){
+    int.cov <- as.matrix(rep(1,n))
+  } else {
+    int.cov <- as.matrix(cbind(1, covariates))
+  }
   # Weights
   if(is.null(i.weights)) {
     i.weights <- as.vector(rep(1, n))
