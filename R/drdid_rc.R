@@ -42,10 +42,13 @@ drdid_rc <-function(y, post, D, covariates,
   # post as vector
   post <- as.vector(post)
   # Add constant to covariate vector
-  if (is.null(covariates)){
-    int.cov <- as.matrix(rep(1,n))
-  } else {
-    int.cov <- as.matrix(cbind(1, covariates))
+  int.cov <- as.matrix(rep(1,n))
+  if (!is.null(covariates)){
+    if(all.equal(as.matrix(covariates)[,1], rep(1,n))){
+      int.cov <- as.matrix(covariates)
+    } else {
+      int.cov <- as.matrix(cbind(1, covariates))
+    }
   }
 
   # Weights

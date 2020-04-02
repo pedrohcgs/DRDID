@@ -25,7 +25,8 @@ and post = 0 if observation belongs to pre-treatment period.)}
 
 \item{D}{An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment perio, =0 otherwise).}
 
-\item{covariates}{An \eqn{n} x \eqn{k} matrix of covariates to be used in the regression estimation}
+\item{covariates}{An \eqn{n} x \eqn{k} matrix of covariates to be used in the regression estimation.
+If covariates = NULL, this leads to an unconditional DID estimator.}
 
 \item{i.weights}{An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.}
 

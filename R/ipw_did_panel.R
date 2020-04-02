@@ -42,10 +42,13 @@ ipw_did_panel <-function(y1, y0, D, covariates,
   # generate deltaY
   deltaY <- as.vector(y1 - y0)
   # Add constant to covariate vector
-  if (is.null(covariates)){
-    int.cov <- as.matrix(rep(1,n))
-  } else {
-    int.cov <- as.matrix(cbind(1, covariates))
+  int.cov <- as.matrix(rep(1,n))
+  if (!is.null(covariates)){
+    if(all.equal(as.matrix(covariates)[,1], rep(1,n))){
+      int.cov <- as.matrix(covariates)
+    } else {
+      int.cov <- as.matrix(cbind(1, covariates))
+    }
   }
 
   # Weights
