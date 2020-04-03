@@ -140,12 +140,12 @@ reg_did_panel <-function(y1, y0, D, covariates,
     }
   }
 
-  if(inffunc==F) att.inf.func <- NULL
+  if(inffunc==F) reg.att.inf.func <- NULL
 
   return(list(ATT = reg.att,
               se = se.reg.att,
               uci = uci,
               lci = lci,
               boots = reg.boot,
-              att.inf.func = att.inf.func))
+              att.inf.func = reg.att.inf.func))
 }

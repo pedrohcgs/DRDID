@@ -194,12 +194,12 @@ drdid_imp_rc <- function(y, post, D, covariates,
   }
 
 
-  if(inffunc==F) att.inf.func <- NULL
+  if(inffunc==F) dr.att.inf.func <- NULL
   return(list(ATT = dr.att,
               se = se.dr.att,
               uci = uci,
               lci = lci,
               boots = dr.boot,
               ps.flag = pscore.ipt$flag,
-              att.inf.func = att.inf.func))
+              att.inf.func = dr.att.inf.func))
 }

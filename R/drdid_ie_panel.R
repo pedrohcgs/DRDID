@@ -175,11 +175,11 @@ drdid_ie_panel <-function(y1, y0, D, covariates,
   }
 
 
-  if(inffunc==F) att.inf.func <- NULL
+  if(inffunc==F) dr.att.inf.func <- NULL
   return(list(ATT = dr.att,
               se = se.dr.att,
               uci = uci,
               lci = lci,
               boots = dr.boot,
-              att.inf.func = att.inf.func))
+              att.inf.func = dr.att.inf.func))
 }
