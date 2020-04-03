@@ -44,7 +44,7 @@ ipw_did_panel <-function(y1, y0, D, covariates,
   # Add constant to covariate vector
   int.cov <- as.matrix(rep(1,n))
   if (!is.null(covariates)){
-    if(all.equal(as.matrix(covariates)[,1], rep(1,n))){
+    if(all(as.matrix(covariates)[,1]==rep(1,n))){
       int.cov <- as.matrix(covariates)
     } else {
       int.cov <- as.matrix(cbind(1, covariates))
