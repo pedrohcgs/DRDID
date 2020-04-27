@@ -21,18 +21,14 @@ NULL
 #' @return A list containing the following components:
 #' \item{ATT}{The DR DID point estimate}
 #' \item{se}{The DR DID standard error}
-#' \item{uci}{Estimate of the upper boudary of a 95\% CI for the ATT}
-#' \item{lci}{Estimate of the lower boudary of a 95\% CI for the ATT}
+#' \item{uci}{Estimate of the upper bound of a 95\% CI for the ATT}
+#' \item{lci}{Estimate of the lower bound of a 95\% CI for the ATT}
 #' \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
 #'  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
-#' @export
+#' @noRd
 
-drdid_ie_panel <-function(y1, y0, D, covariates,
-                          i.weights = NULL,
-                          boot = F,
-                          boot.type = "weighted",
-                          nboot = NULL,
-                          inffunc = F){
+drdid_ie_panel <-function(y1, y0, D, covariates, i.weights = NULL, boot = F, boot.type = "weighted",
+                          nboot = NULL, inffunc = F){
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)

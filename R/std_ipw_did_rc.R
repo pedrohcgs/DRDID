@@ -7,7 +7,7 @@ NULL
 #'
 #'
 #' @param y An \eqn{n} x \eqn{1} vector of outcomes from the both pre and post-treatment periods.
-#' @param post An \eqn{n} x \eqn{1} vector of Post-Treatment dummies (post = 1 if observation belongs to post-tretment period,
+#' @param post An \eqn{n} x \eqn{1} vector of Post-Treatment dummies (post = 1 if observation belongs to post-treatment period,
 #'             and post = 0 if observation belongs to pre-treatment period.)
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).
 #' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the propensity score estimation.
@@ -22,17 +22,21 @@ NULL
 #' @return A list containing the following components:
 #' \item{ATT}{The IPW DID point estimate.}
 #' \item{se}{ The IPW DID standard error}
-#' \item{uci}{Estimate of the upper boudary of a 95\% CI for the ATT}
-#' \item{lci}{Estimate of the lower boudary of a 95\% CI for the ATT}
+#' \item{uci}{Estimate of the upper bound of a 95\% CI for the ATT}
+#' \item{lci}{Estimate of the lower bound of a 95\% CI for the ATT}
 #' \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
 #' \item{att.inf.func}{Estimate of the influence function. Default is NULL}
+#'  \item{call.param}{The matched call.}
+#'  \item{argu}{Some arguments used (explicitly or not) in the call (panel = F, normalized = T, boot, boot.type, nboot, type="ipw")}
+
+#' @references Abadie, Alberto (2005), "Semiparametric Difference-in-Differences Estimators",
+#' Review of Economic Studies, vol. 72(1), p. 1-19, <doi:10.1111/0034-6527.00321>.
+#' @references Sant'Anna, Pedro H. C. and Zhao, Jun (2020), ["Doubly Robust Difference-in-Differences Estimators"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315).
+#'
 #' @export
 
-std_ipw_did_rc <-function(y, post, D, covariates,
-                          i.weights = NULL,
-                          boot = F,
-                          boot.type = "weighted",
-                          nboot = NULL,
+std_ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
+                          boot = F, boot.type = "weighted", nboot = NULL,
                           inffunc = F){
   #-----------------------------------------------------------------------------
   # D as vector
@@ -159,11 +163,32 @@ std_ipw_did_rc <-function(y, post, D, covariates,
 
   }
   if(inffunc==F) att.inf.func <- NULL
+  #---------------------------------------------------------------------
+  # record the call
+  call.param <- match.call()
+  # Record all arguments used in the function
+  argu <- mget(names(formals()), sys.frame(sys.nframe()))
+  boot.type <- ifelse(argu$boot.type=="multiplier", "multiplier", "weighted")
+  boot <- ifelse(argu$boot==T, T, F)
+  argu <- list(
+    panel = F,
+    normalized = T,
+    boot = boot,
+    boot.type = boot.type,
+    nboot = nboot,
+    type = "ipw"
+  )
+  ret <- (list(ATT = ipw.att,
+               se = se.att,
+               uci = uci,
+               lci = lci,
+               boots = ipw.boot,
+               att.inf.func = att.inf.func,
+               call.param = call.param,
+               argu = argu))
+  # Define a new class
+  class(ret) <- "drdid"
 
-  return(list(ATT = ipw.att,
-              se = se.att,
-              uci = uci,
-              lci = lci,
-              boots = ipw.boot,
-              att.inf.func = att.inf.func))
+  # return the list
+  return(ret)
 }

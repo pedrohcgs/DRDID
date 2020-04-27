@@ -48,7 +48,12 @@ A list containing the following components:
    =1 if IPW algorithm converged (in case it was used), =2 if GLM logit estimator was used (i.e., if both \code{trust} and IPT
    did not converged).}
  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
+ \item{call.param}{The matched call.}
+ \item{argu}{Some arguments used (explicitly or not) in the call (panel = T, estMethod = "imp", boot, boot.type, nboot, type="dr")}
 }
 \description{
 Improved Doubly Robust Difference-in-Differences Estimator for the ATT, with Panel Data
+}
+\references{
+Sant'Anna, Pedro H. C. and Zhao, Jun (2020), ["Doubly Robust Difference-in-Differences Estimators"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315).
 }

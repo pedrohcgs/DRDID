@@ -41,11 +41,19 @@ If boot==T, default is "weighted".}
 A list containing the following components:
 \item{ATT}{The IPW DID point estimate.}
 \item{se}{ The IPW DID standard error}
-\item{uci}{Estimate of the upper boudary of a 95\% CI for the ATT}
-\item{lci}{Estimate of the lower boudary of a 95\% CI for the ATT}
+\item{uci}{Estimate of the upper bound of a 95\% CI for the ATT}
+\item{lci}{Estimate of the lower bound of a 95\% CI for the ATT}
 \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
 \item{att.inf.func}{Estimate of the influence function. Default is NULL}
+ \item{call.param}{The matched call.}
+ \item{argu}{Some arguments used (explicitly or not) in the call (panel = T, normalized = T, boot, boot.type, nboot, type="ipw")}
 }
 \description{
 Standardized Inverse probability weighted Difference-in-Differences Estimator with Panel Data
+}
+\references{
+Abadie, Alberto (2005), "Semiparametric Difference-in-Differences Estimators",
+Review of Economic Studies, vol. 72(1), p. 1-19, <doi:10.1111/0034-6527.00321>.
+
+Sant'Anna, Pedro H. C. and Zhao, Jun (2020), ["Doubly Robust Difference-in-Differences Estimators"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315).
 }

@@ -1,20 +1,21 @@
 Package: DRDID
 Type: Package
 Title: Doubly Robust Difference-in-Difference Estimators
-Version: 0.1.1.902
-Author: Pedro H. C. Sant'Anna <pedro.h.santanna@vanderbilt.edu>, Jun B. Zhao
-    <jun.zhao@vanderbilt.edu>
-Maintainer: Pedro H. C. Sant'Anna <pedro.h.santanna@vanderbilt.edu>
-Description: Difference-in-Difference (DID) methods are among the most widely used tools in
-    studying the causal effect of a treatment, intervention, or policy. 
-    This package implements different DID procedures to estimate the ATT when the available data contains
-    two periods, pre and post treatment, and two groups, a treated and a comparison group. The main estimators covered here are
-    (i) the doubly robust and semiparametrically efficient DID estimators developed in 
-    Sant'Anna and Zhao (2019) <https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315>, (ii) the inverse probability weigthed DID
-    estimator developed in Abadie(2005) <doi:10.1111/0034-6527.00321>, and (iii) the regression-based DID estimator 
-    in the spirit of Heckman, Ichimura and Todd (1997) <doi:10.2307/2971733>. For completeness, the package also implements the DID 
-    estimator based on the two-way fixed effect linear regression, though such a procedure usually does not recover the average treatment
-    effect on the treated; see e.g. the simulation exercise in Sant'Anna and Zhao (2019) <https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315>.
+Version: 0.2.1.914
+Authors@R: c(
+    person("Sant'Anna", "Pedro H. C.", email = "pedro.h.santanna@vanderbilt.edu",role = c("aut", "cre")),
+    person("Zhao", "Jun B.", email = "jun.zhao@vanderbilt.edu",role = c("aut"))
+    )
+Description: This package implements different Difference-in-Differences (DID) estimators for 
+    the ATT when the available data contains two periods, pre and post treatment, and two 
+    groups, a treated and a comparison group. The main estimators covered here are the
+    locally efficient doubly robust DID estimators proposed by Sant'Anna and Zhao (2020);
+    the inverse probability weighted DID estimator proposed by Abadie(2005); and the
+    outcome regression DID estimator in the spirit of Heckman, Ichimura and Todd (1997). 
+    For completeness, the package also implements the DID estimator based on the two-way
+    fixed effect linear regression, though such a procedure usually does not recover the 
+    average treatment effect on the treated; see e.g. the simulation exercise in Sant'Anna
+    and Zhao (2020).
 URL: https://github.com/pedrohcgs/DRDID    
 License: GPL-3
 Encoding: UTF-8
@@ -23,6 +24,15 @@ Depends:
     R (>= 3.4)
 Imports:
     stats,
-    trust
+    trust,
+    BMisc(>= 1.4.1)
 RoxygenNote: 7.1.0
-Date: 2020-04-01 18:00
+VignetteBuilder: knitr
+Suggests: 
+    knitr,
+    rmarkdown,
+    spelling,
+    testthat,
+    covr
+Date: 2020-04-26 18:00
+Language: en-US

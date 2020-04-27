@@ -5,7 +5,7 @@ NULL
 #' 'Improved' Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data
 #'
 #' @param y An \eqn{n} x \eqn{1} vector of outcomes from the both pre and post-treatment periods.
-#' @param post An \eqn{n} x \eqn{1} vector of Post-Treatment dummies (post = 1 if observation belongs to post-tretment period,
+#' @param post An \eqn{n} x \eqn{1} vector of Post-Treatment dummies (post = 1 if observation belongs to post-treatment period,
 #'             and post = 0 if observation belongs to pre-treatment period.)
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).
 #' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the propensity score and regression estimation.
@@ -20,21 +20,21 @@ NULL
 #' @return A list containing the following components:
 #' \item{ATT}{The DR DID point estimate}
 #' \item{se}{ The DR DID standard error}
-#' \item{uci}{Estimate of the upper boudary of a 95\% CI for the ATT}
-#' \item{lci}{Estimate of the lower boudary of a 95\% CI for the ATT}
+#' \item{uci}{Estimate of the upper bound of a 95\% CI for the ATT}
+#' \item{lci}{Estimate of the lower bound of a 95\% CI for the ATT}
 #' \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
 #'  \item{ps.flag}{Convergence Flag for the propensity score estimation: =0 if \code{trust} algorithm converged,
 #'    =1 if IPW algorithm converged (in case it was used), =2 if GLM logit estimator was used (i.e., if both \code{trust} and IPT
 #'    did not converged).}
 #'  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
+#'  \item{call.param}{The matched call.}
+#'  \item{argu}{Some arguments used (explicitly or not) in the call (panel = F, estMethod = "imp2", boot, boot.type, nboot, type="dr")}
 #'
+#' @references Sant'Anna, Pedro H. C. and Zhao, Jun (2020), ["Doubly Robust Difference-in-Differences Estimators"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315).
 #' @export
 
-drdid_imp_rc1 <- function(y, post, D, covariates,
-                          i.weights = NULL,
-                          boot = F,
-                          boot.type =  "weighted",
-                          nboot = NULL,
+drdid_imp_rc1 <- function(y, post, D, covariates, i.weights = NULL,
+                          boot = F, boot.type =  "weighted", nboot = NULL,
                           inffunc = F){
   #-----------------------------------------------------------------------------
   # D as vector
@@ -157,11 +157,36 @@ drdid_imp_rc1 <- function(y, post, D, covariates,
 
 
   if(inffunc==F) dr.att.inf.func <- NULL
-  return(list(ATT = dr.att,
-              se = se.dr.att,
-              uci = uci,
-              lci = lci,
-              boots = dr.boot,
-              ps.flag = pscore.ipt$flag,
-              att.inf.func = dr.att.inf.func))
+  #---------------------------------------------------------------------
+  # record the call
+  call.param <- match.call()
+  # Record all arguments used in the function
+  argu <- mget(names(formals()), sys.frame(sys.nframe()))
+  boot.type <- ifelse(argu$boot.type=="multiplier", "multiplier", "weighted")
+  boot <- ifelse(argu$boot==T, T, F)
+  argu <- list(
+    panel = F,
+    estMethod = "imp2",
+    boot = boot,
+    boot.type = boot.type,
+    nboot = nboot,
+    type = "dr"
+  )
+  ret <- (list(ATT = dr.att,
+               se = se.dr.att,
+               uci = uci,
+               lci = lci,
+               boots = dr.boot,
+               ps.flag = pscore.ipt$flag,
+               att.inf.func = dr.att.inf.func,
+               call.param = call.param,
+               argu = argu))
+  # Define a new class
+  class(ret) <- "drdid"
+
+  #warning("This estimator is not locally efficient. Consider using 'drdid_imp_rc' instead.")
+  # return the list
+  return(ret)
+
+
 }

@@ -8,9 +8,9 @@ NULL
 #'
 #'
 #' @param y An \eqn{n} x \eqn{1} vector of outcomes from the both pre and post-treatment periods.
-#' @param post An \eqn{n} x \eqn{1} vector of Post-Treatment dummies (post = 1 if observation belongs to post-tretment period,
+#' @param post An \eqn{n} x \eqn{1} vector of Post-Treatment dummies (post = 1 if observation belongs to post-treatment period,
 #'             and post = 0 if observation belongs to pre-treatment period.)
-#' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment perio, =0 otherwise).
+#' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment period, =0 otherwise).
 #' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the regression estimation.
 #' If covariates = NULL, this leads to an unconditional DID estimator.
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.
@@ -23,17 +23,14 @@ NULL
 #' @return A list containing the following components:
 #'  \item{ATT}{The TWFE DID point estimate}
 #'  \item{se}{The TWFE DID standard error}
-#'  \item{uci}{Estimate of the upper boudary of a 95\% CI for the TWFE parameter.}
-#'  \item{lci}{Estimate of the lower boudary of a 95\% CI for the TWFE parameter.}
+#'  \item{uci}{Estimate of the upper bound of a 95\% CI for the TWFE parameter.}
+#'  \item{lci}{Estimate of the lower bound of a 95\% CI for the TWFE parameter.}
 #'  \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
 #'  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 #' @export
 
-twfe_did_rc <- function(y, post, D, covariates,
-                        i.weights = NULL,
-                        boot = F,
-                        boot.type = "weighted",
-                        nboot = NULL,
+twfe_did_rc <- function(y, post, D, covariates, i.weights = NULL,
+                        boot = F, boot.type = "weighted", nboot = NULL,
                         inffunc = F){
   #-----------------------------------------------------------------------------
   # D as vector

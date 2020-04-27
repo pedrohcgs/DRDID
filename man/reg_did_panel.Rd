@@ -42,12 +42,20 @@ If boot==T, default is "weighted".}
 A list containing the following components:
  \item{ATT}{The Reg DID point estimate}
  \item{se}{The Reg DID standard error}
- \item{uci}{Estimate of the upper boudary of a 95\% CI for the ATT}
- \item{lci}{Estimate of the lower boudary of a 95\% CI for the ATT}
+ \item{uci}{Estimate of the upper bound of a 95\% CI for the ATT}
+ \item{lci}{Estimate of the lower bound of a 95\% CI for the ATT}
  \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
+ \item{call.param}{The matched call.}
+ \item{argu}{Some arguments used (explicitly or not) in the call (panel = T, boot, boot.type, nboot, type="or")}
 }
 \description{
 Regression-based DID estimator with Panel Data
 Regression-based Difference-in-Differences Estimator for the ATT, with Panel Data
+}
+\references{
+Heckman, James J., Ichimura, Hidehiko, and Todd, Petra E. (1997),"Matching as an Econometric Evaluation Estimator: Evidence from Evaluating a Job Training Programme",
+Review of Economic Studies, vol. 64(4), p. 605–654, <doi:10.2307/2971733>.
+
+Sant'Anna, Pedro H. C. and Zhao, Jun (2020), ["Doubly Robust Difference-in-Differences Estimators"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315).
 }

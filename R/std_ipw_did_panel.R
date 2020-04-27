@@ -21,17 +21,21 @@ NULL
 #' @return A list containing the following components:
 #' \item{ATT}{The IPW DID point estimate.}
 #' \item{se}{ The IPW DID standard error}
-#' \item{uci}{Estimate of the upper boudary of a 95\% CI for the ATT}
-#' \item{lci}{Estimate of the lower boudary of a 95\% CI for the ATT}
+#' \item{uci}{Estimate of the upper bound of a 95\% CI for the ATT}
+#' \item{lci}{Estimate of the lower bound of a 95\% CI for the ATT}
 #' \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
 #' \item{att.inf.func}{Estimate of the influence function. Default is NULL}
+#'  \item{call.param}{The matched call.}
+#'  \item{argu}{Some arguments used (explicitly or not) in the call (panel = T, normalized = T, boot, boot.type, nboot, type="ipw")}
+
+#' @references Abadie, Alberto (2005), "Semiparametric Difference-in-Differences Estimators",
+#' Review of Economic Studies, vol. 72(1), p. 1-19, <doi:10.1111/0034-6527.00321>.
+#' @references Sant'Anna, Pedro H. C. and Zhao, Jun (2020), ["Doubly Robust Difference-in-Differences Estimators"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315).
+
 #' @export
 
-std_ipw_did_panel <-function(y1, y0, D, covariates,
-                             i.weights = NULL,
-                             boot = F,
-                             boot.type = "weighted",
-                             nboot = NULL,
+std_ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
+                             boot = F, boot.type = "weighted", nboot = NULL,
                              inffunc = F){
   #-----------------------------------------------------------------------------
   # D as vector
@@ -140,10 +144,32 @@ std_ipw_did_panel <-function(y1, y0, D, covariates,
 
   }
   if(inffunc==F) att.inf.func <- NULL
-  return(list(ATT = ipw.att,
-              se = se.att,
-              uci = uci,
-              lci = lci,
-              boots = ipw.boot,
-              att.inf.func = att.inf.func))
+  #---------------------------------------------------------------------
+  # record the call
+  call.param <- match.call()
+  # Record all arguments used in the function
+  argu <- mget(names(formals()), sys.frame(sys.nframe()))
+  boot.type <- ifelse(argu$boot.type=="multiplier", "multiplier", "weighted")
+  boot <- ifelse(argu$boot==T, T, F)
+  argu <- list(
+    panel = T,
+    normalized = T,
+    boot = boot,
+    boot.type = boot.type,
+    nboot = nboot,
+    type = "ipw"
+  )
+  ret <- (list(ATT = ipw.att,
+               se = se.att,
+               uci = uci,
+               lci = lci,
+               boots = ipw.boot,
+               att.inf.func = att.inf.func,
+               call.param = call.param,
+               argu = argu))
+  # Define a new class
+  class(ret) <- "drdid"
+
+  # return the list
+  return(ret)
 }

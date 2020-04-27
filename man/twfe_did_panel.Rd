@@ -42,8 +42,8 @@ If boot==T, default is "weighted".}
 A list containing the following components:
  \item{ATT}{The TWFE DID point estimate}
  \item{se}{The TWFE DID standard error}
- \item{uci}{Estimate of the upper boudary of a 95\% CI for the TWFE parameter.}
- \item{lci}{Estimate of the lower boudary of a 95\% CI for the TWFE parameter.}
+ \item{uci}{Estimate of the upper bound of a 95\% CI for the TWFE parameter.}
+ \item{lci}{Estimate of the lower bound of a 95\% CI for the TWFE parameter.}
  \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 }

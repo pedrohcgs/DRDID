@@ -28,18 +28,15 @@ NULL
 #'    =1 if IPW algorithm converged (in case it was used), =2 if GLM logit estimator was used (i.e., if both \code{trust} and IPT
 #'    did not converged).}
 #'  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
-
+#'  \item{call.param}{The matched call.}
+#'  \item{argu}{Some arguments used (explicitly or not) in the call (panel = T, estMethod = "imp", boot, boot.type, nboot, type="dr")}
 #'
-#' @rdname drdid_imp_panel
+#' @references Sant'Anna, Pedro H. C. and Zhao, Jun (2020), ["Doubly Robust Difference-in-Differences Estimators"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315).
 #'
 #' @export
 
-drdid_imp_panel <-function(y1, y0, D, covariates,
-                           i.weights = NULL,
-                           boot = F,
-                           boot.type = "weighted",
-                           nboot = NULL,
-                           inffunc = F){
+drdid_imp_panel <-function(y1, y0, D, covariates, i.weights = NULL, boot = F, boot.type = "weighted",
+                           nboot = NULL, inffunc = F){
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
@@ -119,11 +116,35 @@ drdid_imp_panel <-function(y1, y0, D, covariates,
 
 
   if(inffunc==F) dr.att.inf.func <- NULL
-  return(list(ATT = dr.att,
+  #---------------------------------------------------------------------
+  # record the call
+  call.param <- match.call()
+  # Record all arguments used in the function
+  argu <- mget(names(formals()), sys.frame(sys.nframe()))
+  boot.type <- ifelse(argu$boot.type=="multiplier", "multiplier", "weighted")
+  boot <- ifelse(argu$boot==T, T, F)
+  argu <- list(
+    panel = T,
+    estMethod = "imp",
+    boot = boot,
+    boot.type = boot.type,
+    nboot = nboot,
+    type = "dr"
+  )
+
+  ret <- (list(ATT = dr.att,
               se = se.dr.att,
               uci = uci,
               lci = lci,
               boots = dr.boot,
               ps.flag = pscore.br$flag,
-              att.inf.func = dr.att.inf.func))
+              att.inf.func = dr.att.inf.func,
+              call.param = call.param,
+              argu = argu))
+
+  # Define a new class
+  class(ret) <- "drdid"
+  # return the list
+  return(ret)
+
 }

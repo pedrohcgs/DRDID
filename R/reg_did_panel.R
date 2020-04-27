@@ -19,17 +19,21 @@ NULL
 #' @return A list containing the following components:
 #'  \item{ATT}{The Reg DID point estimate}
 #'  \item{se}{The Reg DID standard error}
-#'  \item{uci}{Estimate of the upper boudary of a 95\% CI for the ATT}
-#'  \item{lci}{Estimate of the lower boudary of a 95\% CI for the ATT}
+#'  \item{uci}{Estimate of the upper bound of a 95\% CI for the ATT}
+#'  \item{lci}{Estimate of the lower bound of a 95\% CI for the ATT}
 #'  \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
 #'  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
+#'  \item{call.param}{The matched call.}
+#'  \item{argu}{Some arguments used (explicitly or not) in the call (panel = T, boot, boot.type, nboot, type="or")}
+
+
+#' @references Heckman, James J., Ichimura, Hidehiko, and Todd, Petra E. (1997),"Matching as an Econometric Evaluation Estimator: Evidence from Evaluating a Job Training Programme",
+#' Review of Economic Studies, vol. 64(4), p. 605–654, <doi:10.2307/2971733>.
+#' @references Sant'Anna, Pedro H. C. and Zhao, Jun (2020), ["Doubly Robust Difference-in-Differences Estimators"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315).
 #' @export
 
-reg_did_panel <-function(y1, y0, D, covariates,
-                         i.weights = NULL,
-                         boot = F,
-                         boot.type = "weighted",
-                         nboot = NULL,
+reg_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
+                         boot = F, boot.type = "weighted", nboot = NULL,
                          inffunc = F){
   #-----------------------------------------------------------------------------
   # D as vector
@@ -141,11 +145,31 @@ reg_did_panel <-function(y1, y0, D, covariates,
   }
 
   if(inffunc==F) reg.att.inf.func <- NULL
+  #---------------------------------------------------------------------
+  # record the call
+  call.param <- match.call()
+  # Record all arguments used in the function
+  argu <- mget(names(formals()), sys.frame(sys.nframe()))
+  boot.type <- ifelse(argu$boot.type=="multiplier", "multiplier", "weighted")
+  boot <- ifelse(argu$boot==T, T, F)
+  argu <- list(
+    panel = T,
+    boot = boot,
+    boot.type = boot.type,
+    nboot = nboot,
+    type = "or"
+  )
+  ret <- (list(ATT = reg.att,
+               se = se.reg.att,
+               uci = uci,
+               lci = lci,
+               boots = reg.boot,
+               att.inf.func = reg.att.inf.func,
+               call.param = call.param,
+               argu = argu))
+  # Define a new class
+  class(ret) <- "drdid"
 
-  return(list(ATT = reg.att,
-              se = se.reg.att,
-              uci = uci,
-              lci = lci,
-              boots = reg.boot,
-              att.inf.func = reg.att.inf.func))
+  # return the list
+  return(ret)
 }
