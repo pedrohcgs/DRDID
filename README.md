@@ -62,5 +62,5 @@ Jun B. Zhao, Vanderbilt University, Nashville, TN. E-mail: jun.zhao [at] vanderb
 
 * Heckman, James J., Ichimura, Hidehiko, and Todd, Petra E. (1997), "Matching as an Econometric Evaluation Estimator: Evidence from Evaluating a Job Training Programme", Review of Economic Studies, vol. 64(4), p. 605–654, <doi:10.2307/2971733>.
 
-* Sant'Anna, Pedro H. and Zhao, Jun B. (2020), ["Doubly Robust Difference-in-Differences Estimators"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315), Journal of Econometrics, Forthcoming.
+* Sant'Anna, Pedro H. and Zhao, Jun B. (2020), ["Doubly Robust Difference-in-Differences Estimators"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315), Working paper.
 
