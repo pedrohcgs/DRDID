@@ -177,7 +177,7 @@ drdid_imp_rc <- function(y, post, D, covariates, i.weights = NULL, boot = F,
       lci <- dr.att - cv * se.dr.att
     } else {
       # do weighted bootstrap
-      dr.boot <- unlist(lapply(1:nboot, wboot_drdid_rc,
+      dr.boot <- unlist(lapply(1:nboot, wboot_drdid_imp_rc,
                                n = n, y = y, post = post,
                                D = D, int.cov = int.cov, i.weights = i.weights))
       # get bootstrap std errors based on IQR

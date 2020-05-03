@@ -8,7 +8,11 @@ wboot_twfe_rc <- function(nn, n, y, dd, post, x, i.weights){
   #weights for the bootstrap
   b.weights <- as.vector(i.weights * v)
   #Compute the TWFE Regression
-  reg.b <- stats::lm(y ~  dd:post + post + dd + x, weights = b.weights)
+  if(!is.null(x)){
+    reg.b <- stats::lm(y ~  dd:post + post + dd + x, weights = b.weights)
+  } else{
+    reg.b <- stats::lm(y ~  dd:post + post + dd, weights = b.weights)
+  }
   twfe.att.b <- reg.b$coefficients["dd:post"]
   #-----------------------------------------------------------------------------
   return(twfe.att.b)

@@ -11,7 +11,6 @@ NULL
 #' @param y0 An \eqn{n} x \eqn{1} vector of outcomes from the pre-treatment period.
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).
 #' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the regression estimation.
-#' If covariates = NULL, this leads to an unconditional DID estimator.
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
 #' @param boot.type Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
@@ -49,7 +48,10 @@ twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
     if(all(as.matrix(covariates)[,1] == rep(1,n))) {
       # Remove intercept if you include it
       covariates <- covariates[,-1]
-      if(dim(covariates)[2]==0) covariates = NULL
+      if(dim(covariates)[2]==0) {
+        covariates = NULL
+        x = NULL
+      }
     }
   }
 
@@ -61,7 +63,6 @@ twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
     }
   }
 
-
   # Post treatment indicator
   post <- as.vector(c(rep(0, length(y0)), rep(1,length(y1))))
   # treatment group
@@ -70,63 +71,95 @@ twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   y <- as.vector(c(y0, y1))
   # weights
   i.weights <- as.vector(c(i.weights, i.weights))
-  #---------------------------------------------------------------------------
-  #Estimate TWFE regression
-  reg <- stats::lm(y ~  dd:post + post + dd + x, x = T, weights = i.weights)
-  twfe.att <- reg$coefficients["dd:post"]
-  #-----------------------------------------------------------------------------
-  #Elemenets for influence functions
-  inf.reg <- (i.weights * reg$x * reg$residuals) %*%
-    base::solve(crossprod(i.weights * reg$x, reg$x) / dim(x)[1])
 
-  sel.theta <- matrix(c(rep(0, dim(inf.reg)[2])))
+  # If there are covariates, proceed like this
+  if(!is.null(x)){
+    #---------------------------------------------------------------------------
+    #Estimate TWFE regression
 
-  index.theta <- which(dimnames(reg$x)[[2]]=="dd:post",
-                       arr.ind = T)
+    reg <- stats::lm(y ~  dd:post + post + dd + x, x = T, weights = i.weights)
 
-  sel.theta[index.theta, ] <- 1
-  #-----------------------------------------------------------------------------
-  #get the influence function of the TWFE regression
-  twfe.inf.func <- as.vector(inf.reg %*% sel.theta)
-  #-----------------------------------------------------------------------------
-  if (boot == F) {
-    # Estimate of standard error
-    se.twfe.att <- stats::sd(twfe.inf.func)/sqrt(length(twfe.inf.func))
-    # Estimate of upper boudary of 95% CI
-    uci <- twfe.att + 1.96 * se.twfe.att
-    # Estimate of lower doundary of 95% CI
-    lci <- twfe.att - 1.96 * se.twfe.att
-    #Create this null vector so we can export the bootstrap draws too.
-    twfe.boot <- NULL
+
+    twfe.att <- reg$coefficients["dd:post"]
+    #-----------------------------------------------------------------------------
+    #Elemenets for influence functions
+    inf.reg <- (i.weights * reg$x * reg$residuals) %*%
+      base::solve(crossprod(i.weights * reg$x, reg$x) / dim(reg$x)[1])
+
+    sel.theta <- matrix(c(rep(0, dim(inf.reg)[2])))
+
+    index.theta <- which(dimnames(reg$x)[[2]]=="dd:post",
+                         arr.ind = T)
+
+    sel.theta[index.theta, ] <- 1
+    #-----------------------------------------------------------------------------
+    #get the influence function of the TWFE regression
+    twfe.inf.func <- as.vector(inf.reg %*% sel.theta)
+    #-----------------------------------------------------------------------------
+    if (boot == F) {
+      # Estimate of standard error
+      se.twfe.att <- stats::sd(twfe.inf.func)/sqrt(length(twfe.inf.func))
+      # Estimate of upper boudary of 95% CI
+      uci <- twfe.att + 1.96 * se.twfe.att
+      # Estimate of lower doundary of 95% CI
+      lci <- twfe.att - 1.96 * se.twfe.att
+      #Create this null vector so we can export the bootstrap draws too.
+      twfe.boot <- NULL
+    }
+
+    if (boot == T) {
+      if (is.null(nboot) == T) nboot = 999
+      if(boot.type == "multiplier"){
+        # do multiplier bootstrap
+        twfe.boot <- mboot.twfep.did(n, twfe.inf.func, nboot)
+        # get bootstrap std errors based on IQR
+        se.twfe.att <- stats::IQR(twfe.boot) / (stats::qnorm(0.75) - stats::qnorm(0.25))
+        # get symmtric critival values
+        cv <- stats::quantile(abs(twfe.boot/se.twfe.att), probs = 0.95)
+        # Estimate of upper boudary of 95% CI
+        uci <- twfe.att + cv * se.twfe.att
+        # Estimate of lower doundary of 95% CI
+        lci <- twfe.att - cv * se.twfe.att
+      } else {
+        # do weighted bootstrap
+        twfe.boot <- unlist(lapply(1:nboot, wboot.twfe.panel,
+                                   n = n, y = y, dd = dd, post = post, x = x, i.weights = i.weights))
+        # get bootstrap std errors based on IQR
+        se.twfe.att <- stats::IQR((twfe.boot - twfe.att)) / (stats::qnorm(0.75) - stats::qnorm(0.25))
+        # get symmtric critival values
+        cv <- stats::quantile(abs((twfe.boot - twfe.att)/se.twfe.att), probs = 0.95)
+        # Estimate of upper boudary of 95% CI
+        uci <- twfe.att + cv * se.twfe.att
+        # Estimate of lower doundary of 95% CI
+        lci <- twfe.att - cv * se.twfe.att
+
+      }
+    }
   }
 
-  if (boot == T) {
-    if (is.null(nboot) == T) nboot = 999
-    if(boot.type == "multiplier"){
-      # do multiplier bootstrap
-      twfe.boot <- mboot.did(twfe.inf.func, nboot)
-      # get bootstrap std errors based on IQR
-      se.twfe.att <- stats::IQR(twfe.boot) / (stats::qnorm(0.75) - stats::qnorm(0.25))
-      # get symmtric critival values
-      cv <- stats::quantile(abs(twfe.boot/se.twfe.att), probs = 0.95)
-      # Estimate of upper boudary of 95% CI
-      uci <- twfe.att + cv * se.twfe.att
-      # Estimate of lower doundary of 95% CI
-      lci <- twfe.att - cv * se.twfe.att
-    } else {
-      # do weighted bootstrap
-      twfe.boot <- unlist(lapply(1:nboot, wboot.twfe.panel,
-                                 n = n, y = y, dd = dd, post = post, x = x, i.weights = i.weights))
-      # get bootstrap std errors based on IQR
-      se.twfe.att <- stats::IQR((twfe.boot - twfe.att)) / (stats::qnorm(0.75) - stats::qnorm(0.25))
-      # get symmtric critival values
-      cv <- stats::quantile(abs((twfe.boot - twfe.att)/se.twfe.att), probs = 0.95)
-      # Estimate of upper boudary of 95% CI
-      uci <- twfe.att + cv * se.twfe.att
-      # Estimate of lower doundary of 95% CI
-      lci <- twfe.att - cv * se.twfe.att
+  #If no covariates, call ordid
+  if(is.null(x)){
 
-    }
+    # Create dta_long
+    dta_long <- as.data.frame(cbind( y = y, post = post, d = dd,
+                                     id = rep(1:n,2), w = i.weights))
+
+    reg <- ordid(yname="y",
+                 tname = "post",
+                 idname = "id",
+                 dname = "d",
+                 weightsname  = "w",
+                 xformla= NULL,
+                 data = dta_long,
+                 panel=T,
+                 boot = boot, boot.type = boot.type, nboot = nboot,
+                 inffunc = inffunc)
+    twfe.att <- reg$ATT
+    se.twfe.att <- reg$se
+    uci <- reg$uci
+    lci <- reg$lci
+    twfe.boot <- reg$boots
+    att.inf.func <- reg$att.inf.func
   }
 
 

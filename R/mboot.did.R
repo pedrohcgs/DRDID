@@ -7,14 +7,14 @@ mboot.did = function(linrep, nboot){
   pkappa = 0.5 * (1 + 5^0.5)/(5^0.5)
 
   n <- length(linrep)
-  bootapply <- function(nn) {
+  bootapply <- function(nn,  n = n, linrep = linrep) {
     v <- stats::rbinom(n, 1, pkappa)
     v <- ifelse(v == 1, k1, k2)
     b.did <- mean(linrep * v)
     return(b.did)
   }
 
-  boot.did <- unlist(lapply(1:nboot, bootapply))
+  boot.did <- unlist(lapply(1:nboot, bootapply, n = n, linrep = linrep))
 
 
 }

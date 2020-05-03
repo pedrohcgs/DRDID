@@ -12,7 +12,6 @@ NULL
 #'             and post = 0 if observation belongs to pre-treatment period.)
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment period, =0 otherwise).
 #' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the regression estimation.
-#' If covariates = NULL, this leads to an unconditional DID estimator.
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
 #' @param boot.type Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
@@ -29,7 +28,7 @@ NULL
 #'  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 #' @export
 
-twfe_did_rc <- function(y, post, D, covariates, i.weights = NULL,
+twfe_did_rc <- function(y, post, D, covariates = NULL, i.weights = NULL,
                         boot = F, boot.type = "weighted", nboot = NULL,
                         inffunc = F){
   #-----------------------------------------------------------------------------
@@ -49,7 +48,10 @@ twfe_did_rc <- function(y, post, D, covariates, i.weights = NULL,
     if(all(as.matrix(covariates)[,1] == rep(1,n))) {
       # Remove intercept if you include it
       covariates <- covariates[,-1]
-      if(dim(covariates)[2]==0) covariates = NULL
+      if(dim(covariates)[2]==0) {
+        covariates = NULL
+        x = NULL
+      }
     }
   }
 
@@ -59,12 +61,17 @@ twfe_did_rc <- function(y, post, D, covariates, i.weights = NULL,
   i.weights <- as.vector(i.weights)
   #---------------------------------------------------------------------------
   #Estimate TWFE regression
-  reg <- stats::lm(y ~  dd:post + post + dd + x, x = T, weights = i.weights)
+  if(!is.null(x)){
+    reg <- stats::lm(y ~  dd:post + post + dd + x, x = T, weights = i.weights)
+  }
+  if(is.null(x)){
+    reg <- stats::lm(y ~  dd:post + post + dd, x = T, weights = i.weights)
+  }
   twfe.att <- reg$coefficients["dd:post"]
   #-----------------------------------------------------------------------------
   #Elemenets for influence functions
   inf.reg <- (i.weights * reg$x * reg$residuals) %*%
-    base::solve(crossprod(i.weights * reg$x, reg$x) / dim(x)[1])
+    base::solve(crossprod(i.weights * reg$x, reg$x) / dim(reg$x)[1])
 
   sel.theta <- matrix(c(rep(0, dim(inf.reg)[2])))
 

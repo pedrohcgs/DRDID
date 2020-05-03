@@ -18,6 +18,11 @@ pre_process_drdid <- function(yname,
   # Data pre-processing and error checking
   #-----------------------------------------------------------------------------
   # ####
+  # set estimation method
+  estMethod <- estMethod[1]
+  # set bootstrap type
+  boot.type <- boot.type[1]
+
   # Flag for estMethod
   if ( (estMethod!="imp") && (estMethod!="trad")) {
     warning("estMethod = ",estMethod,  " is not supported. Using 'imp'.")
@@ -37,10 +42,6 @@ pre_process_drdid <- function(yname,
     normalized <- TRUE
   }
 
-  # set estimation method
-  estMethod <- estMethod[1]
-  # set bootstrap type
-  boot.type <- boot.type[1]
   # make sure dataset is a data.frame
   dta <- data
   # this gets around RStudio's default of reading data as tibble
@@ -89,7 +90,7 @@ pre_process_drdid <- function(yname,
   # list of dates from smallest to largest
   tlist <- unique(dta[,tname])[base::order(unique(dta[,tname]))]
   if ( length(tlist)!=2) {
-    stop("drdid only works for cases with two time periods (pre and post) and two treatment groups (d=1 if treated at post, and d=0 if not treated in both pre and post).
+    stop("drdid package only covers the cases with two time periods (pre and post) and two treatment groups (d=1 if treated at post, and d=0 if not treated in both pre and post).
            See package `did' for the cases with multiple groups and/or multiple time periods.")
   }
 
