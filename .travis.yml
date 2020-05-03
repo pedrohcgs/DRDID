@@ -1,16 +1,4 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: R
-sudo: requires
 cache: packages
-r:
-  - release
-  - devel
-r_packages:
-  - covr
-script:
-  - R CMD build . --compact-vignettes=gs+qpdf
-  - R CMD check *tar.gz --as-cran
-after_success:
-  - Rscript -e 'covr::codecov()'
-  - R CMD INSTALL $PKG_TARBALL
