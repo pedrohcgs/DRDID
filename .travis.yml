@@ -1,18 +1,16 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: R
-sudo: false
+sudo: requires
 cache: packages
-addons:
-  apt:
-    packages:
-      - ghostscript
 r:
   - release
   - devel
 r_packages:
   - covr
-  - lintr
+script:
+  - R CMD build . --compact-vignettes=gs+qpdf
+  - R CMD check *tar.gz --as-cran
 after_success:
   - Rscript -e 'covr::codecov()'
   - R CMD INSTALL $PKG_TARBALL
