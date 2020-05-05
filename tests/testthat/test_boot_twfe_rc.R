@@ -4,7 +4,7 @@ test_that("Analytical and bootstrapped std errors are similar: TWFE RC", {
 
   # Let us generate some panel data
   #-----------------------------------------------------------------------------
-  # DGP 1 used by Sant'Anna and Zhao (2020) (Panel data case)
+  # DGP used by Sant'Anna and Zhao (2020) (RC case)
   # Sample size
   n <- 500
   # pscore index (strength of common support)
@@ -97,6 +97,13 @@ test_that("Analytical and bootstrapped std errors are similar: TWFE RC", {
                               dta_long$d,
                               dta_long[,5:8], boot = F,
                               nboot = nboot)
+
+  # No covariates
+  twfe.did_rc_n <- twfe_did_rc(dta_long$y,
+                             dta_long$post,
+                             dta_long$d,
+                             NULL, boot = F,
+                             nboot = nboot)
   #-----------------------------------------------------------------------------
   # Now with bootstrap (weighted)
   twfe.did_rc2 <- twfe_did_rc(dta_long$y,
@@ -104,6 +111,13 @@ test_that("Analytical and bootstrapped std errors are similar: TWFE RC", {
                            dta_long$d,
                            dta_long[,5:8], boot = T, boot.type = "weighted",
                            nboot = nboot)
+
+  twfe.did_rc_n2 <- twfe_did_rc(dta_long$y,
+                              dta_long$post,
+                              dta_long$d,
+                              NULL, boot = T, boot.type = "weighted",
+                              nboot = nboot)
+
 
   #-----------------------------------------------------------------------------
   # Now with bootstrap (multiplier)
@@ -113,15 +127,26 @@ test_that("Analytical and bootstrapped std errors are similar: TWFE RC", {
                               dta_long[,5:8], boot = T, boot.type = "multiplier",
                               nboot = nboot)
 
-
+  twfe.did_rc_n3 <- twfe_did_rc(dta_long$y,
+                                dta_long$post,
+                                dta_long$d,
+                                as.matrix(rep(1,n)), boot = T, boot.type = "multiplier",
+                                nboot = NULL)
   #-----------------------------------------------------------------------------
   # Check if all point estimates are equal
   expect_equal(twfe.did_rc$ATT, twfe.did_rc2$ATT)
   expect_equal(twfe.did_rc3$ATT, twfe.did_rc2$ATT)
 
+  expect_equal(twfe.did_rc_n3$ATT, twfe.did_rc_n$ATT)
+  expect_equal(twfe.did_rc_n2$ATT, twfe.did_rc_n$ATT)
+
+
   # Check if all standard errors are equal
-  expect_equal(twfe.did_rc2$se, twfe.did_rc$se, tol = 0.2)
-  expect_equal(twfe.did_rc3$se, twfe.did_rc$se, tol = 0.2)
+  expect_equal(twfe.did_rc2$se, twfe.did_rc$se, tol = 0.4)
+  expect_equal(twfe.did_rc3$se, twfe.did_rc$se, tol = 0.4)
+
+  expect_equal(twfe.did_rc_n3$se, twfe.did_rc_n$se, tol = 1.5)
+  expect_equal(twfe.did_rc_n2$se, twfe.did_rc_n$se, tol = 1.5)
 
 
 })

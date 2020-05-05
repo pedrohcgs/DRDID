@@ -1,6 +1,6 @@
-context("Compare bootstrapped and analytical std errors: TWFE Panel")
+context("Test output")
 
-test_that("Analytical and bootstrapped std errors are similar: TWFE Panel", {
+test_that("Check if output is printed", {
 
   # Let us generate some panel data
   #-----------------------------------------------------------------------------
@@ -9,7 +9,7 @@ test_that("Analytical and bootstrapped std errors are similar: TWFE Panel", {
   n <- 500
   # pscore index (strength of common support)
   Xsi.ps <- .75
-  #-----------------------------------------------------------------------------
+  # Researcher always observes Z
   #-----------------------------------------------------------------------------
   # Mean and Std deviation of Z's without truncation
   mean.z1 <- exp(0.25/2)
@@ -84,49 +84,110 @@ test_that("Analytical and bootstrapped std errors are similar: TWFE Panel", {
   dta_long <- data.frame(rbind(dta_long,cbind(id = id, y = y0, d = d, post = F,
                                               x1 = z1, x2= z2, x3 = z3, x4 = z4)))
   dta_long <- dta_long[order(dta_long$id),]
-  #-----------------------------------------------------------------------------
-  #-----------------------------------------------------------------------------
-  # Use the different estimators to compute ATT
-  #-----------------------------------------------------------------------------
-  # Analytical std errors
-  twfe.did_panel <- twfe_did_panel(dta_wide$y1,dta_wide$y0, dta_wide$d,
-                                   covariates = dta_wide[,5:8], boot = F)
-
-  twfe.did_panel_n <- twfe_did_panel(dta_wide$y1, dta_wide$y0, dta_wide$d,
-                                     covariates = NULL, boot = F)
-  #-----------------------------------------------------------------------------
-  # Now with bootstrap (weighted)
-  twfe.did_panel2 <- twfe_did_panel(dta_wide$y1,dta_wide$y0, dta_wide$d,
-                                    covariates = dta_wide[,5:8], boot = T)
-
-  twfe.did_panel_n2 <- twfe_did_panel(dta_wide$y1, dta_wide$y0, dta_wide$d,
-                                      covariates = NULL, boot = T,
-                                      boot.type = "weighted")
-  # #-----------------------------------------------------------------------------
-  # Now with bootstrap (multiplier)
-  twfe.did_panel3 <- twfe_did_panel(dta_wide$y1,dta_wide$y0, dta_wide$d,
-                                    dta_wide[,5:8], boot = T, boot.type = "multiplier")
-
-  twfe.did_panel_n3 <- twfe_did_panel(dta_wide$y1, dta_wide$y0, dta_wide$d,
-                                      covariates = rep(1, n), boot = T,
-                                      boot.type = "multiplier")
-
 
   #-----------------------------------------------------------------------------
-  # Check if all point estimates are equal
-  expect_equal(twfe.did_panel$ATT, twfe.did_panel2$ATT)
-  expect_equal(twfe.did_panel3$ATT, twfe.did_panel2$ATT)
+  #-----------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
+  #Output
 
-  expect_equal(twfe.did_panel_n3$ATT, twfe.did_panel_n$ATT)
-  expect_equal(twfe.did_panel_n2$ATT, twfe.did_panel_n$ATT)
+  drout_p <- drdid(yname="y",
+                   tname = "post",
+                   idname = "id",
+                   dname = "d",
+                   xformla= ~ x1 + x2 + x3 + x4,
+                   data = dta_long,
+                   panel=T,
+                   boot = F)
+  expect_output(summary(drout_p))
+  expect_output(print(drout_p))
+
+  drout_rc <- drdid(yname="y",
+                    tname = "post",
+                    idname = "id",
+                    dname = "d",
+                    xformla= ~ x1 + x2 + x3 + x4,
+                    data = dta_long,
+                    panel=F,
+                    boot = F)
+  expect_output(summary(drout_rc))
+  expect_output(print(drout_rc))
+
+  drout_p_b <- drdid(yname="y",
+                     tname = "post",
+                     idname = "id",
+                     dname = "d",
+                     xformla= ~ x1 + x2 + x3 + x4,
+                     data = dta_long,
+                     panel=T,
+                     boot = T)
+  expect_output(summary(drout_p_b))
+  expect_output(print(drout_p_b))
 
 
-  # Check if all standard errors are equal
-  expect_equal(twfe.did_panel2$se, twfe.did_panel$se, tol = 0.05)
-  expect_equal(twfe.did_panel3$se, twfe.did_panel$se, tol = 0.05)
+  drout_p_b2 <- drdid(yname="y",
+                      tname = "post",
+                      idname = "id",
+                      dname = "d",
+                      xformla= ~ x1 + x2 + x3 + x4,
+                      estMethod = "trad",
+                      data = dta_long,
+                      panel=T,
+                      boot = T)
+  expect_output(summary(drout_p_b2))
+  expect_output(print(drout_p_b2))
 
-  expect_equal(twfe.did_panel_n3$se, twfe.did_panel_n$se, tol = 0.15)
-  expect_equal(twfe.did_panel_n2$se, twfe.did_panel_n$se, tol = 0.15)
 
+  orout <- ordid(yname="y",
+                 tname = "post",
+                 idname = "id",
+                 dname = "d",
+                 xformla= ~ x1 + x2 + x3 + x4,
+                 data = dta_long,
+                 panel=T,
+                 boot = F)
+  expect_output(summary(orout))
+  expect_output(print(orout))
+
+  ipwout <- ipwdid(yname="y",
+                 tname = "post",
+                 idname = "id",
+                 dname = "d",
+                 xformla= ~ x1 + x2 + x3 + x4,
+                 data = dta_long,
+                 panel=T,
+                 boot = F)
+  expect_output(summary(ipwout))
+  expect_output(print(ipwout))
+
+  ipwout2 <- ipwdid(yname="y",
+                   tname = "post",
+                   idname = "id",
+                   dname = "d",
+                   xformla= ~ x1 + x2 + x3 + x4,
+                   data = dta_long,
+                   normalized = F,
+                   panel=T,
+                   boot = F)
+  expect_output(summary(ipwout2))
+  expect_output(print(ipwout2))
+
+  dr_trad1.did_rc2 <- drdid_rc1(dta_long$y,
+                                dta_long$post,
+                                dta_long$d,
+                                dta_long[,5:8], boot = F)
+  expect_output(summary(dr_trad1.did_rc2))
+  expect_output(print(dr_trad1.did_rc2))
+
+  dr_imp1.did_rc2 <- drdid_imp_rc1(dta_long$y,
+                                   dta_long$post,
+                                   dta_long$d,
+                                   dta_long[,5:8], boot = F)
+
+  expect_output(summary(dr_imp1.did_rc2))
+  expect_output(print(dr_imp1.did_rc2))
+
+
+
+  #-----------------------------------------------------------------------------
 
 })
