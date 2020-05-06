@@ -36,6 +36,16 @@ NULL
 #' "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
 #' \url{https://arxiv.org/abs/1812.01723}}
 #' }
+#' @examples
+#' # -----------------------------------------------
+#' # Repeated cross section case
+#' # -----------------------------------------------
+#' # use the simulated data
+#' covX = as.matrix(sim_rc[,5:8])
+#' # Implement the improved DR DID estimator (but not locally efficient!)
+#' drdid_imp_rc1(y = sim_rc$y, post = sim_rc$post, D = sim_rc$d,
+#'              covariates= covX)
+#'
 #' @export
 
 drdid_imp_rc1 <- function(y, post, D, covariates, i.weights = NULL,

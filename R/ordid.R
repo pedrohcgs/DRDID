@@ -45,6 +45,37 @@ NULL
 #'
 #' }
 #'
+#' @examples
+#' # -----------------------------------------------
+#' # -----------------------------------------------
+#' # Panel data case
+#' # -----------------------------------------------
+#' # Data preparation using Lalonde sample with CPS comparison group
+#' # Create "selection" treatment dummy: 1 if in experimental sample, 0 if in non-experimental
+#' nsw_long$treated2 <- ifelse(is.na(nsw_long$treated), 0 , 1)
+#'
+#' # Form the Lalonde sample with CPS comparison group
+#' eval_lalonde_cps <- subset(nsw_long, nsw_long$treated == 0 | nsw_long$sample == 2)
+#' # -----------------------------------------------
+#' # Implement OR DID with panel data
+#' ordid(yname="re", tname = "year", idname = "id", dname = "treated2",
+#'       xformla= ~ age+ educ+ black+ married+ nodegree+ hisp+ re74,
+#'       data = eval_lalonde_cps, panel = TRUE)
+#'
+#' # -----------------------------------------------
+#' # -----------------------------------------------
+#' # Repeated cross section case
+#' # -----------------------------------------------
+#' # use the simulated data
+#' #Implement OR DID with repeated cross-section data
+#' # use Bootstrap to make inference with 199 bootstrap draws (just for illustration)
+#' ordid(yname="y", tname = "post", idname = "id", dname = "d",
+#'       xformla= ~ x1 + x2 + x3 + x4,
+#'       data = sim_rc, panel = FALSE,
+#'       boot = TRUE, nboot = 199)
+#'
+#'
+#'
 #' @export
 
 ordid <- function(yname, tname, idname, dname, xformla = NULL, data,

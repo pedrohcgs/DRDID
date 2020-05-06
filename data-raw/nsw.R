@@ -6,6 +6,7 @@
 
 # Data in "wide format"
 nsw <- haven::read_dta("nsw.dta")
+nsw <- as.data.frame(nsw)
 usethis::use_data(nsw, overwrite = TRUE)
 
 # Data in "long format"
@@ -17,4 +18,5 @@ nsw_long <- panelr::long_panel(nsw_long, id = "id",
                          periods = c(75,78),
                          label_location = "end")
 nsw_long$year = ifelse(nsw_long$year==75, 1975, 1978)
+nsw_long <- as.data.frame(nsw_long)
 usethis::use_data(nsw_long, overwrite = TRUE)

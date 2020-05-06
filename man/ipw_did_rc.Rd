@@ -52,6 +52,17 @@ A list containing the following components:
 \description{
 Inverse probability weighted Difference-in-Differences Estimator with Repeated Cross Section  Data
 }
+\examples{
+# -----------------------------------------------
+# Repeated cross section case
+# -----------------------------------------------
+# use the simulated data
+covX = as.matrix(sim_rc[,5:8])
+# Implement unnormalized IPW DID estimator
+ipw_did_rc(y = sim_rc$y, post = sim_rc$post, D = sim_rc$d,
+           covariates= covX)
+
+}
 \references{
 {
 \cite{Abadie, Alberto (2005), "Semiparametric Difference-in-Differences Estimators",
@@ -61,7 +72,6 @@ Review of Economic Studies, vol. 72(1), p. 1-19, \url{https://doi.org/10.1111/00
 \cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
 "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
 \url{https://arxiv.org/abs/1812.01723}}
-
 
 }
 }

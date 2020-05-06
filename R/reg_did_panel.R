@@ -37,7 +37,30 @@ NULL
 #' \url{https://arxiv.org/abs/1812.01723}}
 #'
 #' }
+#' @examples
+#' # -----------------------------------------------
+#' # -----------------------------------------------
+#' # Panel data in "wide" format
+#' # -----------------------------------------------
+#' # Data preparation using Lalonde sample with CPS comparison group
+#' # Create "selection" treatment dummy: 1 if in experimental sample, 0 if in non-experimental
+#' nsw$treated2 <- ifelse(is.na(nsw$treated), 0 , 1)
 #'
+#' # Form the Lalonde sample with CPS comparison group
+#' eval_lalonde_cps <- subset(nsw, nsw$treated == 0 | nsw$sample == 2)
+#' # Select some covariates
+#' covX = as.matrix(cbind(eval_lalonde_cps$age, eval_lalonde_cps$educ,
+#'                        eval_lalonde_cps$black, eval_lalonde_cps$married,
+#'                        eval_lalonde_cps$nodegree, eval_lalonde_cps$hisp,
+#'                        eval_lalonde_cps$re74))
+#' # -----------------------------------------------
+#' # Implement OR DID with panel data
+#' reg_did_panel(y1 = eval_lalonde_cps$re78, y0 = eval_lalonde_cps$re75,
+#'                D = eval_lalonde_cps$treated2,
+#'                covariates = covX)
+#'
+
+
 #' @export
 
 reg_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,

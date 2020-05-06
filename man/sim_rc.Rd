@@ -5,7 +5,7 @@
 \alias{sim_rc}
 \title{Simulated Repeated Cross-Section Data}
 \format{
-A data frame in "long" format with 500 observations on the following and 8 variables:
+A data frame in "long" format with 1000 observations on the following and 8 variables:
 \describe{
   \item{id}{unique identifier for each cross-sectional unit.}
   \item{post}{an indicator variable for post-treatment period (1 if post,

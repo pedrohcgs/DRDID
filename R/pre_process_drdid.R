@@ -23,6 +23,7 @@ pre_process_drdid <- function(yname,
   # set bootstrap type
   boot.type <- boot.type[1]
 
+
   # Flag for estMethod
   if ( (estMethod!="imp") && (estMethod!="trad")) {
     warning("estMethod = ",estMethod,  " is not supported. Using 'imp'.")

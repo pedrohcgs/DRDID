@@ -26,6 +26,17 @@ NULL
 #'  \item{lci}{Estimate of the lower bound of a 95\% CI for the TWFE parameter.}
 #'  \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
 #'  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
+#'
+#' @examples
+#' # -----------------------------------------------
+#' # Repeated cross section case
+#' # -----------------------------------------------
+#' # use the simulated data
+#' covX = as.matrix(sim_rc[,5:8])
+#' # Implement TWFE DID estimator (you probably should consider something else....)
+#' twfe_did_rc(y = sim_rc$y, post = sim_rc$post, D = sim_rc$d,
+#'            covariates= covX)
+#'
 #' @export
 
 twfe_did_rc <- function(y, post, D, covariates = NULL, i.weights = NULL,

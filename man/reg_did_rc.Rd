@@ -54,6 +54,17 @@ A list containing the following components:
 Regression-based DID estimator with Repeated Cross Section Data
 Regression-based Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data
 }
+\examples{
+# -----------------------------------------------
+# Repeated cross section case
+# -----------------------------------------------
+# use the simulated data
+covX = as.matrix(sim_rc[,5:8])
+# Implement OR DID estimator
+reg_did_rc(y = sim_rc$y, post = sim_rc$post, D = sim_rc$d,
+           covariates= covX)
+
+}
 \references{
 {
 \cite{Heckman, James J., Ichimura, Hidehiko, and Todd, Petra E. (1997),"Matching as an Econometric Evaluation Estimator: Evidence from Evaluating a Job Training Programme",

@@ -2,7 +2,7 @@
 ## Simulate data Following Sant'Anna and Zhao (2020)'s DGP 1 (RC Case)
 
 # Sample size
-n <- 500
+n <- 1000
 # pscore index (strength of common support)
 Xsi.ps <- .75
 # Proportion in each period
