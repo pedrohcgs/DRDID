@@ -25,7 +25,7 @@ Depends:
 Imports:
     stats,
     trust,
-    BMisc(>= 1.4.1)
+    BMisc (>= 1.4.1)
 RoxygenNote: 7.1.0
 VignetteBuilder: knitr
 Suggests: 
@@ -36,3 +36,4 @@ Suggests:
     covr
 Date: 2020-04-26 18:00
 Language: en-US
+

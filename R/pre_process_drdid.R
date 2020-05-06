@@ -120,6 +120,12 @@ pre_process_drdid <- function(yname,
   # sort data with respect to id and time
   dta <- dta[base::order(dta[,idname], dta[,tname]),]
 
+  # If panel, make it a balanced data set
+  if (panel) {
+    dta <- BMisc::makeBalancedPanel(dta, idname, tname)
+  }
+
+
   # Outcome variable will be denoted by y
   dta$y <- dta[, yname]
   # group will be denoted by D
@@ -133,6 +139,7 @@ pre_process_drdid <- function(yname,
   # matrix of covariates for pre-period and post periods
   covariates_pre <- stats::model.matrix(xformla, data=subset(dta, dta$post==0))
   covariates_post <- stats::model.matrix(xformla, data=subset(dta, dta$post==1))
+
   d_pre <- subset(dta$D, dta$post==0)
   d_post <- subset(dta$D, dta$post==1)
   w_pre <- subset(dta$w, dta$post==0)
@@ -140,7 +147,7 @@ pre_process_drdid <- function(yname,
 
   if (panel) {
     if (!all(covariates_pre==covariates_post)) {
-      stop("Error: covariates should be time invariant.")
+      stop("Error: covariates should be time invariant, and/or there should be no missing data.")
     }
     if (!all(d_pre==d_post)) {
       stop("Error: group indicator must be time invariant.")

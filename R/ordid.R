@@ -34,10 +34,17 @@ NULL
 #' \item{call.param}{The matched call.}
 #' \item{argu}{Some arguments used in the call (panel, normalized, boot, boot.type, nboot, type=="or")}
 
-#' @references Heckman, James J., Ichimura, Hidehiko, and Todd, Petra E. (1997),"Matching as an Econometric Evaluation Estimator: Evidence from Evaluating a Job Training Programme",
-#' Review of Economic Studies, vol. 64(4), p. 605–654, <doi:10.2307/2971733>.
-#' @references Sant'Anna, Pedro H. C. and Zhao, Jun (2020), ["Doubly Robust Difference-in-Differences Estimators"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315).
-
+#' @references{
+#' \cite{Heckman, James J., Ichimura, Hidehiko, and Todd, Petra E. (1997),"Matching as an Econometric Evaluation Estimator: Evidence from Evaluating a Job Training Programme",
+#' Review of Economic Studies, vol. 64(4), p. 605–654, \url{doi:10.2307/2971733}.
+#' }
+#'
+#' \cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
+#' "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
+#' \url{https://arxiv.org/abs/1812.01723}}
+#'
+#' }
+#'
 #' @export
 
 ordid <- function(yname, tname, idname, dname, xformla = NULL, data,

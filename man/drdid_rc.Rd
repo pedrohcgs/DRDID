@@ -53,5 +53,10 @@ A list containing the following components:
 Locally Efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data
 }
 \references{
-Sant'Anna, Pedro H. C. and Zhao, Jun (2020), ["Doubly Robust Difference-in-Differences Estimators"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315).
+{
+
+\cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
+"Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
+\url{https://arxiv.org/abs/1812.01723}}
+}
 }

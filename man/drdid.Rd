@@ -82,5 +82,10 @@ A list containing the following components:
  robust for inference. See Sant'Anna and Zhao (2020) for a detailed description.
 }
 \references{
-Sant'Anna, Pedro H. C. and Zhao, Jun (2020), ["Doubly Robust Difference-in-Differences Estimators"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315).
+{
+
+\cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
+"Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
+\url{https://arxiv.org/abs/1812.01723}}
+}
 }

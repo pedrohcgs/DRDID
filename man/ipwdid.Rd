@@ -70,8 +70,15 @@ A list containing the following components:
  See Abadie (2005) and Sant'Anna and Zhao (2020) for details.
 }
 \references{
-Abadie, Alberto (2005), "Semiparametric Difference-in-Differences Estimators",
-Review of Economic Studies, vol. 72(1), p. 1-19, <doi:10.1111/0034-6527.00321>.
+{
+\cite{Abadie, Alberto (2005), "Semiparametric Difference-in-Differences Estimators",
+Review of Economic Studies, vol. 72(1), p. 1-19, \url{doi:10.1111/0034-6527.00321}.
+}
 
-Sant'Anna, Pedro H. C. and Zhao, Jun (2020), ["Doubly Robust Difference-in-Differences Estimators"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315).
+\cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
+"Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
+\url{https://arxiv.org/abs/1812.01723}}
+
+
+}
 }

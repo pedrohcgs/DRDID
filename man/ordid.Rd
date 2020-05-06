@@ -66,8 +66,14 @@ A list containing the following components:
  in DID setups. It can be used with panel or repeated cross section data. See Sant'Anna and Zhao (2020) for details.
 }
 \references{
-Heckman, James J., Ichimura, Hidehiko, and Todd, Petra E. (1997),"Matching as an Econometric Evaluation Estimator: Evidence from Evaluating a Job Training Programme",
-Review of Economic Studies, vol. 64(4), p. 605–654, <doi:10.2307/2971733>.
+{
+\cite{Heckman, James J., Ichimura, Hidehiko, and Todd, Petra E. (1997),"Matching as an Econometric Evaluation Estimator: Evidence from Evaluating a Job Training Programme",
+Review of Economic Studies, vol. 64(4), p. 605–654, \url{doi:10.2307/2971733}.
+}
 
-Sant'Anna, Pedro H. C. and Zhao, Jun (2020), ["Doubly Robust Difference-in-Differences Estimators"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315).
+\cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
+"Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
+\url{https://arxiv.org/abs/1812.01723}}
+
+}
 }

@@ -52,5 +52,10 @@ A list containing the following components:
 'Traditional' Doubly Robust Difference-in-Differences Estimator for the ATT, with Panel Data
 }
 \references{
-Sant'Anna, Pedro H. C. and Zhao, Jun (2020), ["Doubly Robust Difference-in-Differences Estimators"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315).
+{
+
+\cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
+"Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
+\url{https://arxiv.org/abs/1812.01723}}
+}
 }

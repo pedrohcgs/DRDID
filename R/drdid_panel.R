@@ -26,7 +26,13 @@ NULL
 #'  \item{call.param}{The matched call.}
 #'  \item{argu}{Some arguments used (explicitly or not) in the call (panel = T, estMethod = "trad", boot, boot.type, nboot, type="dr")}
 #'
-#' @references Sant'Anna, Pedro H. C. and Zhao, Jun (2020), ["Doubly Robust Difference-in-Differences Estimators"](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315).
+#' @references{
+#'
+#' \cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
+#' "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
+#' \url{https://arxiv.org/abs/1812.01723}}
+#' }
+#'
 #' @export
 
 drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
