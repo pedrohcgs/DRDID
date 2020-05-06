@@ -2,7 +2,7 @@ context("Compare bootstrapped and analytical std errors: TWFE RC")
 
 test_that("Analytical and bootstrapped std errors are similar: TWFE RC", {
 
-  # Let us generate some panel data
+  # Let us generate some data
   #-----------------------------------------------------------------------------
   # DGP used by Sant'Anna and Zhao (2020) (RC case)
   # Sample size

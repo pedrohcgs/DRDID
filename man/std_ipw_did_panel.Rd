@@ -54,7 +54,7 @@ Standardized Inverse probability weighted Difference-in-Differences Estimator wi
 \references{
 {
 \cite{Abadie, Alberto (2005), "Semiparametric Difference-in-Differences Estimators",
-Review of Economic Studies, vol. 72(1), p. 1-19, \url{doi:10.1111/0034-6527.00321}.
+Review of Economic Studies, vol. 72(1), p. 1-19, \url{https://doi.org/10.1111/0034-6527.00321}.
 }
 
 \cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),

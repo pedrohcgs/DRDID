@@ -147,7 +147,7 @@ pre_process_drdid <- function(yname,
 
   if (panel) {
     if (!all(covariates_pre==covariates_post)) {
-      stop("Error: covariates should be time invariant, and/or there should be no missing data.")
+      stop("Error: covariates should be time invariant, and there should be no missing data.")
     }
     if (!all(d_pre==d_post)) {
       stop("Error: group indicator must be time invariant.")

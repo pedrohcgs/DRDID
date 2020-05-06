@@ -56,7 +56,7 @@ Regression-based Difference-in-Differences Estimator for the ATT, with Panel Dat
 \references{
 {
 \cite{Heckman, James J., Ichimura, Hidehiko, and Todd, Petra E. (1997),"Matching as an Econometric Evaluation Estimator: Evidence from Evaluating a Job Training Programme",
-Review of Economic Studies, vol. 64(4), p. 605–654, \url{doi:10.2307/2971733}.
+Review of Economic Studies, vol. 64(4), p. 605–654, \url{https://doi.org/10.2307/2971733}.
 }
 
 \cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),

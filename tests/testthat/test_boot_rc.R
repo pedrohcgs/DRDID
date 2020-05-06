@@ -2,9 +2,9 @@ context("Compare bootstrapped and analytical std errors: RC")
 
 test_that("Analytical and bootstrapped std errors are similar: RC", {
 
-  # Let us generate some panel data
+  # Let us generate some data
   #-----------------------------------------------------------------------------
-  # DGP 1 used by Sant'Anna and Zhao (2020) (Panel data case)
+  # DGP 1 used by Sant'Anna and Zhao (2020) (RC case)
   # Sample size
   n <- 500
   # pscore index (strength of common support)
