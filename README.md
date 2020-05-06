@@ -8,8 +8,11 @@
 
 ## Overview 
 
-This `R` package implements different DID procedures to estimate the ATT under the conditional parallel trends assumption, including a regression-based DID estimator in the spirit of Heckman, Ichimura and Todd (1997), the inverse probability weighted (IPW) DID estimator proposed by Abadie (2005), and the doubly robust (DR), locally efficient DID estimators proposed
-by Sant'Anna and Zhao (2020), [Doubly Robust Difference-in-Differences Estimators](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315).
+This `R` package implements different estimators for the Average Treatment Effect on the Treated (ATT) in Difference-in-Differences (DID) setups where the parallel trends assumption holds
+after you condition on a vector of pre-treatment covariates. The main estimators implemented here are the locally efficient, doubly-robust DID estimators proposed by Sant'Anna and Zhao (2020), [Doubly Robust Difference-in-Differences Estimators](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293315). In addition to these, the `DRDID` package also implements regression-based DID estimator in the spirit of Heckman, Ichimura and Todd (1997), and the inverse probability weighted (IPW) DID estimator proposed by Abadie (2005). 
+
+
+See Sant'Anna and Zhao (2020) for additional details.
 
 ## Installing DRDID
 This github website hosts the source code, and it always has the most updated version of the package.
