@@ -93,7 +93,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>The <code>DRDID</code> R package implements different estimators for the Average Treatment Effect on the Treated (ATT) in Difference-in-Differences (DID) setups where the parallel trends assumption holds after you condition on a vector of pre-treatment covariates.</p>
+<p>The <code>DRDID</code> R package implements different estimators for the Average Treatment Effect on the Treated (ATT) in Difference-in-Differences (DID) setups where the parallel trends assumption holds after conditioning on a vector of pre-treatment covariates.</p>
 <p>The main estimators implemented here are the locally efficient, doubly-robust DID estimators proposed by <a href="https://arxiv.org/abs/1812.01723">Sant’Anna and Zhao (2020), Doubly Robust Difference-in-Differences Estimators</a>. The package covers both panel data and repeated cross-section data setups with two treatment groups (treated and comparison group) and two time periods (pre-treatment and post-treatment).</p>
 <p>See the <a href="https://pedrohcgs.github.io/DRDID/reference/index.html">package manual</a> for documentation of all package functions (with examples).</p>
 <p>If you end up using this package, please cite our paper:</p>
@@ -110,7 +110,7 @@
 <div id="short-example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#short-example" class="anchor"></a>Short example</h2>
-<p>The following is a portion of the empirical illustration considered by Sant’Anna and Zhao (2020) that uses the Lalonde sample from the NSW experiment and consider data from the Current Population Survey (CPS) to form a non-experimental comparison group.</p>
+<p>The following is a portion of the empirical illustration considered by Sant’Anna and Zhao (2020) that uses the LaLonde sample from the NSW experiment and considers data from the Current Population Survey (CPS) to form a non-experimental comparison group.</p>
 <p>Let’s first get the data ready:</p>
 <div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DRDID</span>)
 <span class="co"># Load data in long format that comes in the DRDID package</span>
