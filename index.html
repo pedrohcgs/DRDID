@@ -107,19 +107,17 @@
 <div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DRDID</span>)
 <span class="co"># Load data in long format that comes in the DRDID package</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">nsw_long</span>)
-
-<span class="co">#Create "selection" treatment dummy: 1 if in experimental sample, 0 if in non-experimental</span>
-<span class="no">nsw_long</span>$<span class="no">treated2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">nsw_long</span>$<span class="no">treated</span>), <span class="fl">0</span> , <span class="fl">1</span>)
 <span class="co"># Form the Lalonde sample with CPS comparison group</span>
 <span class="no">eval_lalonde_cps</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="no">nsw_long</span>, <span class="no">nsw_long</span>$<span class="no">treated</span> <span class="kw">==</span> <span class="fl">0</span> <span class="kw">|</span> <span class="no">nsw_long</span>$<span class="no">sample</span> <span class="kw">==</span> <span class="fl">2</span>)</pre></div>
-<p>Now, to estimate the ATT (in this case the “evaluation bias”) using the Improved Locally Efficient Doubly Robust DID estimator, we can use the <strong>drdid</strong> function:</p>
-<pre class="{r}"><code># Implement Improved locally efficient DR DID with panel data:
-out &lt;- drdid(yname="re", tname = "year", idname = "id", dname = "treated2",
+<p>Now, to estimate the ATT using the Improved Locally Efficient Doubly Robust DID estimator, we can use the <strong>drdid</strong> function:</p>
+<pre class="{r}"><code># Implement improved locally efficient DR DID:
+out &lt;- drdid(yname = "re", tname = "year", idname = "id", dname = "experimental",
              xformla= ~ age + educ + black + married + nodegree + hisp + re74,
              data = eval_lalonde_cps, panel = TRUE)
 summary(out)
 </code></pre>
 <p>For additional details on the usage of the <strong>drdid</strong> function, see <a href="https://pedrohcgs.github.io/DRDID/reference/drdid.html">check the manual</a>.</p>
+<p>To implement IPW and outcome regression DID estimators, check <a href="https://pedrohcgs.github.io/DRDID/reference/ipwdid.html">here</a> and <a href="https://pedrohcgs.github.io/DRDID/reference/ordid.html">here</a>, respectively.</p>
 </div>
 </div>
   </div>

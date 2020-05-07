@@ -203,40 +203,18 @@ If boot==T, default is "weighted".</p></td>
 <a href='https://arxiv.org/abs/1812.01723'>https://arxiv.org/abs/1812.01723</a></cite></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># -----------------------------------------------</span>
-<span class='co'># -----------------------------------------------</span>
-<span class='co'># Panel data in "wide" format</span>
-<span class='co'># -----------------------------------------------</span>
-<span class='co'># Data preparation using Lalonde sample with CPS comparison group</span>
-<span class='co'># Create "selection" treatment dummy: 1 if in experimental sample, 0 if in non-experimental</span>
-<span class='no'>nsw</span>$<span class='no'>treated2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>nsw</span>$<span class='no'>treated</span>), <span class='fl'>0</span> , <span class='fl'>1</span>)
-
-<span class='co'># Form the Lalonde sample with CPS comparison group</span>
+    <pre class="examples"><div class='input'><span class='co'># Form the Lalonde sample with CPS comparison group</span>
 <span class='no'>eval_lalonde_cps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>nsw</span>, <span class='no'>nsw</span>$<span class='no'>treated</span> <span class='kw'>==</span> <span class='fl'>0</span> <span class='kw'>|</span> <span class='no'>nsw</span>$<span class='no'>sample</span> <span class='kw'>==</span> <span class='fl'>2</span>)
 <span class='co'># Select some covariates</span>
 <span class='no'>covX</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='no'>eval_lalonde_cps</span>$<span class='no'>age</span>, <span class='no'>eval_lalonde_cps</span>$<span class='no'>educ</span>,
                              <span class='no'>eval_lalonde_cps</span>$<span class='no'>black</span>, <span class='no'>eval_lalonde_cps</span>$<span class='no'>married</span>,
                              <span class='no'>eval_lalonde_cps</span>$<span class='no'>nodegree</span>, <span class='no'>eval_lalonde_cps</span>$<span class='no'>hisp</span>,
                              <span class='no'>eval_lalonde_cps</span>$<span class='no'>re74</span>))
-<span class='co'># -----------------------------------------------</span>
-<span class='co'># Implement Further improved DR locally efficient DID with panel data</span>
+
+<span class='co'># Implement improved DR locally efficient DID with panel data</span>
 <span class='fu'>drdid_imp_panel</span>(<span class='kw'>y1</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>$<span class='no'>re78</span>, <span class='kw'>y0</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>$<span class='no'>re75</span>,
-                <span class='kw'>D</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>$<span class='no'>treated2</span>,
-                <span class='kw'>covariates</span> <span class='kw'>=</span> <span class='no'>covX</span>)</div><div class='output co'>#&gt;  Call:
-#&gt; drdid_imp_panel(y1 = eval_lalonde_cps$re78, y0 = eval_lalonde_cps$re75, 
-#&gt;     D = eval_lalonde_cps$treated2, covariates = covX)
-#&gt; ------------------------------------------------------------------
-#&gt;  Further improved locally efficient DR DID estimator for the ATT:
-#&gt;  
-#&gt;    ATT     Std. Error  t value    Pr(&gt;|t|)  [95% Conf. Interval] 
-#&gt; -901.2703   393.6247   -2.2897     0.022    -1672.7747  -129.766 
-#&gt; ------------------------------------------------------------------
-#&gt;  Estimator based on panel data.
-#&gt;  Outcome regression est. method: weighted least squares.
-#&gt;  Propensity score est. method: inverse prob. tilting.
-#&gt;  Analytical standard error.
-#&gt; ------------------------------------------------------------------
-#&gt;  See Sant'Anna and Zhao (2020) for details.</div><div class='input'>
+                <span class='kw'>D</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>$<span class='no'>experimental</span>,
+                <span class='kw'>covariates</span> <span class='kw'>=</span> <span class='no'>covX</span>)</div><div class='output co'>#&gt; <span class='error'>Error in model.frame.default(formula = D ~ -1 + int.cov, drop.unused.levels = TRUE): invalid type (NULL) for variable 'D'</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

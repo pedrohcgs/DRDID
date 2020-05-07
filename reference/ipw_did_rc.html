@@ -203,10 +203,7 @@ Review of Economic Studies, vol. 72(1), p. 1-19, <a href='https://doi.org/10.111
 <a href='https://arxiv.org/abs/1812.01723'>https://arxiv.org/abs/1812.01723</a></cite></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># -----------------------------------------------</span>
-<span class='co'># Repeated cross section case</span>
-<span class='co'># -----------------------------------------------</span>
-<span class='co'># use the simulated data</span>
+    <pre class="examples"><div class='input'><span class='co'># use the simulated data provided in the package</span>
 <span class='no'>covX</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='no'>sim_rc</span>[,<span class='fl'>5</span>:<span class='fl'>8</span>])
 <span class='co'># Implement unnormalized IPW DID estimator</span>
 <span class='fu'>ipw_did_rc</span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>sim_rc</span>$<span class='no'>y</span>, <span class='kw'>post</span> <span class='kw'>=</span> <span class='no'>sim_rc</span>$<span class='no'>post</span>, <span class='kw'>D</span> <span class='kw'>=</span> <span class='no'>sim_rc</span>$<span class='no'>d</span>,

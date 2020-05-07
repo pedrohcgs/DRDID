@@ -244,58 +244,23 @@ If <code>boot==TRUE</code>, default is "weighted".</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># -----------------------------------------------</span>
-<span class='co'># -----------------------------------------------</span>
 <span class='co'># Panel data case</span>
 <span class='co'># -----------------------------------------------</span>
-<span class='co'># Data preparation using Lalonde sample with CPS comparison group</span>
-<span class='co'># Create "selection" treatment dummy: 1 if in experimental sample, 0 if in non-experimental</span>
-<span class='no'>nsw_long</span>$<span class='no'>treated2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>nsw_long</span>$<span class='no'>treated</span>), <span class='fl'>0</span> , <span class='fl'>1</span>)
-
 <span class='co'># Form the Lalonde sample with CPS comparison group</span>
 <span class='no'>eval_lalonde_cps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>nsw_long</span>, <span class='no'>nsw_long</span>$<span class='no'>treated</span> <span class='kw'>==</span> <span class='fl'>0</span> <span class='kw'>|</span> <span class='no'>nsw_long</span>$<span class='no'>sample</span> <span class='kw'>==</span> <span class='fl'>2</span>)
 <span class='co'># -----------------------------------------------</span>
-<span class='co'># Implement Further improved DR locally efficient DID with panel data</span>
-<span class='fu'>drdid</span>(<span class='kw'>yname</span><span class='kw'>=</span><span class='st'>"re"</span>, <span class='kw'>tname</span> <span class='kw'>=</span> <span class='st'>"year"</span>, <span class='kw'>idname</span> <span class='kw'>=</span> <span class='st'>"id"</span>, <span class='kw'>dname</span> <span class='kw'>=</span> <span class='st'>"treated2"</span>,
+<span class='co'># Implement improved DR locally efficient DID with panel data</span>
+<span class='fu'>drdid</span>(<span class='kw'>yname</span><span class='kw'>=</span><span class='st'>"re"</span>, <span class='kw'>tname</span> <span class='kw'>=</span> <span class='st'>"year"</span>, <span class='kw'>idname</span> <span class='kw'>=</span> <span class='st'>"id"</span>, <span class='kw'>dname</span> <span class='kw'>=</span> <span class='st'>"experimental"</span>,
       <span class='kw'>xformla</span><span class='kw'>=</span> ~ <span class='no'>age</span>+ <span class='no'>educ</span>+ <span class='no'>black</span>+ <span class='no'>married</span>+ <span class='no'>nodegree</span>+ <span class='no'>hisp</span>+ <span class='no'>re74</span>,
-      <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>, <span class='kw'>panel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;  Call:
-#&gt; drdid(yname = "re", tname = "year", idname = "id", dname = "treated2", 
-#&gt;     xformla = ~age + educ + black + married + nodegree + hisp + 
-#&gt;         re74, data = eval_lalonde_cps, panel = TRUE)
-#&gt; ------------------------------------------------------------------
-#&gt;  Further improved locally efficient DR DID estimator for the ATT:
-#&gt;  
-#&gt;    ATT     Std. Error  t value    Pr(&gt;|t|)  [95% Conf. Interval] 
-#&gt; -901.2703   393.6247   -2.2897     0.022    -1672.7747  -129.766 
-#&gt; ------------------------------------------------------------------
-#&gt;  Estimator based on panel data.
-#&gt;  Outcome regression est. method: weighted least squares.
-#&gt;  Propensity score est. method: inverse prob. tilting.
-#&gt;  Analytical standard error.
-#&gt; ------------------------------------------------------------------
-#&gt;  See Sant'Anna and Zhao (2020) for details.</div><div class='input'>
+      <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>, <span class='kw'>panel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in pre_process_drdid(yname = yname, tname = tname, idname = idname,     dname = dname, xformla = xformla, data = data, panel = panel,     estMethod = estMethod, weightsname = weightsname, boot = boot,     boot.type = boot.type, nboot = nboot, inffunc = inffunc): dname = experimental could not be found in the data provided.</span></div><div class='input'>
 <span class='co'>#Implement "traditional" DR locally efficient DID with panel data</span>
-<span class='fu'>drdid</span>(<span class='kw'>yname</span><span class='kw'>=</span><span class='st'>"re"</span>, <span class='kw'>tname</span> <span class='kw'>=</span> <span class='st'>"year"</span>, <span class='kw'>idname</span> <span class='kw'>=</span> <span class='st'>"id"</span>, <span class='kw'>dname</span> <span class='kw'>=</span> <span class='st'>"treated2"</span>,
+<span class='fu'>drdid</span>(<span class='kw'>yname</span><span class='kw'>=</span><span class='st'>"re"</span>, <span class='kw'>tname</span> <span class='kw'>=</span> <span class='st'>"year"</span>, <span class='kw'>idname</span> <span class='kw'>=</span> <span class='st'>"id"</span>, <span class='kw'>dname</span> <span class='kw'>=</span> <span class='st'>"experimental"</span>,
       <span class='kw'>xformla</span><span class='kw'>=</span> ~ <span class='no'>age</span>+ <span class='no'>educ</span>+ <span class='no'>black</span>+ <span class='no'>married</span>+ <span class='no'>nodegree</span>+ <span class='no'>hisp</span>+ <span class='no'>re74</span>,
-      <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>, <span class='kw'>panel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>estMethod</span> <span class='kw'>=</span> <span class='st'>"trad"</span>)</div><div class='output co'>#&gt;  Call:
-#&gt; drdid(yname = "re", tname = "year", idname = "id", dname = "treated2", 
-#&gt;     xformla = ~age + educ + black + married + nodegree + hisp + 
-#&gt;         re74, data = eval_lalonde_cps, panel = TRUE, estMethod = "trad")
-#&gt; ------------------------------------------------------------------
-#&gt;  Locally efficient DR DID estimator for the ATT:
-#&gt;  
-#&gt;    ATT     Std. Error  t value    Pr(&gt;|t|)  [95% Conf. Interval] 
-#&gt; -871.3271   396.0332   -2.2001     0.0278   -1647.5521  -95.1022 
-#&gt; ------------------------------------------------------------------
-#&gt;  Estimator based on panel data.
-#&gt;  Outcome regression est. method: OLS.
-#&gt;  Propensity score est. method: maximum likelihood.
-#&gt;  Analytical standard error.
-#&gt; ------------------------------------------------------------------
-#&gt;  See Sant'Anna and Zhao (2020) for details.</div><div class='input'><span class='co'># -----------------------------------------------</span>
+      <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>, <span class='kw'>panel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>estMethod</span> <span class='kw'>=</span> <span class='st'>"trad"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in pre_process_drdid(yname = yname, tname = tname, idname = idname,     dname = dname, xformla = xformla, data = data, panel = panel,     estMethod = estMethod, weightsname = weightsname, boot = boot,     boot.type = boot.type, nboot = nboot, inffunc = inffunc): dname = experimental could not be found in the data provided.</span></div><div class='input'>
 <span class='co'># -----------------------------------------------</span>
 <span class='co'># Repeated cross section case</span>
 <span class='co'># -----------------------------------------------</span>
-<span class='co'># use the simulated data</span>
+<span class='co'># use the simulated data provided in the package</span>
 <span class='co'>#Implement "improved" DR locally efficient DID with repeated cross-section data</span>
 <span class='fu'>drdid</span>(<span class='kw'>yname</span><span class='kw'>=</span><span class='st'>"y"</span>, <span class='kw'>tname</span> <span class='kw'>=</span> <span class='st'>"post"</span>, <span class='kw'>idname</span> <span class='kw'>=</span> <span class='st'>"id"</span>, <span class='kw'>dname</span> <span class='kw'>=</span> <span class='st'>"d"</span>,
       <span class='kw'>xformla</span><span class='kw'>=</span> ~ <span class='no'>x1</span> + <span class='no'>x2</span> + <span class='no'>x3</span> + <span class='no'>x4</span>,
