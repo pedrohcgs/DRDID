@@ -1,4 +1,4 @@
-# Doubly Robust Difference-in-Differences
+# Doubly Robust Difference-in-Differences <img src="man/figures/logo.png" align="right" alt="" width="120" />
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/DRDID)](https://CRAN.R-project.org/package=DRDID)
 [![Travis build status](https://travis-ci.com/pedrohcgs/DRDID.svg?branch=master)](https://travis-ci.com/pedrohcgs/DRDID)
@@ -6,6 +6,7 @@
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#stable)
 [![R build status](https://github.com/pedrohcgs/DRDID/workflows/R-CMD-check/badge.svg)](https://github.com/pedrohcgs/DRDID/actions)
 <!-- badges: end -->
+
 
 The `DRDID R` package implements different estimators for the Average Treatment Effect on the Treated (ATT) in Difference-in-Differences (DID) setups where the parallel trends assumption holds after you condition on a vector of pre-treatment covariates.
 
