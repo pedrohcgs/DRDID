@@ -4,6 +4,9 @@ template:
     params:
       bootswatch: flatly
     opengraph:
+      image:
+        src: man/figures/logo.png
+        alt: "Doubly Robust Difference-in-Differences Estimators"
       twitter:
         creator: "@pedrohcgs"
         card: summary_large_image
