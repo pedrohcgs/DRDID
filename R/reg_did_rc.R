@@ -38,10 +38,7 @@ NULL
 #' }
 #'
 #' @examples
-#' # -----------------------------------------------
-#' # Repeated cross section case
-#' # -----------------------------------------------
-#' # use the simulated data
+#' # use the simulated data provided in the package
 #' covX = as.matrix(sim_rc[,5:8])
 #' # Implement OR DID estimator
 #' reg_did_rc(y = sim_rc$y, post = sim_rc$post, D = sim_rc$d,

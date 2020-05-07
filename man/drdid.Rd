@@ -83,30 +83,25 @@ A list containing the following components:
 }
 \examples{
 # -----------------------------------------------
-# -----------------------------------------------
 # Panel data case
 # -----------------------------------------------
-# Data preparation using Lalonde sample with CPS comparison group
-# Create "selection" treatment dummy: 1 if in experimental sample, 0 if in non-experimental
-nsw_long$treated2 <- ifelse(is.na(nsw_long$treated), 0 , 1)
-
 # Form the Lalonde sample with CPS comparison group
 eval_lalonde_cps <- subset(nsw_long, nsw_long$treated == 0 | nsw_long$sample == 2)
 # -----------------------------------------------
-# Implement Further improved DR locally efficient DID with panel data
-drdid(yname="re", tname = "year", idname = "id", dname = "treated2",
+# Implement improved DR locally efficient DID with panel data
+drdid(yname="re", tname = "year", idname = "id", dname = "experimental",
       xformla= ~ age+ educ+ black+ married+ nodegree+ hisp+ re74,
       data = eval_lalonde_cps, panel = TRUE)
 
 #Implement "traditional" DR locally efficient DID with panel data
-drdid(yname="re", tname = "year", idname = "id", dname = "treated2",
+drdid(yname="re", tname = "year", idname = "id", dname = "experimental",
       xformla= ~ age+ educ+ black+ married+ nodegree+ hisp+ re74,
       data = eval_lalonde_cps, panel = TRUE, estMethod = "trad")
-# -----------------------------------------------
+
 # -----------------------------------------------
 # Repeated cross section case
 # -----------------------------------------------
-# use the simulated data
+# use the simulated data provided in the package
 #Implement "improved" DR locally efficient DID with repeated cross-section data
 drdid(yname="y", tname = "post", idname = "id", dname = "d",
       xformla= ~ x1 + x2 + x3 + x4,

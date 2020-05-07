@@ -50,10 +50,7 @@ A list containing the following components:
 Two-Way Fixed Effects DID estimator, with Repeated Cross Section
 }
 \examples{
-# -----------------------------------------------
-# Repeated cross section case
-# -----------------------------------------------
-# use the simulated data
+# use the simulated data provided in the package
 covX = as.matrix(sim_rc[,5:8])
 # Implement TWFE DID estimator (you probably should consider something else....)
 twfe_did_rc(y = sim_rc$y, post = sim_rc$post, D = sim_rc$d,

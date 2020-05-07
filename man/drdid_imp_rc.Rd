@@ -56,9 +56,6 @@ A list containing the following components:
 Improved Locally Efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data
 }
 \examples{
-# -----------------------------------------------
-# Repeated cross section case
-# -----------------------------------------------
 # use the simulated data
 covX = as.matrix(sim_rc[,5:8])
 # Implement the improved, locally efficient DR DID estimator

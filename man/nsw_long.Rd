@@ -6,7 +6,7 @@
 \title{National Supported Work Demonstration Dataset, in Long Format}
 \format{
 A data frame in "long" format with 38408 observations on the following and
-14 variables:
+15 variables:
 \describe{
   \item{id}{unique identifier for each cross-sectional unit (worker).}
   \item{year}{year. 1975 is the pre-treatment and 1978 is the post-treatment}
@@ -26,6 +26,7 @@ A data frame in "long" format with 38408 observations on the following and
   \item{sample}{1 if NSW (experimental sample), 2 if CPS comparison group, 3 if PSID
    comparison group.}
   \item{re}{real earnings (outcome of interest).}
+  \item{experimental}{1 if in experimental sample, 0 otherwise.}
 
 }
 }

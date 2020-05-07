@@ -6,7 +6,7 @@
 #'
 #'
 #'
-#' @format A data frame in "wide" format with 19204 observations on the following and 13 variables:
+#' @format A data frame in "wide" format with 19204 observations on the following and 14 variables:
 #' \describe{
 #'   \item{treated}{an indicator variable for treatment status. Missing if not part of the
 #'   NSW experimental sample}
@@ -25,6 +25,7 @@
 #'   sample in Smith and Todd (2005). Missing if not part of the experimental sample}
 #'   \item{sample}{1 if NSW (experimental sample), 2 if CPS comparison group, 3 if PSID
 #'    comparison group.}
+#'   \item{experimental}{1 if in experimental sample, 0 otherwise.}
 #'
 #' }
 #' @source {https://dataverse.harvard.edu/file.xhtml?persistentId=doi:10.7910/DVN/23407/DYEWLO&version=1.0.}

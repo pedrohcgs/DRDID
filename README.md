@@ -38,17 +38,14 @@ Let's first get the data ready:
 library(DRDID)
 # Load data in long format that comes in the DRDID package
 data(nsw_long)
-  
-#Create "selection" treatment dummy: 1 if in experimental sample, 0 if in non-experimental
-nsw_long$treated2 <- ifelse(is.na(nsw_long$treated), 0 , 1)
 # Form the Lalonde sample with CPS comparison group
 eval_lalonde_cps <- subset(nsw_long, nsw_long$treated == 0 | nsw_long$sample == 2)
 ```
 
-Now, to estimate the ATT (in this case the "evaluation bias") using the Improved Locally Efficient Doubly Robust DID estimator, we can use the **drdid** function:
+Now, to estimate the ATT using the Improved Locally Efficient Doubly Robust DID estimator, we can use the **drdid** function:
 ```{r}
-# Implement Improved locally efficient DR DID with panel data:
-out <- drdid(yname="re", tname = "year", idname = "id", dname = "treated2",
+# Implement improved locally efficient DR DID:
+out <- drdid(yname = "re", tname = "year", idname = "id", dname = "experimental",
              xformla= ~ age + educ + black + married + nodegree + hisp + re74,
              data = eval_lalonde_cps, panel = TRUE)
 summary(out)
@@ -58,5 +55,5 @@ summary(out)
 For additional details on the usage of the **drdid** function, see [check the manual](https://pedrohcgs.github.io/DRDID/reference/drdid.html).
         
 
-
+To implement IPW and outcome regression DID estimators, check [here](https://pedrohcgs.github.io/DRDID/reference/ipwdid.html) and [here](https://pedrohcgs.github.io/DRDID/reference/ordid.html), respectively.
 

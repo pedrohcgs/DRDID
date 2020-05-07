@@ -53,10 +53,7 @@ A list containing the following components:
 Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data
 }
 \examples{
-# -----------------------------------------------
-# Repeated cross section case
-# -----------------------------------------------
-# use the simulated data
+# use the simulated data provided in the package
 covX = as.matrix(sim_rc[,5:8])
 # Implement the 'traditional' DR DID estimator (not locally efficient!)
 drdid_rc1(y = sim_rc$y, post = sim_rc$post, D = sim_rc$d,

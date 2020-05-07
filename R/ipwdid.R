@@ -49,26 +49,20 @@ NULL
 #'
 #' @examples
 #' # -----------------------------------------------
-#' # -----------------------------------------------
 #' # Panel data case
 #' # -----------------------------------------------
-#' # Data preparation using Lalonde sample with CPS comparison group
-#' # Create "selection" treatment dummy: 1 if in experimental sample, 0 if in non-experimental
-#' nsw_long$treated2 <- ifelse(is.na(nsw_long$treated), 0 , 1)
-#'
 #' # Form the Lalonde sample with CPS comparison group
 #' eval_lalonde_cps <- subset(nsw_long, nsw_long$treated == 0 | nsw_long$sample == 2)
-#' # -----------------------------------------------
+#'
 #' # Implement IPW DID with panel data (normalized weights)
-#' ipwdid(yname="re", tname = "year", idname = "id", dname = "treated2",
+#' ipwdid(yname="re", tname = "year", idname = "id", dname = "experimental",
 #'       xformla= ~ age+ educ+ black+ married+ nodegree+ hisp+ re74,
 #'       data = eval_lalonde_cps, panel = TRUE)
 #'
 #' # -----------------------------------------------
-#' # -----------------------------------------------
 #' # Repeated cross section case
 #' # -----------------------------------------------
-#' # use the simulated data
+#' # use the simulated data provided in the package
 #' #Implement IPW DID with repeated cross-section data (normalized weights)
 #' # use Bootstrap to make inference with 199 bootstrap draws (just for illustration)
 #' ipwdid(yname="y", tname = "post", idname = "id", dname = "d",
