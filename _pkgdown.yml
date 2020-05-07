@@ -3,8 +3,10 @@ destination: docs
 template:
     params:
       bootswatch: flatly
-    twitter:
-      creator: "@pedrohcgs"
+    opengraph:
+      twitter:
+        creator: "@pedrohcgs"
+        card: summary_large_image
 
 authors:
   Pedro H. C. Sant'Anna:
