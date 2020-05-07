@@ -1,7 +1,6 @@
 #' @import stats
 NULL
 ###################################################################################
-#' Regression-based DID estimator with Panel Data
 #' Regression-based Difference-in-Differences Estimator for the ATT, with Panel Data
 #'
 #' @param y1 An \eqn{n} x \eqn{1} vector of outcomes from the post-treatment period.

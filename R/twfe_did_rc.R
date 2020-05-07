@@ -1,9 +1,7 @@
 #' @import stats
 NULL
 ###################################################################################
-#' Two-Way Fixed Effects DID estimator with Repeated Cross Section Data
-
-#' Two-Way Fixed Effects DID estimator with Repeated Cross Section
+#' Two-Way Fixed Effects DID estimator, with Repeated Cross Section
 #'
 #'
 #'

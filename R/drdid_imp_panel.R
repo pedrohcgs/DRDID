@@ -3,7 +3,7 @@ NULL
 ###################################################################################
 # Improved Doubly Robust DID estimator with panel Data
 
-#' Improved Doubly Robust Difference-in-Differences Estimator for the ATT, with Panel Data
+#' Improved Locally Efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Panel Data
 #'
 #'
 #' @param y1 An \eqn{n} x \eqn{1} vector of outcomes from the post-treatment period.

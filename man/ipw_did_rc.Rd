@@ -2,7 +2,7 @@
 % Please edit documentation in R/ipw_did_rc.R
 \name{ipw_did_rc}
 \alias{ipw_did_rc}
-\title{Inverse probability weighted Difference-in-Differences Estimator with Repeated Cross Section  Data}
+\title{Inverse Probability Weighted Difference-in-Differences Estimator, with Repeated Cross Section  Data}
 \usage{
 ipw_did_rc(
   y,
@@ -50,7 +50,7 @@ A list containing the following components:
  \item{argu}{Some arguments used (explicitly or not) in the call (panel = F, normalized = F, boot, boot.type, nboot, type="ipw")}
 }
 \description{
-Inverse probability weighted Difference-in-Differences Estimator with Repeated Cross Section  Data
+Inverse Probability Weighted Difference-in-Differences Estimator, with Repeated Cross Section  Data
 }
 \examples{
 # -----------------------------------------------

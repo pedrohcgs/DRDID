@@ -2,8 +2,7 @@
 % Please edit documentation in R/reg_did_panel.R
 \name{reg_did_panel}
 \alias{reg_did_panel}
-\title{Regression-based DID estimator with Panel Data
-Regression-based Difference-in-Differences Estimator for the ATT, with Panel Data}
+\title{Regression-based Difference-in-Differences Estimator for the ATT, with Panel Data}
 \usage{
 reg_did_panel(
   y1,
@@ -50,7 +49,6 @@ A list containing the following components:
  \item{argu}{Some arguments used (explicitly or not) in the call (panel = T, boot, boot.type, nboot, type="or")}
 }
 \description{
-Regression-based DID estimator with Panel Data
 Regression-based Difference-in-Differences Estimator for the ATT, with Panel Data
 }
 \examples{

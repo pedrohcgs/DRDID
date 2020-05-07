@@ -2,7 +2,7 @@
 % Please edit documentation in R/drdid_panel.R
 \name{drdid_panel}
 \alias{drdid_panel}
-\title{'Traditional' Doubly Robust Difference-in-Differences Estimator for the ATT, with Panel Data}
+\title{Locally Efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Panel Data}
 \usage{
 drdid_panel(
   y1,
@@ -49,7 +49,7 @@ A list containing the following components:
  \item{argu}{Some arguments used (explicitly or not) in the call (panel = T, estMethod = "trad", boot, boot.type, nboot, type="dr")}
 }
 \description{
-'Traditional' Doubly Robust Difference-in-Differences Estimator for the ATT, with Panel Data
+Locally Efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Panel Data
 }
 \examples{
 # -----------------------------------------------

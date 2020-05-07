@@ -1,9 +1,7 @@
 #' @import stats
 NULL
 ###################################################################################
-#' Two-Way Fixed Effects DID estimator with Panel Data
-
-#' Two-Way Fixed Effects DID estimator with Panel Data
+#' Two-Way Fixed Effects DID Estimator, with Panel Data
 #'
 #'
 #'

@@ -2,8 +2,7 @@
 % Please edit documentation in R/reg_did_rc.R
 \name{reg_did_rc}
 \alias{reg_did_rc}
-\title{Regression-based DID estimator with Repeated Cross Section Data
-Regression-based Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data}
+\title{Regression-based Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data}
 \usage{
 reg_did_rc(
   y,
@@ -51,7 +50,6 @@ A list containing the following components:
  \item{argu}{Some arguments used (explicitly or not) in the call (panel = F, boot, boot.type, nboot, type="or")}
 }
 \description{
-Regression-based DID estimator with Repeated Cross Section Data
 Regression-based Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data
 }
 \examples{

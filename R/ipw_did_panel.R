@@ -3,7 +3,7 @@ NULL
 ###################################################################################
 # Abadie's IPW DID estimator
 
-#' Abadie's inverse probability weighted Difference-in-Differences Estimator with Panel Data
+#' Inverse Probability Weighted Difference-in-Differences Estimator, with Panel Data
 #'
 #'
 #' @param y1 An \eqn{n} x \eqn{1} vector of outcomes from the post-treatment period.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/ipw_did_panel.R
 \name{ipw_did_panel}
 \alias{ipw_did_panel}
-\title{Abadie's inverse probability weighted Difference-in-Differences Estimator with Panel Data}
+\title{Inverse Probability Weighted Difference-in-Differences Estimator, with Panel Data}
 \usage{
 ipw_did_panel(
   y1,
@@ -49,7 +49,7 @@ A list containing the following components:
  \item{argu}{Some arguments used (explicitly or not) in the call (panel = T, normalized = F, boot, boot.type, nboot, type="ipw")}
 }
 \description{
-Abadie's inverse probability weighted Difference-in-Differences Estimator with Panel Data
+Inverse Probability Weighted Difference-in-Differences Estimator, with Panel Data
 }
 \examples{
 # -----------------------------------------------

@@ -1,8 +1,8 @@
 NULL
 ###################################################################################
-#' Doubly Robust Difference-in-Differences Estimators for the ATT
+#'  	Locally Efficient Doubly Robust Difference-in-Differences Estimators for the ATT
 #'
-##' @description \code{drdid} computes the doubly robust estimators for the average treatment effect on the treated
+#' @description \code{drdid} computes the doubly robust estimators for the average treatment effect on the treated
 #'  in DID setups. It can be used with panel or repeated cross section data. The nuisance parameters can be estimated
 #'  using "traditional" methods (OLS for the outcome regressions and maximum likelihood for the propensity score), or
 #'  "improved" methods (weighted least squares for the outcome regressions and

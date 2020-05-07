@@ -2,7 +2,7 @@ NULL
 ###################################################################################
 #' Inverse Probability Weighted Difference-in-Differences Estimators for the ATT
 #'
-##' @description \code{ipwdid} computes the inverse probability weighted estimators for the average treatment effect on the treated
+#' @description \code{ipwdid} computes the inverse probability weighted estimators for the average treatment effect on the treated
 #'  in DID setups. It can be used with panel or repeated cross section data, with or without normalized (stabilized) weights.
 #'  See Abadie (2005) and Sant'Anna and Zhao (2020) for details.
 #'

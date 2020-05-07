@@ -2,7 +2,7 @@
 % Please edit documentation in R/std_ipw_did_panel.R
 \name{std_ipw_did_panel}
 \alias{std_ipw_did_panel}
-\title{Standardized Inverse probability weighted Difference-in-Differences Estimator with Panel Data}
+\title{Standardized Inverse Probability Weighted Difference-in-Differences Estimator, with Panel Data}
 \usage{
 std_ipw_did_panel(
   y1,
@@ -49,7 +49,7 @@ A list containing the following components:
  \item{argu}{Some arguments used (explicitly or not) in the call (panel = T, normalized = T, boot, boot.type, nboot, type="ipw")}
 }
 \description{
-Standardized Inverse probability weighted Difference-in-Differences Estimator with Panel Data
+Standardized Inverse Probability Weighted Difference-in-Differences Estimator, with Panel Data
 }
 \examples{
 # -----------------------------------------------

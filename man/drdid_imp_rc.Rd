@@ -2,7 +2,7 @@
 % Please edit documentation in R/drdid_imp_rc.R
 \name{drdid_imp_rc}
 \alias{drdid_imp_rc}
-\title{'Improved' and locally efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data}
+\title{Improved Locally Efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data}
 \usage{
 drdid_imp_rc(
   y,
@@ -53,7 +53,7 @@ A list containing the following components:
  \item{argu}{Some arguments used (explicitly or not) in the call (panel = F, estMethod = "imp", boot, boot.type, nboot, type="dr")}
 }
 \description{
-'Improved' and locally efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data
+Improved Locally Efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data
 }
 \examples{
 # -----------------------------------------------

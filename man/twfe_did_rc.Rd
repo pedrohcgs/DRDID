@@ -2,8 +2,7 @@
 % Please edit documentation in R/twfe_did_rc.R
 \name{twfe_did_rc}
 \alias{twfe_did_rc}
-\title{Two-Way Fixed Effects DID estimator with Repeated Cross Section Data
-Two-Way Fixed Effects DID estimator with Repeated Cross Section}
+\title{Two-Way Fixed Effects DID estimator, with Repeated Cross Section}
 \usage{
 twfe_did_rc(
   y,
@@ -48,8 +47,7 @@ A list containing the following components:
  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 }
 \description{
-Two-Way Fixed Effects DID estimator with Repeated Cross Section Data
-Two-Way Fixed Effects DID estimator with Repeated Cross Section
+Two-Way Fixed Effects DID estimator, with Repeated Cross Section
 }
 \examples{
 # -----------------------------------------------

@@ -1,8 +1,8 @@
 #' @import stats
 NULL
 ###################################################################################
-# 'Improved' Doubly Robust DID estimator with Repeated Cross Section Data
-#' 'Improved' Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data
+#  Improved Doubly Robust DID estimator with Repeated Cross Section Data
+#' Improved Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data
 #'
 #' @param y An \eqn{n} x \eqn{1} vector of outcomes from the both pre and post-treatment periods.
 #' @param post An \eqn{n} x \eqn{1} vector of Post-Treatment dummies (post = 1 if observation belongs to post-treatment period,

@@ -3,7 +3,7 @@
 \docType{data}
 \name{nsw_long}
 \alias{nsw_long}
-\title{National Supported Work Demonstration Dataset in Long format}
+\title{National Supported Work Demonstration Dataset, in Long Format}
 \format{
 A data frame in "long" format with 38408 observations on the following and
 14 variables:
@@ -45,6 +45,8 @@ nsw_long
 "Genetic Matching for Estimating Causal Effects: A General Multivariate Matching Method for Achieving Balance
 in Observational Studies" Review of Economics and Statistics, vol. 95 , pp. 932-945,
  \url{https://doi.org/10.1162/REST_a_00318}}
+
+
 \cite{Smith, Jeffrey, and Todd, Petra (2005),
 "Does matching overcome LaLonde's critique of nonexperimental estimators?" Journal of Econometrics,
 vol. 125, pp. 305-353, \url{https://doi.org/10.1016/j.jeconom.2004.04.011}}

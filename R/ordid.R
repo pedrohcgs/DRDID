@@ -2,7 +2,7 @@ NULL
 ###################################################################################
 #' Outcome Regression Difference-in-Differences Estimators for the ATT
 #'
-##' @description \code{ordid} computes the outcome regressions estimators for the average treatment effect on the treated
+#' @description \code{ordid} computes the outcome regressions estimators for the average treatment effect on the treated
 #'  in DID setups. It can be used with panel or repeated cross section data. See Sant'Anna and Zhao (2020) for details.
 #'
 #' @param yname The name of the outcome variable.

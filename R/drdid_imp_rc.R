@@ -2,7 +2,7 @@
 NULL
 ###################################################################################
 # 'Improved' and locally efficient Doubly Robust DID estimator with Repeated Cross Section Data
-#' 'Improved' and locally efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data
+#' Improved Locally Efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data
 #'
 #' @param y An \eqn{n} x \eqn{1} vector of outcomes from the both pre and post-treatment periods.
 #' @param post An \eqn{n} x \eqn{1} vector of Post-Treatment dummies (post = 1 if observation belongs to post-treatment period,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/drdid.R
 \name{drdid}
 \alias{drdid}
-\title{Doubly Robust Difference-in-Differences Estimators for the ATT}
+\title{Locally Efficient Doubly Robust Difference-in-Differences Estimators for the ATT}
 \usage{
 drdid(
   yname,

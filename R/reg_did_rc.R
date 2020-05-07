@@ -1,7 +1,6 @@
 #' @import stats
 NULL
 ###################################################################################
-#' Regression-based DID estimator with Repeated Cross Section Data
 #' Regression-based Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data
 #'
 #' @param y An \eqn{n} x \eqn{1} vector of outcomes from the both pre and post-treatment periods.

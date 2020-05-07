@@ -1,22 +1,18 @@
 Package: DRDID
 Type: Package
-Title: Doubly Robust Difference-in-Difference Estimators
-Version: 0.2.1.940
-Authors@R: c(
-    person("Sant'Anna", "Pedro H. C.", email = "pedro.h.santanna@vanderbilt.edu",role = c("aut", "cre")),
-    person("Zhao", "Jun B.", email = "jun.zhao@vanderbilt.edu",role = c("aut"))
-    )
-Description: This package implements different Difference-in-Differences (DID) estimators for 
-    the ATT when the available data contains two periods, pre and post treatment, and two 
-    groups, a treated and a comparison group. The main estimators covered here are the
-    locally efficient doubly robust DID estimators proposed by Sant'Anna and Zhao (2020);
-    the inverse probability weighted DID estimator proposed by Abadie(2005); and the
-    outcome regression DID estimator in the spirit of Heckman, Ichimura and Todd (1997). 
-    For completeness, the package also implements the DID estimator based on the two-way
-    fixed effect linear regression, though such a procedure usually does not recover the 
-    average treatment effect on the treated; see e.g. the simulation exercise in Sant'Anna
-    and Zhao (2020).
-URL: https://github.com/pedrohcgs/DRDID    
+Title: DRDID: A package for computing doubly robust difference-in-differences estimators
+Version: 1.0.0
+Authors@R: c(person("Pedro H. C.", "Sant'Anna", email = "pedro.h.santanna@vanderbilt.edu",
+              role = c("aut", "cre")),
+              person("Jun B.", "Zhao", email = "jun.zhao@vanderbilt.edu",role = c("aut"))
+            )
+Description: This package implements different estimators for the Average Treatment Effect on
+    the Treated in Difference-in-Differences (DID) setups where the parallel trends assumption
+    holds after you condition on a vector of pre-treatment covariates. The main estimators 
+    implemented here are the locally efficient, doubly-robust DID estimators proposed by 
+    Sant'Anna and Zhao (2020) <https://arxiv.org/abs/1812.01723>. A number of other DID 
+    estimators discussed in Sant'Anna and Zhao (2020) are also implemented.
+URL: https://pedrohcgs.github.io/DRDID/, https://github.com/pedrohcgs/DRDID    
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -36,4 +32,4 @@ Suggests:
     covr
 Date: 2020-04-26 18:00
 Language: en-US
-
+BugReports: https://github.com/pedrohcgs/DRDID/issues

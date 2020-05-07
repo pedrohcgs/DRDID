@@ -3,7 +3,7 @@ NULL
 ###################################################################################
 # Abadie's IPW DID estimator
 
-#' Inverse probability weighted Difference-in-Differences Estimator with Repeated Cross Section  Data
+#' Inverse Probability Weighted Difference-in-Differences Estimator, with Repeated Cross Section  Data
 #'
 #'
 #' @param y An \eqn{n} x \eqn{1} vector of outcomes from the both pre and post-treatment periods.

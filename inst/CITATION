@@ -1,0 +1,10 @@
+bibentry(bibtype = "Article",
+         title   = "Doubly Robust Difference-in-Differences Estimators",
+         author  = c(person("Pedro H. C.", "Sant\'Anna"),
+                    person("Jun B.", "Zhao")),,
+         journal = "Journal of Econometrics",
+         year    = "2020",
+         volume  = "Forthcoming",
+         url     = "https://arxiv.org/abs/1812.01723",
+         header = "To cite DRDID in publications use:"
+)

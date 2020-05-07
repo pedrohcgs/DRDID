@@ -1,8 +1,8 @@
 #' @import stats
 NULL
 ###################################################################################
-# 'Traditional' Doubly Robust DID estimator with panel Data
-#' 'Traditional' Doubly Robust Difference-in-Differences Estimator for the ATT, with Panel Data
+#  Locally Efficient Doubly Robust DID estimator with panel Data
+#' Locally Efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Panel Data
 #'
 #' @param y1 An \eqn{n} x \eqn{1} vector of outcomes from the post-treatment period.
 #' @param y0 An \eqn{n} x \eqn{1} vector of outcomes from the pre-treatment period.

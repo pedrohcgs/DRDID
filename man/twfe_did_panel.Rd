@@ -2,8 +2,7 @@
 % Please edit documentation in R/twfe_did_panel.R
 \name{twfe_did_panel}
 \alias{twfe_did_panel}
-\title{Two-Way Fixed Effects DID estimator with Panel Data
-Two-Way Fixed Effects DID estimator with Panel Data}
+\title{Two-Way Fixed Effects DID Estimator, with Panel Data}
 \usage{
 twfe_did_panel(
   y1,
@@ -47,8 +46,7 @@ A list containing the following components:
  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 }
 \description{
-Two-Way Fixed Effects DID estimator with Panel Data
-Two-Way Fixed Effects DID estimator with Panel Data
+Two-Way Fixed Effects DID Estimator, with Panel Data
 }
 \examples{
 # -----------------------------------------------

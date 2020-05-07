@@ -3,7 +3,7 @@ NULL
 ###################################################################################
 # Standardized version of Abadie's IPW DID estimator
 
-#' Standardized Inverse probability weighted Difference-in-Differences Estimator with Panel Data
+#' Standardized Inverse Probability Weighted Difference-in-Differences Estimator, with Panel Data
 #'
 #'
 #' @param y1 An \eqn{n} x \eqn{1} vector of outcomes from the post-treatment period.
