@@ -50,7 +50,9 @@ A list containing the following components:
  \item{argu}{Some arguments used (explicitly or not) in the call (panel = F, normalized = T, boot, boot.type, nboot, type="ipw")}
 }
 \description{
-Standardized Inverse probability Weighted Difference-in-Differences Estimator, with Repeated Cross Section Data
+\code{std_ipw_did_rc} is used to compute inverse probability weighted (IPW) estimators for the ATT
+ in DID setups with stationary repeated cross-sectional data. IPW weights are normalized to sum up to one, that is,
+ the estimator is of the Hajek type.
 }
 \examples{
 # use the simulated data provided in the package
@@ -61,15 +63,12 @@ std_ipw_did_rc(y = sim_rc$y, post = sim_rc$post, D = sim_rc$d,
 
 }
 \references{
-{
 \cite{Abadie, Alberto (2005), "Semiparametric Difference-in-Differences Estimators",
 Review of Economic Studies, vol. 72(1), p. 1-19, \url{https://doi.org/10.1111/0034-6527.00321}.
 }
 
+
 \cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
 "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
 \url{https://arxiv.org/abs/1812.01723}}
-
-
-}
 }

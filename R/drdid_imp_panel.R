@@ -5,6 +5,9 @@ NULL
 
 #' Improved Locally Efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Panel Data
 #'
+#' @description \code{drdid_imp_panel} is used to compute the locally efficient doubly robust estimators for the ATT
+#'  in DID setups with panel data. The resulting estimator is also doubly robust for inference; see Section 3.1 of
+#'  Sant'Anna and Zhao (2020).
 #'
 #' @param y1 An \eqn{n} x \eqn{1} vector of outcomes from the post-treatment period.
 #' @param y0 An \eqn{n} x \eqn{1} vector of outcomes from the pre-treatment period.
@@ -31,12 +34,36 @@ NULL
 #'  \item{call.param}{The matched call.}
 #'  \item{argu}{Some arguments used (explicitly or not) in the call (panel = T, estMethod = "imp", boot, boot.type, nboot, type="dr")}
 #'
-#' @references{
+#' @references
+#' \cite{Graham, Bryan, Pinto, Cristine, and Egel, Daniel (2012),
+#' "Inverse Probability Tilting for Moment Condition Models with Missing Data."
+#'  Review of Economic Studies, vol. 79 (3), pp. 1053-1079,
+#' \url{https://doi.org/10.1093/restud/rdr047}}
+#'
 #'
 #' \cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
 #' "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
 #' \url{https://arxiv.org/abs/1812.01723}}
-#' }
+#'
+#'
+#' @details
+#'
+#' The \code{drdid_imp_panel} function implements the locally efficient doubly robust difference-in-differences (DID)
+#' estimator for the average treatment effect on the treated (ATT) defined in equation (3.1)
+#' in Sant'Anna and Zhao (2020). This estimator makes use of a logistic propensity score model for the probability
+#' of being in the treated group, and of a linear regression model for the outcome evolution among the comparison units.
+#'
+#'
+#' The nuisance parameters (propensity score and outcome regression parameters) are estimated using the methods
+#' described in Sections 3.1 of Sant'Anna and Zhao (2020). In short, the propensity score parameters are estimated
+#' using the inverse probability tilting estimator proposed by Graham, Pinto and Pinto (2012), and the outcome
+#' regression coefficients are estimated using weighted least squares,where the weights depend on
+#' the propensity score estimates; see Sant'Anna and Zhao (2020) for details.
+#'
+#'
+#' The resulting estimator is not only locally efficient and doubly robust for the ATT,
+#' but it is also doubly robust for inference; see Sant'Anna and Zhao (2020) for details.
+#'
 #'
 #' @examples
 #' # Form the Lalonde sample with CPS comparison group

@@ -3,7 +3,9 @@ NULL
 ###################################################################################
 #' Two-Way Fixed Effects DID Estimator, with Panel Data
 #'
-#'
+#' @description \code{twfe_did_panel} is used to compute linear two-way fixed effects estimators for the ATT
+#'  in DID setups with panel data. As illustrated by Sant'Anna and Zhao (2020), this estimator generally do not recover
+#'  the ATT. We encourage empiricists to adopt alternative specifications.
 #'
 #' @param y1 An \eqn{n} x \eqn{1} vector of outcomes from the post-treatment period.
 #' @param y0 An \eqn{n} x \eqn{1} vector of outcomes from the pre-treatment period.

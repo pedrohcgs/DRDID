@@ -3,8 +3,8 @@ NULL
 #' Inverse Probability Weighted Difference-in-Differences Estimators for the ATT
 #'
 #' @description \code{ipwdid} computes the inverse probability weighted estimators for the average treatment effect on the treated
-#'  in DID setups. It can be used with panel or repeated cross section data, with or without normalized (stabilized) weights.
-#'  See Abadie (2005) and Sant'Anna and Zhao (2020) for details.
+#'  in DID setups. It can be used with panel or stationary repeated cross-sectional data, with or without
+#'  normalized (stabilized) weights. See Abadie (2005) and Sant'Anna and Zhao (2020) for details.
 #'
 #' @param yname The name of the outcome variable.
 #' @param tname The name of the column containing the time periods.
@@ -36,16 +36,17 @@ NULL
 #' \item{call.param}{The matched call.}
 #' \item{argu}{Some arguments used in the call (panel, normalized, boot, boot.type, nboot, type=="ipw")}
 
-#' @references{
+#' @references
 #' \cite{Abadie, Alberto (2005), "Semiparametric Difference-in-Differences Estimators",
 #' Review of Economic Studies, vol. 72(1), p. 1-19, \url{https://doi.org/10.1111/0034-6527.00321}.
 #' }
+#'
 #'
 #' \cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
 #' "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
 #' \url{https://arxiv.org/abs/1812.01723}}
 #'
-#' }
+#'
 #'
 #' @examples
 #' # -----------------------------------------------
@@ -69,6 +70,16 @@ NULL
 #'       xformla= ~ x1 + x2 + x3 + x4,
 #'       data = sim_rc, panel = FALSE,
 #'       boot = TRUE, nboot = 199)
+#'
+#' @details
+#'
+#' The \code{ipwdid} function implements the
+#' inverse probability weighted (IPW) difference-in-differences (DID) estimator for the average treatment effect
+#' on the treated (ATT) proposed by Abadie (2005) (\code{normalized = FALSE}) or Hajek-type version
+#' defined in equations (4.1) and (4.2) in Sant'Anna and Zhao (2020), when either panel data or
+#' stationary repeated cross-sectional data are available. This estimator makes use of
+#' a logistic propensity score model for the probability of being in the treated group, and the propensity score
+#' parameters are estimated via maximum likelihood.
 #'
 #'
 #' @export

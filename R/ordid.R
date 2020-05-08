@@ -33,17 +33,29 @@ NULL
 #' \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 #' \item{call.param}{The matched call.}
 #' \item{argu}{Some arguments used in the call (panel, normalized, boot, boot.type, nboot, type=="or")}
-
-#' @references{
+#'
+#' @details
+#'
+#' The \code{ordid} function implements
+#' outcome regression difference-in-differences (DID) estimator for the average treatment effect
+#' on the treated (ATT) defined in equation (2.2) of Sant'Anna and Zhao (2020). The estimator follows the same spirit
+#' of the nonparametric estimators proposed by Heckman, Ichimura and Todd (1997), though here the the outcome regression
+#' models are assumed to be linear in covariates (parametric).
+#'
+#' The nuisance parameters (outcome regression coefficients) are estimated via ordinary least squares.
+#'
+#'
+#' @references
 #' \cite{Heckman, James J., Ichimura, Hidehiko, and Todd, Petra E. (1997),"Matching as an Econometric Evaluation Estimator: Evidence from Evaluating a Job Training Programme",
 #' Review of Economic Studies, vol. 64(4), p. 605–654, \url{https://doi.org/10.2307/2971733}.
 #' }
+#'
 #'
 #' \cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
 #' "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
 #' \url{https://arxiv.org/abs/1812.01723}}
 #'
-#' }
+#'
 #'
 #' @examples
 #' # -----------------------------------------------

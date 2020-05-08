@@ -49,7 +49,9 @@ A list containing the following components:
  \item{argu}{Some arguments used (explicitly or not) in the call (panel = T, normalized = T, boot, boot.type, nboot, type="ipw")}
 }
 \description{
-Standardized Inverse Probability Weighted Difference-in-Differences Estimator, with Panel Data
+\code{std_ipw_did_panel} is used to compute inverse probability weighted (IPW) estimators for the ATT
+ in DID setups with panel data. IPW weights are normalized to sum up to one, that is, the estimator is of the
+ Hajek type.
 }
 \examples{
 # Form the Lalonde sample with CPS comparison group
@@ -66,15 +68,12 @@ std_ipw_did_panel(y1 = eval_lalonde_cps$re78, y0 = eval_lalonde_cps$re75,
 
 }
 \references{
-{
 \cite{Abadie, Alberto (2005), "Semiparametric Difference-in-Differences Estimators",
 Review of Economic Studies, vol. 72(1), p. 1-19, \url{https://doi.org/10.1111/0034-6527.00321}.
 }
 
+
 \cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
 "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
 \url{https://arxiv.org/abs/1812.01723}}
-
-
-}
 }

@@ -2,8 +2,9 @@
 NULL
 ###################################################################################
 #' Two-Way Fixed Effects DID estimator, with Repeated Cross Section
-#'
-#'
+#' @description \code{twfe_did_rc} is used to compute linear two-way fixed effects estimators for the ATT
+#'  in DID setups with stationary repeated cross-sectional data. As illustrated by Sant'Anna and Zhao (2020),
+#'   this estimator generally do not recover the ATT. We encourage empiricists to adopt alternative specifications.
 #'
 #' @param y An \eqn{n} x \eqn{1} vector of outcomes from the both pre and post-treatment periods.
 #' @param post An \eqn{n} x \eqn{1} vector of Post-Treatment dummies (post = 1 if observation belongs to post-treatment period,

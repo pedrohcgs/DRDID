@@ -49,7 +49,18 @@ A list containing the following components:
  \item{argu}{Some arguments used (explicitly or not) in the call (panel = T, estMethod = "trad", boot, boot.type, nboot, type="dr")}
 }
 \description{
-Locally Efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Panel Data
+\code{drdid_panel} is used to compute the locally efficient doubly robust estimators for the ATT
+ in DID setups with panel data.
+}
+\details{
+The \code{drdid_panel} function implements the locally efficient doubly robust difference-in-differences (DID)
+estimator for the average treatment effect on the treated (ATT) defined in equation (3.1)
+in Sant'Anna and Zhao (2020). This estimator makes use of a logistic propensity score model for the probability
+of being in the treated group, and of a linear regression model for the outcome evolution among the comparison units.
+
+
+The propensity score parameters are estimated using maximum
+likelihood, and the outcome regression coefficients are estimated using ordinary least squares.
 }
 \examples{
 # Form the Lalonde sample with CPS comparison group (data in wide format)

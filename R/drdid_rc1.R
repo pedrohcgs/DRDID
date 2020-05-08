@@ -4,6 +4,10 @@ NULL
 # 'Traditional' Doubly Robust DID estimator with Repeated Cross Section Data
 #' Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data
 #'
+#' @description \code{drdid_rc1} is used to compute the doubly robust estimators for the ATT
+#'  in DID setups with stationary repeated cross-sectional data. The resulting estimator is not locally efficient;
+#'   see Section 3.2 of Sant'Anna and Zhao (2020).
+#'
 #' @param y An \eqn{n} x \eqn{1} vector of outcomes from the both pre and post-treatment periods.
 #' @param post An \eqn{n} x \eqn{1} vector of Post-Treatment dummies (post = 1 if observation belongs to post-treatment period,
 #'             and post = 0 if observation belongs to pre-treatment period.)
@@ -26,7 +30,19 @@ NULL
 #'  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 #'  \item{call.param}{The matched call.}
 #'  \item{argu}{Some arguments used (explicitly or not) in the call (panel = F, estMethod = "trad2", boot, boot.type, nboot, type="dr")}
-
+#' @details
+#'
+#' The \code{drdid_rc1} function implements the doubly robust difference-in-differences (DID)
+#' estimator for the average treatment effect on the treated (ATT) defined in equation (3.3)
+#' in Sant'Anna and Zhao (2020). This estimator makes use of a logistic propensity score model for the probability
+#' of being in the treated group, and of (separate) linear regression models for the outcome among the comparison units in both pre and
+#' post-treatment time periods. Importantly, this estimator is not locally efficient for the ATT.
+#'
+#'
+#' The propensity score parameters are estimated using maximum
+#' likelihood, and the outcome regression coefficients are estimated using ordinary least squares.
+#'
+#' The resulting estimator is not not locally efficient; see Sant'Anna and Zhao (2020) for details.
 #' @references{
 #'
 #' \cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),

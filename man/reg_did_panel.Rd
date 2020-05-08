@@ -49,7 +49,17 @@ A list containing the following components:
  \item{argu}{Some arguments used (explicitly or not) in the call (panel = T, boot, boot.type, nboot, type="or")}
 }
 \description{
-Regression-based Difference-in-Differences Estimator for the ATT, with Panel Data
+\code{reg_did_panel} computes the outcome regressions estimators for the average treatment effect on the
+treated in DID setups with panel data.
+}
+\details{
+The \code{reg_did_panel} function implements
+outcome regression difference-in-differences (DID) estimator for the average treatment effect
+on the treated (ATT) defined in equation (2.2) of Sant'Anna and Zhao (2020) when panel data are available.
+The estimator follows the same spirit of the nonparametric estimators proposed by Heckman, Ichimura and Todd (1997),
+though here the the outcome regression models are assumed to be linear in covariates (parametric),
+
+The nuisance parameters (outcome regression coefficients) are estimated via ordinary least squares.
 }
 \examples{
 # Form the Lalonde sample with CPS comparison group
@@ -66,14 +76,12 @@ reg_did_panel(y1 = eval_lalonde_cps$re78, y0 = eval_lalonde_cps$re75,
 
 }
 \references{
-{
 \cite{Heckman, James J., Ichimura, Hidehiko, and Todd, Petra E. (1997),"Matching as an Econometric Evaluation Estimator: Evidence from Evaluating a Job Training Programme",
 Review of Economic Studies, vol. 64(4), p. 605–654, \url{https://doi.org/10.2307/2971733}.
 }
 
+
 \cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
 "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
 \url{https://arxiv.org/abs/1812.01723}}
-
-}
 }

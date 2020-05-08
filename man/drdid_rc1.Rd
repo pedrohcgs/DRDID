@@ -50,7 +50,22 @@ A list containing the following components:
  \item{argu}{Some arguments used (explicitly or not) in the call (panel = F, estMethod = "trad2", boot, boot.type, nboot, type="dr")}
 }
 \description{
-Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data
+\code{drdid_rc1} is used to compute the doubly robust estimators for the ATT
+ in DID setups with stationary repeated cross-sectional data. The resulting estimator is not locally efficient;
+  see Section 3.2 of Sant'Anna and Zhao (2020).
+}
+\details{
+The \code{drdid_rc1} function implements the doubly robust difference-in-differences (DID)
+estimator for the average treatment effect on the treated (ATT) defined in equation (3.3)
+in Sant'Anna and Zhao (2020). This estimator makes use of a logistic propensity score model for the probability
+of being in the treated group, and of (separate) linear regression models for the outcome among the comparison units in both pre and
+post-treatment time periods. Importantly, this estimator is not locally efficient for the ATT.
+
+
+The propensity score parameters are estimated using maximum
+likelihood, and the outcome regression coefficients are estimated using ordinary least squares.
+
+The resulting estimator is not not locally efficient; see Sant'Anna and Zhao (2020) for details.
 }
 \examples{
 # use the simulated data provided in the package

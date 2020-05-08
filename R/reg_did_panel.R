@@ -3,6 +3,9 @@ NULL
 ###################################################################################
 #' Regression-based Difference-in-Differences Estimator for the ATT, with Panel Data
 #'
+#' @description \code{reg_did_panel} computes the outcome regressions estimators for the average treatment effect on the
+#' treated in DID setups with panel data.
+#'
 #' @param y1 An \eqn{n} x \eqn{1} vector of outcomes from the post-treatment period.
 #' @param y0 An \eqn{n} x \eqn{1} vector of outcomes from the pre-treatment period.
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).
@@ -24,18 +27,29 @@ NULL
 #'  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 #'  \item{call.param}{The matched call.}
 #'  \item{argu}{Some arguments used (explicitly or not) in the call (panel = T, boot, boot.type, nboot, type="or")}
+#'
+#' @details
+#'
+#' The \code{reg_did_panel} function implements
+#' outcome regression difference-in-differences (DID) estimator for the average treatment effect
+#' on the treated (ATT) defined in equation (2.2) of Sant'Anna and Zhao (2020) when panel data are available.
+#' The estimator follows the same spirit of the nonparametric estimators proposed by Heckman, Ichimura and Todd (1997),
+#' though here the the outcome regression models are assumed to be linear in covariates (parametric),
+#'
+#' The nuisance parameters (outcome regression coefficients) are estimated via ordinary least squares.
 
 
-#' @references{
+#' @references
 #' \cite{Heckman, James J., Ichimura, Hidehiko, and Todd, Petra E. (1997),"Matching as an Econometric Evaluation Estimator: Evidence from Evaluating a Job Training Programme",
 #' Review of Economic Studies, vol. 64(4), p. 605–654, \url{https://doi.org/10.2307/2971733}.
 #' }
+#'
 #'
 #' \cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
 #' "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
 #' \url{https://arxiv.org/abs/1812.01723}}
 #'
-#' }
+#'
 #' @examples
 #' # Form the Lalonde sample with CPS comparison group
 #' eval_lalonde_cps <- subset(nsw, nsw$treated == 0 | nsw$sample == 2)

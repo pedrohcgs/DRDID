@@ -4,6 +4,9 @@ NULL
 #  Locally Efficient Doubly Robust DID estimator with panel Data
 #' Locally Efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Panel Data
 #'
+#' @description \code{drdid_panel} is used to compute the locally efficient doubly robust estimators for the ATT
+#'  in DID setups with panel data.
+#'
 #' @param y1 An \eqn{n} x \eqn{1} vector of outcomes from the post-treatment period.
 #' @param y0 An \eqn{n} x \eqn{1} vector of outcomes from the pre-treatment period.
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).
@@ -32,6 +35,17 @@ NULL
 #' "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
 #' \url{https://arxiv.org/abs/1812.01723}}
 #' }
+#' @details
+#'
+#' The \code{drdid_panel} function implements the locally efficient doubly robust difference-in-differences (DID)
+#' estimator for the average treatment effect on the treated (ATT) defined in equation (3.1)
+#' in Sant'Anna and Zhao (2020). This estimator makes use of a logistic propensity score model for the probability
+#' of being in the treated group, and of a linear regression model for the outcome evolution among the comparison units.
+#'
+#'
+#' The propensity score parameters are estimated using maximum
+#' likelihood, and the outcome regression coefficients are estimated using ordinary least squares.
+#'
 #'
 #' @examples
 #' # Form the Lalonde sample with CPS comparison group (data in wide format)

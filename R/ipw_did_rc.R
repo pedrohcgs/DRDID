@@ -4,6 +4,9 @@ NULL
 # Abadie's IPW DID estimator
 
 #' Inverse Probability Weighted Difference-in-Differences Estimator, with Repeated Cross Section  Data
+#' @description \code{ipw_did_rc} is used to compute inverse probability weighted (IPW) estimators for the ATT
+#'  in DID setups with stationary cross-sectional data. IPW weights are not normalized to sum up to one, that is,
+#'  the estimator is of the Horwitz-Thompson type.
 #'
 #'
 #' @param y An \eqn{n} x \eqn{1} vector of outcomes from the both pre and post-treatment periods.
@@ -29,16 +32,16 @@ NULL
 #'  \item{call.param}{The matched call.}
 #'  \item{argu}{Some arguments used (explicitly or not) in the call (panel = F, normalized = F, boot, boot.type, nboot, type="ipw")}
 
-#' @references{
+#' @references
 #' \cite{Abadie, Alberto (2005), "Semiparametric Difference-in-Differences Estimators",
 #' Review of Economic Studies, vol. 72(1), p. 1-19, \url{https://doi.org/10.1111/0034-6527.00321}.
 #' }
+#'
 #'
 #' \cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
 #' "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
 #' \url{https://arxiv.org/abs/1812.01723}}
 #'
-#' }
 #' @examples
 #' # use the simulated data provided in the package
 #' covX = as.matrix(sim_rc[,5:8])

@@ -74,12 +74,38 @@ A list containing the following components:
 \item{argu}{Some arguments used in the call (panel, estMethod, boot, boot.type, nboot, type="dr")}
 }
 \description{
-\code{drdid} computes the doubly robust estimators for the average treatment effect on the treated
- in DID setups. It can be used with panel or repeated cross section data. The nuisance parameters can be estimated
- using "traditional" methods (OLS for the outcome regressions and maximum likelihood for the propensity score), or
- "improved" methods (weighted least squares for the outcome regressions and
- inverse probability tilting for the propensity score). Estimators based on "improved methods" are also doubly
- robust for inference. See Sant'Anna and Zhao (2020) for a detailed description.
+\code{drdid} is used to compute the locally efficient doubly robust estimators for the ATT
+ in DID setups. It can be used with panel or stationary repeated cross section data. Data should be store in "long" format.
+}
+\details{
+When panel data are available (\code{panel = T}), the \code{drdid} function implements the
+locally efficient doubly robust difference-in-differences (DID) estimator for the average treatment effect
+on the treated (ATT) defined in equation (3.1) in Sant'Anna and Zhao (2020). This estimator makes use of
+a logistic propensity score model for the probability of being in the treated group,
+and of a linear regression model for the outcome evolution among the comparison units.
+
+
+When only stationary repeated cross-section data are available (\code{panel = F}), the \code{drdid} function
+implements the locally efficient doubly robust difference-in-differences (DID) estimator for the
+average treatment effect on the treated (ATT) defined in equation (3.4) in Sant'Anna and Zhao (2020).
+This estimator makes use of a logistic propensity score model for the probability of being in the
+treated group, and of (separate) linear regression models for the outcome of both treated and comparison units,
+in both pre and post-treatment periods.
+
+
+When one sets \code{estMethod = "imp"} (the default), the nuisance parameters (propensity score and
+outcome regression parameters) are estimated using the methods described in Sections 3.1 and 3.2 of
+Sant'Anna and Zhao (2020). In short, the propensity score parameters are estimated using the inverse
+probability tilting estimator proposed by Graham, Pinto and Pinto (2012), and the outcome
+regression coefficients are estimated using weighted least squares,where the weights depend on
+the propensity score estimates; see Sant'Anna and Zhao (2020) for details.
+
+When one sets \code{estMethod = "trad"}, the propensity score parameters are estimated using maximum
+likelihood, and the outcome regression coefficients are estimated using ordinary least squares.
+
+The main advantage of using \code{estMethod = "imp"} is that the resulting estimator is not only
+locally efficient and doubly robust for the ATT, but it is also doubly robust for inference;
+see Sant'Anna and Zhao (2020) for details.
 }
 \examples{
 # -----------------------------------------------
@@ -114,10 +140,13 @@ drdid(yname="y", tname = "post", idname = "id", dname = "d",
 
 }
 \references{
-{
+\cite{Graham, Bryan, Pinto, Cristine, and Egel, Daniel (2012),
+"Inverse Probability Tilting for Moment Condition Models with Missing Data."
+ Review of Economic Studies, vol. 79 (3), pp. 1053-1079,
+\url{https://doi.org/10.1093/restud/rdr047}}
+
 
 \cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
 "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
 \url{https://arxiv.org/abs/1812.01723}}
-}
 }

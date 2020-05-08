@@ -46,7 +46,9 @@ A list containing the following components:
  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 }
 \description{
-Two-Way Fixed Effects DID Estimator, with Panel Data
+\code{twfe_did_panel} is used to compute linear two-way fixed effects estimators for the ATT
+ in DID setups with panel data. As illustrated by Sant'Anna and Zhao (2020), this estimator generally do not recover
+ the ATT. We encourage empiricists to adopt alternative specifications.
 }
 \examples{
 # Form the Lalonde sample with CPS comparison group
