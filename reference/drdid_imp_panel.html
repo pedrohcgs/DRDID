@@ -47,7 +47,9 @@
 
 
 <meta property="og:title" content="Improved Locally Efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Panel Data — drdid_imp_panel" />
-<meta property="og:description" content="Improved Locally Efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Panel Data" />
+<meta property="og:description" content="drdid_imp_panel is used to compute the locally efficient doubly robust estimators for the ATT
+ in DID setups with panel data. The resulting estimator is also doubly robust for inference; see Section 3.1 of
+ Sant'Anna and Zhao (2020)." />
 <meta property="og:image" content="/reference/figures/logo.png" />
 <meta property="og:image:alt" content="Doubly Robust DID Estimators" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -135,7 +137,9 @@
     </div>
 
     <div class="ref-description">
-    <p>Improved Locally Efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Panel Data</p>
+    <p><code>drdid_imp_panel</code> is used to compute the locally efficient doubly robust estimators for the ATT
+ in DID setups with panel data. The resulting estimator is also doubly robust for inference; see Section 3.1 of
+ Sant'Anna and Zhao (2020).</p>
     </div>
 
     <pre class="usage"><span class='fu'>drdid_imp_panel</span>(
@@ -208,9 +212,29 @@ If boot==T, default is "weighted".</p></td>
  <dt>call.param</dt><dd><p>The matched call.</p></dd>
  <dt>argu</dt><dd><p>Some arguments used (explicitly or not) in the call (panel = T, estMethod = "imp", boot, boot.type, nboot, type="dr")</p></dd>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The <code>drdid_imp_panel</code> function implements the locally efficient doubly robust difference-in-differences (DID)
+estimator for the average treatment effect on the treated (ATT) defined in equation (3.1)
+in Sant'Anna and Zhao (2020). This estimator makes use of a logistic propensity score model for the probability
+of being in the treated group, and of a linear regression model for the outcome evolution among the comparison units.</p>
+
+<p>The nuisance parameters (propensity score and outcome regression parameters) are estimated using the methods
+described in Sections 3.1 of Sant'Anna and Zhao (2020). In short, the propensity score parameters are estimated
+using the inverse probability tilting estimator proposed by Graham, Pinto and Pinto (2012), and the outcome
+regression coefficients are estimated using weighted least squares,where the weights depend on
+the propensity score estimates; see Sant'Anna and Zhao (2020) for details.</p>
+
+<p>The resulting estimator is not only locally efficient and doubly robust for the ATT,
+but it is also doubly robust for inference; see Sant'Anna and Zhao (2020) for details.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p><cite>Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
+    <p><cite>Graham, Bryan, Pinto, Cristine, and Egel, Daniel (2012),
+"Inverse Probability Tilting for Moment Condition Models with Missing Data."
+ Review of Economic Studies, vol. 79 (3), pp. 1053-1079,
+<a href='https://doi.org/10.1093/restud/rdr047'>https://doi.org/10.1093/restud/rdr047</a></cite></p>
+
+<p><cite>Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
 "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
 <a href='https://arxiv.org/abs/1812.01723'>https://arxiv.org/abs/1812.01723</a></cite></p>
 
@@ -226,7 +250,21 @@ If boot==T, default is "weighted".</p></td>
 <span class='co'># Implement improved DR locally efficient DID with panel data</span>
 <span class='fu'>drdid_imp_panel</span>(<span class='kw'>y1</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>$<span class='no'>re78</span>, <span class='kw'>y0</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>$<span class='no'>re75</span>,
                 <span class='kw'>D</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>$<span class='no'>experimental</span>,
-                <span class='kw'>covariates</span> <span class='kw'>=</span> <span class='no'>covX</span>)</div><div class='output co'>#&gt; <span class='error'>Error in model.frame.default(formula = D ~ -1 + int.cov, drop.unused.levels = TRUE): invalid type (NULL) for variable 'D'</span></div><div class='input'>
+                <span class='kw'>covariates</span> <span class='kw'>=</span> <span class='no'>covX</span>)</div><div class='output co'>#&gt;  Call:
+#&gt; drdid_imp_panel(y1 = eval_lalonde_cps$re78, y0 = eval_lalonde_cps$re75, 
+#&gt;     D = eval_lalonde_cps$experimental, covariates = covX)
+#&gt; ------------------------------------------------------------------
+#&gt;  Further improved locally efficient DR DID estimator for the ATT:
+#&gt;  
+#&gt;    ATT     Std. Error  t value    Pr(&gt;|t|)  [95% Conf. Interval] 
+#&gt; -901.2703   393.6247   -2.2897     0.022    -1672.7747  -129.766 
+#&gt; ------------------------------------------------------------------
+#&gt;  Estimator based on panel data.
+#&gt;  Outcome regression est. method: weighted least squares.
+#&gt;  Propensity score est. method: inverse prob. tilting.
+#&gt;  Analytical standard error.
+#&gt; ------------------------------------------------------------------
+#&gt;  See Sant'Anna and Zhao (2020) for details.</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -243,7 +281,7 @@ If boot==T, default is "weighted".</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
 
       </footer>

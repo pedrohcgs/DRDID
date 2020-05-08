@@ -48,8 +48,8 @@
 
 <meta property="og:title" content="Inverse Probability Weighted Difference-in-Differences Estimators for the ATT — ipwdid" />
 <meta property="og:description" content="ipwdid computes the inverse probability weighted estimators for the average treatment effect on the treated
- in DID setups. It can be used with panel or repeated cross section data, with or without normalized (stabilized) weights.
- See Abadie (2005) and Sant'Anna and Zhao (2020) for details." />
+ in DID setups. It can be used with panel or stationary repeated cross-sectional data, with or without
+ normalized (stabilized) weights. See Abadie (2005) and Sant'Anna and Zhao (2020) for details." />
 <meta property="og:image" content="/reference/figures/logo.png" />
 <meta property="og:image:alt" content="Doubly Robust DID Estimators" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -138,8 +138,8 @@
 
     <div class="ref-description">
     <p><code>ipwdid</code> computes the inverse probability weighted estimators for the average treatment effect on the treated
- in DID setups. It can be used with panel or repeated cross section data, with or without normalized (stabilized) weights.
- See Abadie (2005) and Sant'Anna and Zhao (2020) for details.</p>
+ in DID setups. It can be used with panel or stationary repeated cross-sectional data, with or without
+ normalized (stabilized) weights. See Abadie (2005) and Sant'Anna and Zhao (2020) for details.</p>
     </div>
 
     <pre class="usage"><span class='fu'>ipwdid</span>(
@@ -233,11 +233,22 @@ If <code>boot==TRUE</code>, default is "weighted".</p></td>
 <dt>call.param</dt><dd><p>The matched call.</p></dd>
 <dt>argu</dt><dd><p>Some arguments used in the call (panel, normalized, boot, boot.type, nboot, type=="ipw")</p></dd>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The <code>ipwdid</code> function implements the
+inverse probability weighted (IPW) difference-in-differences (DID) estimator for the average treatment effect
+on the treated (ATT) proposed by Abadie (2005) (<code>normalized = FALSE</code>) or Hajek-type version
+defined in equations (4.1) and (4.2) in Sant'Anna and Zhao (2020), when either panel data or
+stationary repeated cross-sectional data are available. This estimator makes use of
+a logistic propensity score model for the probability of being in the treated group, and the propensity score
+parameters are estimated via maximum likelihood.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p><cite>Abadie, Alberto (2005), "Semiparametric Difference-in-Differences Estimators",
 Review of Economic Studies, vol. 72(1), p. 1-19, <a href='https://doi.org/10.1111/0034-6527.00321'>https://doi.org/10.1111/0034-6527.00321</a>.
-</cite><cite>Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
+</cite></p>
+
+<p><cite>Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
 "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
 <a href='https://arxiv.org/abs/1812.01723'>https://arxiv.org/abs/1812.01723</a></cite></p>
 
@@ -251,7 +262,22 @@ Review of Economic Studies, vol. 72(1), p. 1-19, <a href='https://doi.org/10.111
 <span class='co'># Implement IPW DID with panel data (normalized weights)</span>
 <span class='fu'>ipwdid</span>(<span class='kw'>yname</span><span class='kw'>=</span><span class='st'>"re"</span>, <span class='kw'>tname</span> <span class='kw'>=</span> <span class='st'>"year"</span>, <span class='kw'>idname</span> <span class='kw'>=</span> <span class='st'>"id"</span>, <span class='kw'>dname</span> <span class='kw'>=</span> <span class='st'>"experimental"</span>,
       <span class='kw'>xformla</span><span class='kw'>=</span> ~ <span class='no'>age</span>+ <span class='no'>educ</span>+ <span class='no'>black</span>+ <span class='no'>married</span>+ <span class='no'>nodegree</span>+ <span class='no'>hisp</span>+ <span class='no'>re74</span>,
-      <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>, <span class='kw'>panel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in pre_process_drdid(yname = yname, tname = tname, idname = idname,     dname = dname, xformla = xformla, data = data, panel = panel,     normalized = normalized, weightsname = weightsname, boot = boot,     boot.type = boot.type, nboot = nboot, inffunc = inffunc): dname = experimental could not be found in the data provided.</span></div><div class='input'>
+      <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>, <span class='kw'>panel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;  Call:
+#&gt; ipwdid(yname = "re", tname = "year", idname = "id", dname = "experimental", 
+#&gt;     xformla = ~age + educ + black + married + nodegree + hisp + 
+#&gt;         re74, data = eval_lalonde_cps, panel = TRUE)
+#&gt; ------------------------------------------------------------------
+#&gt;  IPW DID estimator for the ATT:
+#&gt;  
+#&gt;    ATT     Std. Error  t value    Pr(&gt;|t|)  [95% Conf. Interval] 
+#&gt; -1021.6095  397.5322   -2.5699     0.0102   -1800.7726 -242.4464 
+#&gt; ------------------------------------------------------------------
+#&gt;  Estimator based on panel data.
+#&gt;  Hajek-type IPW estimator (weights sum up to 1).
+#&gt;  Propensity score est. method: maximum likelihood.
+#&gt;  Analytical standard error.
+#&gt; ------------------------------------------------------------------
+#&gt;  See Sant'Anna and Zhao (2020) for details.</div><div class='input'>
 <span class='co'># -----------------------------------------------</span>
 <span class='co'># Repeated cross section case</span>
 <span class='co'># -----------------------------------------------</span>
@@ -278,7 +304,6 @@ Review of Economic Studies, vol. 72(1), p. 1-19, <a href='https://doi.org/10.111
 #&gt;  Bootstrap method: weighted . 
 #&gt; ------------------------------------------------------------------
 #&gt;  See Sant'Anna and Zhao (2020) for details.</div><div class='input'>
-
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -295,7 +320,7 @@ Review of Economic Studies, vol. 72(1), p. 1-19, <a href='https://doi.org/10.111
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
 
       </footer>

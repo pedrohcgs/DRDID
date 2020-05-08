@@ -47,7 +47,8 @@
 
 
 <meta property="og:title" content="Locally Efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data — drdid_rc" />
-<meta property="og:description" content="Locally Efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data" />
+<meta property="og:description" content="drdid_rc is used to compute the locally efficient doubly robust estimators for the ATT
+ in DID setups with stationary repeated cross-sectional data." />
 <meta property="og:image" content="/reference/figures/logo.png" />
 <meta property="og:image:alt" content="Doubly Robust DID Estimators" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -135,7 +136,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Locally Efficient Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data</p>
+    <p><code>drdid_rc</code> is used to compute the locally efficient doubly robust estimators for the ATT
+ in DID setups with stationary repeated cross-sectional data.</p>
     </div>
 
     <pre class="usage"><span class='fu'>drdid_rc</span>(
@@ -206,6 +208,17 @@ If boot==T, default is "weighted".</p></td>
  <dt>call.param</dt><dd><p>The matched call.</p></dd>
  <dt>argu</dt><dd><p>Some arguments used (explicitly or not) in the call (panel = T, estMethod = "trad", boot, boot.type, nboot, type="dr")</p></dd>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The <code>drdid_rc</code> function implements the locally efficient doubly robust difference-in-differences (DID)
+estimator for the average treatment effect on the treated (ATT) defined in equation (3.4)
+in Sant'Anna and Zhao (2020). This estimator makes use of a logistic propensity score model for the probability
+of being in the treated group, and of (separate) linear regression models for the outcome of both treated and comparison units,
+in both pre and post-treatment periods.</p>
+
+<p>The propensity score parameters are estimated using maximum
+likelihood, and the outcome regression coefficients are estimated using ordinary least squares;
+see Sant'Anna and Zhao (2020) for details.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p><cite>Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
@@ -247,7 +260,7 @@ If boot==T, default is "weighted".</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
 
       </footer>

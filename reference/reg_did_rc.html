@@ -47,7 +47,8 @@
 
 
 <meta property="og:title" content="Regression-based Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data — reg_did_rc" />
-<meta property="og:description" content="Regression-based Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data" />
+<meta property="og:description" content="reg_did_rc computes the outcome regressions estimators for the average treatment effect on the
+treated in DID setups with stationary repeated cross-sectional data." />
 <meta property="og:image" content="/reference/figures/logo.png" />
 <meta property="og:image:alt" content="Doubly Robust DID Estimators" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -135,7 +136,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Regression-based Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data</p>
+    <p><code>reg_did_rc</code> computes the outcome regressions estimators for the average treatment effect on the
+treated in DID setups with stationary repeated cross-sectional data.</p>
     </div>
 
     <pre class="usage"><span class='fu'>reg_did_rc</span>(
@@ -206,11 +208,21 @@ If boot==T, default is "weighted".</p></td>
  <dt>call.param</dt><dd><p>The matched call.</p></dd>
  <dt>argu</dt><dd><p>Some arguments used (explicitly or not) in the call (panel = F, boot, boot.type, nboot, type="or")</p></dd>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The <code>reg_did_rc</code> function implements
+outcome regression difference-in-differences (DID) estimator for the average treatment effect
+on the treated (ATT) defined in equation (2.2) of Sant'Anna and Zhao (2020) when stationary repeated cross-sectional
+data are available.  The estimator follows the same spirit of the nonparametric estimators proposed by Heckman, Ichimura and Todd (1997),
+though here the the outcome regression models are assumed to be linear in covariates (parametric),</p>
+<p>The nuisance parameters (outcome regression coefficients) are estimated via ordinary least squares.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p><cite>Heckman, James J., Ichimura, Hidehiko, and Todd, Petra E. (1997),"Matching as an Econometric Evaluation Estimator: Evidence from Evaluating a Job Training Programme",
 Review of Economic Studies, vol. 64(4), p. 605–654, <a href='https://doi.org/10.2307/2971733'>https://doi.org/10.2307/2971733</a>.
-</cite><cite>Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
+</cite></p>
+
+<p><cite>Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
 "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
 <a href='https://arxiv.org/abs/1812.01723'>https://arxiv.org/abs/1812.01723</a></cite></p>
 
@@ -248,7 +260,7 @@ Review of Economic Studies, vol. 64(4), p. 605–654, <a href='https://doi.org/1
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
 
       </footer>

@@ -47,7 +47,9 @@
 
 
 <meta property="og:title" content="Standardized Inverse Probability Weighted Difference-in-Differences Estimator, with Panel Data — std_ipw_did_panel" />
-<meta property="og:description" content="Standardized Inverse Probability Weighted Difference-in-Differences Estimator, with Panel Data" />
+<meta property="og:description" content="std_ipw_did_panel is used to compute inverse probability weighted (IPW) estimators for the ATT
+ in DID setups with panel data. IPW weights are normalized to sum up to one, that is, the estimator is of the
+ Hajek type." />
 <meta property="og:image" content="/reference/figures/logo.png" />
 <meta property="og:image:alt" content="Doubly Robust DID Estimators" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -135,7 +137,9 @@
     </div>
 
     <div class="ref-description">
-    <p>Standardized Inverse Probability Weighted Difference-in-Differences Estimator, with Panel Data</p>
+    <p><code>std_ipw_did_panel</code> is used to compute inverse probability weighted (IPW) estimators for the ATT
+ in DID setups with panel data. IPW weights are normalized to sum up to one, that is, the estimator is of the
+ Hajek type.</p>
     </div>
 
     <pre class="usage"><span class='fu'>std_ipw_did_panel</span>(
@@ -209,7 +213,9 @@ If boot==T, default is "weighted".</p></td>
 
     <p><cite>Abadie, Alberto (2005), "Semiparametric Difference-in-Differences Estimators",
 Review of Economic Studies, vol. 72(1), p. 1-19, <a href='https://doi.org/10.1111/0034-6527.00321'>https://doi.org/10.1111/0034-6527.00321</a>.
-</cite><cite>Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
+</cite></p>
+
+<p><cite>Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
 "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
 <a href='https://arxiv.org/abs/1812.01723'>https://arxiv.org/abs/1812.01723</a></cite></p>
 
@@ -224,7 +230,21 @@ Review of Economic Studies, vol. 72(1), p. 1-19, <a href='https://doi.org/10.111
 <span class='co'># Implement normalized IPW DID with panel data</span>
 <span class='fu'>std_ipw_did_panel</span>(<span class='kw'>y1</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>$<span class='no'>re78</span>, <span class='kw'>y0</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>$<span class='no'>re75</span>,
                 <span class='kw'>D</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>$<span class='no'>experimental</span>,
-                <span class='kw'>covariates</span> <span class='kw'>=</span> <span class='no'>covX</span>)</div><div class='output co'>#&gt; <span class='error'>Error in model.frame.default(formula = D ~ -1 + int.cov, weights = i.weights,     drop.unused.levels = TRUE): invalid type (NULL) for variable 'D'</span></div><div class='input'>
+                <span class='kw'>covariates</span> <span class='kw'>=</span> <span class='no'>covX</span>)</div><div class='output co'>#&gt;  Call:
+#&gt; std_ipw_did_panel(y1 = eval_lalonde_cps$re78, y0 = eval_lalonde_cps$re75, 
+#&gt;     D = eval_lalonde_cps$experimental, covariates = covX)
+#&gt; ------------------------------------------------------------------
+#&gt;  IPW DID estimator for the ATT:
+#&gt;  
+#&gt;    ATT     Std. Error  t value    Pr(&gt;|t|)  [95% Conf. Interval] 
+#&gt; -1021.6095  397.5322   -2.5699     0.0102   -1800.7726 -242.4464 
+#&gt; ------------------------------------------------------------------
+#&gt;  Estimator based on panel data.
+#&gt;  Hajek-type IPW estimator (weights sum up to 1).
+#&gt;  Propensity score est. method: maximum likelihood.
+#&gt;  Analytical standard error.
+#&gt; ------------------------------------------------------------------
+#&gt;  See Sant'Anna and Zhao (2020) for details.</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -241,7 +261,7 @@ Review of Economic Studies, vol. 72(1), p. 1-19, <a href='https://doi.org/10.111
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
 
       </footer>

@@ -226,11 +226,21 @@ If <code>boot==TRUE</code>, default is "weighted".</p></td>
 <dt>call.param</dt><dd><p>The matched call.</p></dd>
 <dt>argu</dt><dd><p>Some arguments used in the call (panel, normalized, boot, boot.type, nboot, type=="or")</p></dd>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The <code>ordid</code> function implements
+outcome regression difference-in-differences (DID) estimator for the average treatment effect
+on the treated (ATT) defined in equation (2.2) of Sant'Anna and Zhao (2020). The estimator follows the same spirit
+of the nonparametric estimators proposed by Heckman, Ichimura and Todd (1997), though here the the outcome regression
+models are assumed to be linear in covariates (parametric).</p>
+<p>The nuisance parameters (outcome regression coefficients) are estimated via ordinary least squares.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p><cite>Heckman, James J., Ichimura, Hidehiko, and Todd, Petra E. (1997),"Matching as an Econometric Evaluation Estimator: Evidence from Evaluating a Job Training Programme",
 Review of Economic Studies, vol. 64(4), p. 605–654, <a href='https://doi.org/10.2307/2971733'>https://doi.org/10.2307/2971733</a>.
-</cite><cite>Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
+</cite></p>
+
+<p><cite>Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
 "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
 <a href='https://arxiv.org/abs/1812.01723'>https://arxiv.org/abs/1812.01723</a></cite></p>
 
@@ -244,7 +254,21 @@ Review of Economic Studies, vol. 64(4), p. 605–654, <a href='https://doi.org/1
 <span class='co'># Implement OR DID with panel data</span>
 <span class='fu'>ordid</span>(<span class='kw'>yname</span><span class='kw'>=</span><span class='st'>"re"</span>, <span class='kw'>tname</span> <span class='kw'>=</span> <span class='st'>"year"</span>, <span class='kw'>idname</span> <span class='kw'>=</span> <span class='st'>"id"</span>, <span class='kw'>dname</span> <span class='kw'>=</span> <span class='st'>"experimental"</span>,
       <span class='kw'>xformla</span><span class='kw'>=</span> ~ <span class='no'>age</span>+ <span class='no'>educ</span>+ <span class='no'>black</span>+ <span class='no'>married</span>+ <span class='no'>nodegree</span>+ <span class='no'>hisp</span>+ <span class='no'>re74</span>,
-      <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>, <span class='kw'>panel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in pre_process_drdid(yname = yname, tname = tname, idname = idname,     dname = dname, xformla = xformla, data = data, panel = panel,     weightsname = weightsname, boot = boot, boot.type = boot.type,     nboot = nboot, inffunc = inffunc): dname = experimental could not be found in the data provided.</span></div><div class='input'>
+      <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>, <span class='kw'>panel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;  Call:
+#&gt; ordid(yname = "re", tname = "year", idname = "id", dname = "experimental", 
+#&gt;     xformla = ~age + educ + black + married + nodegree + hisp + 
+#&gt;         re74, data = eval_lalonde_cps, panel = TRUE)
+#&gt; ------------------------------------------------------------------
+#&gt;  Outcome-Regression DID estimator for the ATT:
+#&gt;  
+#&gt;    ATT     Std. Error  t value    Pr(&gt;|t|)  [95% Conf. Interval] 
+#&gt; -1300.6446  349.8365   -3.7179     2e-04    -1986.3241  -614.965 
+#&gt; ------------------------------------------------------------------
+#&gt;  Estimator based on panel data.
+#&gt;  Outcome regression est. method: OLS.
+#&gt;  Analytical standard error.
+#&gt; ------------------------------------------------------------------
+#&gt;  See Sant'Anna and Zhao (2020) for details.</div><div class='input'>
 <span class='co'># -----------------------------------------------</span>
 <span class='co'># Repeated cross section case</span>
 <span class='co'># -----------------------------------------------</span>
@@ -288,7 +312,7 @@ Review of Economic Studies, vol. 64(4), p. 605–654, <a href='https://doi.org/1
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
 
       </footer>

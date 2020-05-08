@@ -47,7 +47,9 @@
 
 
 <meta property="og:title" content="Two-Way Fixed Effects DID Estimator, with Panel Data — twfe_did_panel" />
-<meta property="og:description" content="Two-Way Fixed Effects DID Estimator, with Panel Data" />
+<meta property="og:description" content="twfe_did_panel is used to compute linear two-way fixed effects estimators for the ATT
+ in DID setups with panel data. As illustrated by Sant'Anna and Zhao (2020), this estimator generally do not recover
+ the ATT. We encourage empiricists to adopt alternative specifications." />
 <meta property="og:image" content="/reference/figures/logo.png" />
 <meta property="og:image:alt" content="Doubly Robust DID Estimators" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -135,7 +137,9 @@
     </div>
 
     <div class="ref-description">
-    <p>Two-Way Fixed Effects DID Estimator, with Panel Data</p>
+    <p><code>twfe_did_panel</code> is used to compute linear two-way fixed effects estimators for the ATT
+ in DID setups with panel data. As illustrated by Sant'Anna and Zhao (2020), this estimator generally do not recover
+ the ATT. We encourage empiricists to adopt alternative specifications.</p>
     </div>
 
     <pre class="usage"><span class='fu'>twfe_did_panel</span>(
@@ -214,7 +218,27 @@ If boot==T, default is "weighted".</p></td>
 <span class='co'># Implement TWFE DID with panel data</span>
 <span class='fu'>twfe_did_panel</span>(<span class='kw'>y1</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>$<span class='no'>re78</span>, <span class='kw'>y0</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>$<span class='no'>re75</span>,
                <span class='kw'>D</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>$<span class='no'>experimental</span>,
-               <span class='kw'>covariates</span> <span class='kw'>=</span> <span class='no'>covX</span>)</div><div class='output co'>#&gt; <span class='error'>Error in model.frame.default(formula = y ~ dd:post + post + dd + x, weights = i.weights,     drop.unused.levels = TRUE): invalid type (NULL) for variable 'dd'</span></div><div class='input'>
+               <span class='kw'>covariates</span> <span class='kw'>=</span> <span class='no'>covX</span>)</div><div class='output co'>#&gt; $ATT
+#&gt; dd:post 
+#&gt; 867.509 
+#&gt; 
+#&gt; $se
+#&gt; [1] 352.9703
+#&gt; 
+#&gt; $uci
+#&gt;  dd:post 
+#&gt; 1559.331 
+#&gt; 
+#&gt; $lci
+#&gt;  dd:post 
+#&gt; 175.6872 
+#&gt; 
+#&gt; $boots
+#&gt; NULL
+#&gt; 
+#&gt; $att.inf.func
+#&gt; NULL
+#&gt; </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -231,7 +255,7 @@ If boot==T, default is "weighted".</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
 
       </footer>
