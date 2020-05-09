@@ -1,17 +1,17 @@
 Package: DRDID
 Type: Package
-Title: DRDID: A package for computing doubly robust difference-in-differences estimators
+Title: Doubly Robust Difference-in-Differences Estimators
 Version: 1.0.0
 Authors@R: c(person("Pedro H. C.", "Sant'Anna", email = "pedro.h.santanna@vanderbilt.edu",
               role = c("aut", "cre")),
               person("Jun B.", "Zhao", email = "jun.zhao@vanderbilt.edu",role = c("aut"))
             )
-Description: This package implements different estimators for the Average Treatment Effect on
-    the Treated in Difference-in-Differences (DID) setups where the parallel trends assumption
-    holds after you condition on a vector of pre-treatment covariates. The main estimators 
-    implemented here are the locally efficient, doubly-robust DID estimators proposed by 
-    Sant'Anna and Zhao (2020) <https://arxiv.org/abs/1812.01723>. A number of other DID 
-    estimators discussed in Sant'Anna and Zhao (2020) are also implemented.
+Description: Implements the locally efficient doubly robust difference-in-Differences (DID)
+    estimators for the Average Treatment Effect proposed by Sant'Anna and Zhao (2020)
+    <arXiv:1812.01723>. The estimator combines inverse probability weighting and outcome
+    regression estimators (also implemented in the package) to form estimators with
+    more attractive statistical properties. Two different estimation methods can be used
+    to estimate the nuisance functions.
 URL: https://pedrohcgs.github.io/DRDID/, https://github.com/pedrohcgs/DRDID    
 License: GPL-3
 Encoding: UTF-8
@@ -23,7 +23,6 @@ Imports:
     trust,
     BMisc (>= 1.4.1)
 RoxygenNote: 7.1.0
-VignetteBuilder: knitr
 Suggests: 
     knitr,
     rmarkdown,
