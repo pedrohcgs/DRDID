@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Two-Way Fixed Effects DID Estimator, with Panel Data — twfe_did_panel • DRDID</title>
+<title>Two-Way Fixed Effects DiD estimator, with panel data — twfe_did_panel • DRDID</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,10 +46,10 @@
 
 
 
-<meta property="og:title" content="Two-Way Fixed Effects DID Estimator, with Panel Data — twfe_did_panel" />
+<meta property="og:title" content="Two-Way Fixed Effects DiD estimator, with panel data — twfe_did_panel" />
 <meta property="og:description" content="twfe_did_panel is used to compute linear two-way fixed effects estimators for the ATT
- in DID setups with panel data. As illustrated by Sant'Anna and Zhao (2020), this estimator generally do not recover
- the ATT. We encourage empiricists to adopt alternative specifications." />
+ in difference-in-differences (DiD) setups with panel data. As illustrated by Sant'Anna and Zhao (2020),
+ this estimator generally do not recover the ATT. We encourage empiricists to adopt alternative specifications." />
 <meta property="og:image" content="/reference/figures/logo.png" />
 <meta property="og:image:alt" content="Doubly Robust DID Estimators" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -131,15 +131,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Two-Way Fixed Effects DID Estimator, with Panel Data</h1>
+    <h1>Two-Way Fixed Effects DiD estimator, with panel data</h1>
     <small class="dont-index">Source: <a href='https://github.com/pedrohcgs/DRDID/blob/master/R/twfe_did_panel.R'><code>R/twfe_did_panel.R</code></a></small>
     <div class="hidden name"><code>twfe_did_panel.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p><code>twfe_did_panel</code> is used to compute linear two-way fixed effects estimators for the ATT
- in DID setups with panel data. As illustrated by Sant'Anna and Zhao (2020), this estimator generally do not recover
- the ATT. We encourage empiricists to adopt alternative specifications.</p>
+ in difference-in-differences (DiD) setups with panel data. As illustrated by Sant'Anna and Zhao (2020),
+ this estimator generally do not recover the ATT. We encourage empiricists to adopt alternative specifications.</p>
     </div>
 
     <pre class="usage"><span class='fu'>twfe_did_panel</span>(
@@ -148,10 +148,10 @@
   <span class='no'>D</span>,
   <span class='no'>covariates</span>,
   <span class='kw'>i.weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>boot</span> <span class='kw'>=</span> <span class='no'>F</span>,
+  <span class='kw'>boot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>boot.type</span> <span class='kw'>=</span> <span class='st'>"weighted"</span>,
   <span class='kw'>nboot</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>inffunc</span> <span class='kw'>=</span> <span class='no'>F</span>
+  <span class='kw'>inffunc</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -183,12 +183,12 @@
     </tr>
     <tr>
       <th>boot.type</th>
-      <td><p>Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
-If boot==T, default is "weighted".</p></td>
+      <td><p>Type of bootstrap to be performed (not relevant if <code>boot = FALSE</code>). Options are "weighted" and "multiplier".
+If <code>boot = TRUE</code>, default is "weighted".</p></td>
     </tr>
     <tr>
       <th>nboot</th>
-      <td><p>Number of bootstrap repetitions (not relevant if boot = FALSE). Default is 999 if boot = TRUE.</p></td>
+      <td><p>Number of bootstrap repetitions (not relevant if <code>boot = FALSE</code>). Default is 999.</p></td>
     </tr>
     <tr>
       <th>inffunc</th>

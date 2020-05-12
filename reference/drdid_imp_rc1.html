@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Improved Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data — drdid_imp_rc1 • DRDID</title>
+<title>Improved doubly robust DiD estimator for the ATT, with repeated cross-section data — drdid_imp_rc1 • DRDID</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,9 @@
 
 
 
-<meta property="og:title" content="Improved Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data — drdid_imp_rc1" />
+<meta property="og:title" content="Improved doubly robust DiD estimator for the ATT, with repeated cross-section data — drdid_imp_rc1" />
 <meta property="og:description" content="drdid_imp_rc1 is used to compute the doubly robust estimators for the ATT
- in DID setups with stationary repeated cross-sectional data. The resulting estimator is also doubly robust for inference,
+ in difference-in-differences (DiD) setups with stationary repeated cross-sectional data. The resulting estimator is also doubly robust for inference,
  though it is not locally efficient; see Section 3.2 of Sant'Anna and Zhao (2020)." />
 <meta property="og:image" content="/reference/figures/logo.png" />
 <meta property="og:image:alt" content="Doubly Robust DID Estimators" />
@@ -131,14 +131,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Improved Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data</h1>
+    <h1>Improved doubly robust DiD estimator for the ATT, with repeated cross-section data</h1>
     <small class="dont-index">Source: <a href='https://github.com/pedrohcgs/DRDID/blob/master/R/drdid_imp_rc1.R'><code>R/drdid_imp_rc1.R</code></a></small>
     <div class="hidden name"><code>drdid_imp_rc1.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p><code>drdid_imp_rc1</code> is used to compute the doubly robust estimators for the ATT
- in DID setups with stationary repeated cross-sectional data. The resulting estimator is also doubly robust for inference,
+ in difference-in-differences (DiD) setups with stationary repeated cross-sectional data. The resulting estimator is also doubly robust for inference,
  though it is not locally efficient; see Section 3.2 of Sant'Anna and Zhao (2020).</p>
     </div>
 
@@ -148,10 +148,10 @@
   <span class='no'>D</span>,
   <span class='no'>covariates</span>,
   <span class='kw'>i.weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>boot</span> <span class='kw'>=</span> <span class='no'>F</span>,
+  <span class='kw'>boot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>boot.type</span> <span class='kw'>=</span> <span class='st'>"weighted"</span>,
   <span class='kw'>nboot</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>inffunc</span> <span class='kw'>=</span> <span class='no'>F</span>
+  <span class='kw'>inffunc</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -185,12 +185,12 @@ If covariates = NULL, this leads to an unconditional DID estimator.</p></td>
     </tr>
     <tr>
       <th>boot.type</th>
-      <td><p>Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
-If boot==T, default is "weighted".</p></td>
+      <td><p>Type of bootstrap to be performed (not relevant if <code>boot = FALSE</code>). Options are "weighted" and "multiplier".
+If <code>boot = TRUE</code>, default is "weighted".</p></td>
     </tr>
     <tr>
       <th>nboot</th>
-      <td><p>Number of bootstrap repetitions (not relevant if boot = FALSE). Default is 999 if boot = TRUE</p></td>
+      <td><p>Number of bootstrap repetitions (not relevant if <code>boot = FALSE</code>). Default is 999.</p></td>
     </tr>
     <tr>
       <th>inffunc</th>
@@ -211,7 +211,7 @@ If boot==T, default is "weighted".</p></td>
    did not converged).</p></dd>
  <dt>att.inf.func</dt><dd><p>Estimate of the influence function. Default is NULL</p></dd>
  <dt>call.param</dt><dd><p>The matched call.</p></dd>
- <dt>argu</dt><dd><p>Some arguments used (explicitly or not) in the call (panel = F, estMethod = "imp2", boot, boot.type, nboot, type="dr")</p></dd>
+ <dt>argu</dt><dd><p>Some arguments used (explicitly or not) in the call (panel = FALSE, estMethod = "imp2", boot, boot.type, nboot, type="dr")</p></dd>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 

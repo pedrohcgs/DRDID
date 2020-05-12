@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Locally Efficient Doubly Robust Difference-in-Differences Estimators for the ATT — drdid • DRDID</title>
+<title>Locally efficient doubly robust DiD estimators for the ATT — drdid • DRDID</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,10 @@
 
 
 
-<meta property="og:title" content="Locally Efficient Doubly Robust Difference-in-Differences Estimators for the ATT — drdid" />
+<meta property="og:title" content="Locally efficient doubly robust DiD estimators for the ATT — drdid" />
 <meta property="og:description" content="drdid is used to compute the locally efficient doubly robust estimators for the ATT
- in DID setups. It can be used with panel or stationary repeated cross section data. Data should be store in &quot;long&quot; format." />
+ in difference-in-differences (DiD) setups. It can be used with panel or stationary repeated cross section data.
+ Data should be store in &quot;long&quot; format." />
 <meta property="og:image" content="/reference/figures/logo.png" />
 <meta property="og:image:alt" content="Doubly Robust DID Estimators" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -130,14 +131,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Locally Efficient Doubly Robust Difference-in-Differences Estimators for the ATT</h1>
+    <h1>Locally efficient doubly robust DiD estimators for the ATT</h1>
     <small class="dont-index">Source: <a href='https://github.com/pedrohcgs/DRDID/blob/master/R/drdid.R'><code>R/drdid.R</code></a></small>
     <div class="hidden name"><code>drdid.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p><code>drdid</code> is used to compute the locally efficient doubly robust estimators for the ATT
- in DID setups. It can be used with panel or stationary repeated cross section data. Data should be store in "long" format.</p>
+ in difference-in-differences (DiD) setups. It can be used with panel or stationary repeated cross section data.
+ Data should be store in "long" format.</p>
     </div>
 
     <pre class="usage"><span class='fu'>drdid</span>(
@@ -188,7 +190,7 @@
       <th>panel</th>
       <td><p>Whether or not the data is a panel dataset. The panel dataset should be provided in long format -- that
 is, where each row corresponds to a unit observed at a particular point in time.  The default is TRUE.
-Whens <code>panel=TRUE</code>, the variable <code>idname</code> must be set.  When <code>panel=FALSE</code>, the data is treated
+Whens <code>panel = TRUE</code>, the variable <code>idname</code> must be set.  When <code>panel = FALSE</code>, the data is treated
 as stationary repeated cross sections.</p></td>
     </tr>
     <tr>
@@ -211,8 +213,8 @@ standard errors are reported.</p></td>
     </tr>
     <tr>
       <th>boot.type</th>
-      <td><p>Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
-If <code>boot==TRUE</code>, default is "weighted".</p></td>
+      <td><p>Type of bootstrap to be performed (not relevant if <code>boot = FALSE</code>). Options are "weighted" and "multiplier".
+If <code>boot = TRUE</code>, default is "weighted".</p></td>
     </tr>
     <tr>
       <th>nboot</th>
@@ -235,20 +237,21 @@ If <code>boot==TRUE</code>, default is "weighted".</p></td>
 <dt>att.inf.func</dt><dd><p>Estimate of the influence function. Default is NULL</p></dd>
  <dt>ps.flag</dt><dd><p>Convergence Flag for the propensity score estimation
  (only active if <code>estMethod = "imp"</code>.): =0 if <code>trust</code> algorithm converged,
-   =1 if IPT (original) algorithm converged (in case it was used), =2 if GLM logit estimator was used (i.e., if both <code>trust</code> and IPT
+   =1 if IPT (original) algorithm converged (in case it was used), =2 if
+   GLM logit estimator was used (i.e., if both <code>trust</code> and IPT
    did not converged).</p></dd>
 <dt>call.param</dt><dd><p>The matched call.</p></dd>
 <dt>argu</dt><dd><p>Some arguments used in the call (panel, estMethod, boot, boot.type, nboot, type="dr")</p></dd>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>When panel data are available (<code>panel = T</code>), the <code>drdid</code> function implements the
+    <p>When panel data are available (<code>panel = TRUE</code>), the <code>drdid</code> function implements the
 locally efficient doubly robust difference-in-differences (DID) estimator for the average treatment effect
 on the treated (ATT) defined in equation (3.1) in Sant'Anna and Zhao (2020). This estimator makes use of
 a logistic propensity score model for the probability of being in the treated group,
 and of a linear regression model for the outcome evolution among the comparison units.</p>
 
-<p>When only stationary repeated cross-section data are available (<code>panel = F</code>), the <code>drdid</code> function
+<p>When only stationary repeated cross-section data are available (<code>panel = FALSE</code>), the <code>drdid</code> function
 implements the locally efficient doubly robust difference-in-differences (DID) estimator for the
 average treatment effect on the treated (ATT) defined in equation (3.4) in Sant'Anna and Zhao (2020).
 This estimator makes use of a logistic propensity score model for the probability of being in the

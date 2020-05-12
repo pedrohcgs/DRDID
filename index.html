@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DRDID: A package for computing doubly robust difference-in-differences estimators • DRDID</title>
+<title>Doubly Robust Difference-in-Differences Estimators • DRDID</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
@@ -17,13 +17,13 @@
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="DRDID: A package for computing doubly robust difference-in-differences estimators">
-<meta property="og:description" content="This package implements different estimators for the Average Treatment Effect on
-    the Treated in Difference-in-Differences (DID) setups where the parallel trends assumption
-    holds after you condition on a vector of pre-treatment covariates. The main estimators 
-    implemented here are the locally efficient, doubly-robust DID estimators proposed by 
-    SantAnna and Zhao (2020) &lt;https://arxiv.org/abs/1812.01723&gt;. A number of other DID 
-    estimators discussed in SantAnna and Zhao (2020) are also implemented.">
+<script src="pkgdown.js"></script><meta property="og:title" content="Doubly Robust Difference-in-Differences Estimators">
+<meta property="og:description" content="Implements the locally efficient doubly robust difference-in-differences (DiD)
+    estimators for the average treatment effect proposed by Sant'Anna and Zhao (2020)
+    &lt;arXiv:1812.01723&gt;. The estimator combines inverse probability weighting and outcome
+    regression estimators (also implemented in the package) to form estimators with
+    more attractive statistical properties. Two different estimation methods can be used
+    to estimate the nuisance functions.">
 <meta property="og:image" content="/reference/figures/logo.png">
 <meta property="og:image:alt" content="Doubly Robust DID Estimators">
 <meta name="twitter:card" content="summary_large_image">

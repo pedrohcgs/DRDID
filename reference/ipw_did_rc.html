@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Inverse Probability Weighted Difference-in-Differences Estimator, with Repeated Cross Section  Data — ipw_did_rc • DRDID</title>
+<title>Inverse probability weighted DiD estimator, with repeated cross-section data — ipw_did_rc • DRDID</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,10 +46,10 @@
 
 
 
-<meta property="og:title" content="Inverse Probability Weighted Difference-in-Differences Estimator, with Repeated Cross Section  Data — ipw_did_rc" />
+<meta property="og:title" content="Inverse probability weighted DiD estimator, with repeated cross-section data — ipw_did_rc" />
 <meta property="og:description" content="ipw_did_rc is used to compute inverse probability weighted (IPW) estimators for the ATT
- in DID setups with stationary cross-sectional data. IPW weights are not normalized to sum up to one, that is,
- the estimator is of the Horwitz-Thompson type." />
+ in difference-in-differences (DiD) setups with stationary cross-sectional data. IPW weights are not normalized
+ to sum up to one, that is, the estimator is of the Horwitz-Thompson type." />
 <meta property="og:image" content="/reference/figures/logo.png" />
 <meta property="og:image:alt" content="Doubly Robust DID Estimators" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -131,15 +131,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Inverse Probability Weighted Difference-in-Differences Estimator, with Repeated Cross Section  Data</h1>
+    <h1>Inverse probability weighted DiD estimator, with repeated cross-section data</h1>
     <small class="dont-index">Source: <a href='https://github.com/pedrohcgs/DRDID/blob/master/R/ipw_did_rc.R'><code>R/ipw_did_rc.R</code></a></small>
     <div class="hidden name"><code>ipw_did_rc.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p><code>ipw_did_rc</code> is used to compute inverse probability weighted (IPW) estimators for the ATT
- in DID setups with stationary cross-sectional data. IPW weights are not normalized to sum up to one, that is,
- the estimator is of the Horwitz-Thompson type.</p>
+ in difference-in-differences (DiD) setups with stationary cross-sectional data. IPW weights are not normalized
+ to sum up to one, that is, the estimator is of the Horwitz-Thompson type.</p>
     </div>
 
     <pre class="usage"><span class='fu'>ipw_did_rc</span>(
@@ -148,10 +148,10 @@
   <span class='no'>D</span>,
   <span class='no'>covariates</span>,
   <span class='kw'>i.weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>boot</span> <span class='kw'>=</span> <span class='no'>F</span>,
+  <span class='kw'>boot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>boot.type</span> <span class='kw'>=</span> <span class='st'>"weighted"</span>,
   <span class='kw'>nboot</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>inffunc</span> <span class='kw'>=</span> <span class='no'>F</span>
+  <span class='kw'>inffunc</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -185,12 +185,12 @@ If covariates = NULL, this leads to an unconditional DID estimator.</p></td>
     </tr>
     <tr>
       <th>boot.type</th>
-      <td><p>Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
-If boot==T, default is "weighted".</p></td>
+      <td><p>Type of bootstrap to be performed (not relevant if <code>boot = FALSE</code>). Options are "weighted" and "multiplier".
+If <code>boot = TRUE</code>, default is "weighted".</p></td>
     </tr>
     <tr>
       <th>nboot</th>
-      <td><p>Number of bootstrap repetitions (not relevant if boot = FALSE). Default is 999 if boot = TRUE.</p></td>
+      <td><p>Number of bootstrap repetitions (not relevant if <code>boot = FALSE</code>). Default is 999.</p></td>
     </tr>
     <tr>
       <th>inffunc</th>
@@ -208,7 +208,7 @@ If boot==T, default is "weighted".</p></td>
 <dt>boots</dt><dd><p>All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL</p></dd>
 <dt>att.inf.func</dt><dd><p>Estimate of the influence function. Default is NULL</p></dd>
  <dt>call.param</dt><dd><p>The matched call.</p></dd>
- <dt>argu</dt><dd><p>Some arguments used (explicitly or not) in the call (panel = F, normalized = F, boot, boot.type, nboot, type="ipw")</p></dd>
+ <dt>argu</dt><dd><p>Some arguments used (explicitly or not) in the call (panel = FALSE, normalized = FALSE, boot, boot.type, nboot, type="ipw")</p></dd>
 
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
