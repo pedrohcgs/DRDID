@@ -1,9 +1,9 @@
 #' @import stats trust
 NULL
 ###################################################################################
-# Improved Doubly Robust DID estimator with panel Data
+# Improved Doubly Robust DID estimator with panel data
 
-#' Improved locally efficient doubly robust DiD estimator for the ATT, with panel pata
+#' Improved locally efficient doubly robust DiD estimator for the ATT, with panel data
 #'
 #' @description \code{drdid_imp_panel} is used to compute the locally efficient doubly robust estimators for the ATT
 #'  in difference-in-differences (DiD) setups with panel data. The resulting estimator is also doubly robust

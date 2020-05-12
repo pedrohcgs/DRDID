@@ -1,7 +1,7 @@
 #' @import stats
 NULL
 ###################################################################################
-#' Two-Way Fixed Effects DiD estimator, with panel data
+#' Two-way fixed effects DiD estimator, with panel data
 #'
 #' @description \code{twfe_did_panel} is used to compute linear two-way fixed effects estimators for the ATT
 #'  in difference-in-differences (DiD) setups with panel data. As illustrated by Sant'Anna and Zhao (2020),

@@ -2,7 +2,7 @@
 % Please edit documentation in R/twfe_did_panel.R
 \name{twfe_did_panel}
 \alias{twfe_did_panel}
-\title{Two-Way Fixed Effects DiD estimator, with panel data}
+\title{Two-way fixed effects DiD estimator, with panel data}
 \usage{
 twfe_did_panel(
   y1,

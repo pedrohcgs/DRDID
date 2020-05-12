@@ -1,7 +1,7 @@
 #' @import stats
 NULL
 ###################################################################################
-#' Two-Way Fixed Effects DiD estimator, with repeated cross-section data
+#' Two-way fixed effects DiD estimator, with repeated cross-section data
 #' @description \code{twfe_did_rc} is used to compute linear two-way fixed effects estimators for the ATT
 #'  in difference-in-differences (DiD) setups with stationary repeated cross-sectional data. As illustrated
 #'  by Sant'Anna and Zhao (2020),this estimator generally do not recover the ATT. We encourage empiricists

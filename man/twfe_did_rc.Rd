@@ -2,7 +2,7 @@
 % Please edit documentation in R/twfe_did_rc.R
 \name{twfe_did_rc}
 \alias{twfe_did_rc}
-\title{Two-Way Fixed Effects DiD estimator, with repeated cross-section data}
+\title{Two-way fixed effects DiD estimator, with repeated cross-section data}
 \usage{
 twfe_did_rc(
   y,

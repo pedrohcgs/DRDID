@@ -2,7 +2,7 @@
 % Please edit documentation in R/drdid_imp_panel.R
 \name{drdid_imp_panel}
 \alias{drdid_imp_panel}
-\title{Improved locally efficient doubly robust DiD estimator for the ATT, with panel pata}
+\title{Improved locally efficient doubly robust DiD estimator for the ATT, with panel data}
 \usage{
 drdid_imp_panel(
   y1,
