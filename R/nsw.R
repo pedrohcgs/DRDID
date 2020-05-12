@@ -1,4 +1,4 @@
-#' @title National Supported Work Demonstration Dataset
+#' @title National Supported Work Demonstration dataset
 #'
 #' @description \code{nsw} contains all the subsamples of from the
 #' National Supported Work (NSW) Demonstration analyzed used by Smith and Todd (2005)
