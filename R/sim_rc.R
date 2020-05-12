@@ -1,4 +1,4 @@
-#' @title Simulated Repeated Cross-Section Data
+#' @title Simulated repeated cross-section data
 #'
 #' @description \code{sim_rc} contains a simulated dataset following the DGP1 in Sant'Anna
 #' and Zhao (2020).

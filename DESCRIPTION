@@ -6,8 +6,8 @@ Authors@R: c(person("Pedro H. C.", "Sant'Anna", email = "pedro.h.santanna@vander
               role = c("aut", "cre")),
               person("Jun B.", "Zhao", email = "jun.zhao@vanderbilt.edu",role = c("aut"))
             )
-Description: Implements the locally efficient doubly robust difference-in-differences (DID)
-    estimators for the Average Treatment Effect proposed by Sant'Anna and Zhao (2020)
+Description: Implements the locally efficient doubly robust difference-in-differences (DiD)
+    estimators for the average treatment effect proposed by Sant'Anna and Zhao (2020)
     <arXiv:1812.01723>. The estimator combines inverse probability weighting and outcome
     regression estimators (also implemented in the package) to form estimators with
     more attractive statistical properties. Two different estimation methods can be used

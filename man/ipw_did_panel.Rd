@@ -2,7 +2,7 @@
 % Please edit documentation in R/ipw_did_panel.R
 \name{ipw_did_panel}
 \alias{ipw_did_panel}
-\title{Inverse Probability Weighted Difference-in-Differences Estimator, with Panel Data}
+\title{Inverse probability weighted DiD estimator, with panel data}
 \usage{
 ipw_did_panel(
   y1,
@@ -10,10 +10,10 @@ ipw_did_panel(
   D,
   covariates,
   i.weights = NULL,
-  boot = F,
+  boot = FALSE,
   boot.type = "weighted",
   nboot = NULL,
-  inffunc = F
+  inffunc = FALSE
 )
 }
 \arguments{
@@ -30,10 +30,10 @@ If covariates = NULL, this leads to an unconditional DID estimator.}
 
 \item{boot}{Logical argument to whether bootstrap should be used for inference. Default is FALSE.}
 
-\item{boot.type}{Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
-If boot==T, default is "weighted".}
+\item{boot.type}{Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
+If \code{boot = TRUE}, default is "weighted".}
 
-\item{nboot}{Number of bootstrap repetitions (not relevant if boot = FALSE). Default is 999 if boot = TRUE.}
+\item{nboot}{Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.}
 
 \item{inffunc}{Logical argument to whether influence function should be returned. Default is FALSE.}
 }
@@ -46,12 +46,12 @@ A list containing the following components:
 \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
 \item{att.inf.func}{Estimate of the influence function. Default is NULL}
  \item{call.param}{The matched call.}
- \item{argu}{Some arguments used (explicitly or not) in the call (panel = T, normalized = F, boot, boot.type, nboot, type="ipw")}
+ \item{argu}{Some arguments used (explicitly or not) in the call (panel = TRUE, normalized = FALSE, boot, boot.type, nboot, type="ipw")}
 }
 \description{
 \code{ipw_did_panel} is used to compute inverse probability weighted (IPW) estimators for the ATT
- in DID setups with panel data. IPW weights are not normalized to sum up to one, that is, the estimator is of the
- Horwitz-Thompson type.
+ in difference-in-differences (DiD) setups with panel data. IPW weights are not normalized to sum up to one,
+ that is, the estimator is of the Horwitz-Thompson type.
 }
 \examples{
 # Form the Lalonde sample with CPS comparison group

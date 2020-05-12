@@ -1,4 +1,4 @@
-#' @title National Supported Work Demonstration Dataset, in Long Format
+#' @title National Supported Work Demonstration dataset, in long format
 #'
 #' @description \code{nsw_long} is the same dataset as \code{nsw} but in a long format.
 #'

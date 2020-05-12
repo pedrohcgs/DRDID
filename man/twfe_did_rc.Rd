@@ -2,7 +2,7 @@
 % Please edit documentation in R/twfe_did_rc.R
 \name{twfe_did_rc}
 \alias{twfe_did_rc}
-\title{Two-Way Fixed Effects DID estimator, with Repeated Cross Section}
+\title{Two-Way Fixed Effects DiD estimator, with repeated cross-section data}
 \usage{
 twfe_did_rc(
   y,
@@ -10,10 +10,10 @@ twfe_did_rc(
   D,
   covariates = NULL,
   i.weights = NULL,
-  boot = F,
+  boot = FALSE,
   boot.type = "weighted",
   nboot = NULL,
-  inffunc = F
+  inffunc = FALSE
 )
 }
 \arguments{
@@ -30,10 +30,10 @@ and post = 0 if observation belongs to pre-treatment period.)}
 
 \item{boot}{Logical argument to whether bootstrap should be used for inference. Default is FALSE.}
 
-\item{boot.type}{Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
-If boot==T, default is "weighted".}
+\item{boot.type}{Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
+If \code{boot = TRUE}, default is "weighted".}
 
-\item{nboot}{Number of bootstrap repetitions (not relevant if boot = FALSE). Default is 999 if boot = TRUE.}
+\item{nboot}{Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.}
 
 \item{inffunc}{Logical argument to whether influence function should be returned. Default is FALSE.}
 }
@@ -48,8 +48,9 @@ A list containing the following components:
 }
 \description{
 \code{twfe_did_rc} is used to compute linear two-way fixed effects estimators for the ATT
- in DID setups with stationary repeated cross-sectional data. As illustrated by Sant'Anna and Zhao (2020),
-  this estimator generally do not recover the ATT. We encourage empiricists to adopt alternative specifications.
+ in difference-in-differences (DiD) setups with stationary repeated cross-sectional data. As illustrated
+ by Sant'Anna and Zhao (2020),this estimator generally do not recover the ATT. We encourage empiricists
+ to adopt alternative specifications.
 }
 \examples{
 # use the simulated data provided in the package

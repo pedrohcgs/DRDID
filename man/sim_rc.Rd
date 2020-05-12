@@ -3,7 +3,7 @@
 \docType{data}
 \name{sim_rc}
 \alias{sim_rc}
-\title{Simulated Repeated Cross-Section Data}
+\title{Simulated repeated cross-section data}
 \format{
 A data frame in "long" format with 1000 observations on the following and 8 variables:
 \describe{

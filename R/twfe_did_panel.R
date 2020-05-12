@@ -1,11 +1,11 @@
 #' @import stats
 NULL
 ###################################################################################
-#' Two-Way Fixed Effects DID Estimator, with Panel Data
+#' Two-Way Fixed Effects DiD estimator, with panel data
 #'
 #' @description \code{twfe_did_panel} is used to compute linear two-way fixed effects estimators for the ATT
-#'  in DID setups with panel data. As illustrated by Sant'Anna and Zhao (2020), this estimator generally do not recover
-#'  the ATT. We encourage empiricists to adopt alternative specifications.
+#'  in difference-in-differences (DiD) setups with panel data. As illustrated by Sant'Anna and Zhao (2020),
+#'  this estimator generally do not recover the ATT. We encourage empiricists to adopt alternative specifications.
 #'
 #' @param y1 An \eqn{n} x \eqn{1} vector of outcomes from the post-treatment period.
 #' @param y0 An \eqn{n} x \eqn{1} vector of outcomes from the pre-treatment period.
@@ -13,9 +13,9 @@ NULL
 #' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the regression estimation.
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
-#' @param boot.type Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
-#' If boot==T, default is "weighted".
-#' @param nboot Number of bootstrap repetitions (not relevant if boot = FALSE). Default is 999 if boot = TRUE.
+#' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
+#' If \code{boot = TRUE}, default is "weighted".
+#' @param nboot Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
 #'
 #' @return A list containing the following components:
@@ -41,8 +41,8 @@ NULL
 #' @export
 
 twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
-                          boot = F, boot.type = "weighted", nboot = NULL,
-                          inffunc = F){
+                          boot = FALSE, boot.type = "weighted", nboot = NULL,
+                          inffunc = FALSE){
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
@@ -90,7 +90,7 @@ twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
     #---------------------------------------------------------------------------
     #Estimate TWFE regression
 
-    reg <- stats::lm(y ~  dd:post + post + dd + x, x = T, weights = i.weights)
+    reg <- stats::lm(y ~  dd:post + post + dd + x, x = TRUE, weights = i.weights)
 
 
     twfe.att <- reg$coefficients["dd:post"]
@@ -102,14 +102,14 @@ twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
     sel.theta <- matrix(c(rep(0, dim(inf.reg)[2])))
 
     index.theta <- which(dimnames(reg$x)[[2]]=="dd:post",
-                         arr.ind = T)
+                         arr.ind = TRUE)
 
     sel.theta[index.theta, ] <- 1
     #-----------------------------------------------------------------------------
     #get the influence function of the TWFE regression
     twfe.inf.func <- as.vector(inf.reg %*% sel.theta)
     #-----------------------------------------------------------------------------
-    if (boot == F) {
+    if (boot == FALSE) {
       # Estimate of standard error
       se.twfe.att <- stats::sd(twfe.inf.func)/sqrt(length(twfe.inf.func))
       # Estimate of upper boudary of 95% CI
@@ -120,8 +120,8 @@ twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
       twfe.boot <- NULL
     }
 
-    if (boot == T) {
-      if (is.null(nboot) == T) nboot = 999
+    if (boot == TRUE) {
+      if (is.null(nboot) == TRUE) nboot = 999
       if(boot.type == "multiplier"){
         # do multiplier bootstrap
         twfe.boot <- mboot.twfep.did(n, twfe.inf.func, nboot)
@@ -164,7 +164,7 @@ twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
                  weightsname  = "w",
                  xformla= NULL,
                  data = dta_long,
-                 panel=T,
+                 panel = TRUE,
                  boot = boot, boot.type = boot.type, nboot = nboot,
                  inffunc = inffunc)
     twfe.att <- reg$ATT
@@ -176,7 +176,7 @@ twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   }
 
 
-  if(inffunc==F) att.inf.func <- NULL
+  if(inffunc == FALSE) att.inf.func <- NULL
   return(list(ATT = twfe.att,
               se = se.twfe.att,
               uci = uci,

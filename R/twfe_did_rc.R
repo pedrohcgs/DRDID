@@ -1,10 +1,11 @@
 #' @import stats
 NULL
 ###################################################################################
-#' Two-Way Fixed Effects DID estimator, with Repeated Cross Section
+#' Two-Way Fixed Effects DiD estimator, with repeated cross-section data
 #' @description \code{twfe_did_rc} is used to compute linear two-way fixed effects estimators for the ATT
-#'  in DID setups with stationary repeated cross-sectional data. As illustrated by Sant'Anna and Zhao (2020),
-#'   this estimator generally do not recover the ATT. We encourage empiricists to adopt alternative specifications.
+#'  in difference-in-differences (DiD) setups with stationary repeated cross-sectional data. As illustrated
+#'  by Sant'Anna and Zhao (2020),this estimator generally do not recover the ATT. We encourage empiricists
+#'  to adopt alternative specifications.
 #'
 #' @param y An \eqn{n} x \eqn{1} vector of outcomes from the both pre and post-treatment periods.
 #' @param post An \eqn{n} x \eqn{1} vector of Post-Treatment dummies (post = 1 if observation belongs to post-treatment period,
@@ -13,9 +14,9 @@ NULL
 #' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the regression estimation.
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
-#' @param boot.type Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
-#' If boot==T, default is "weighted".
-#' @param nboot Number of bootstrap repetitions (not relevant if boot = FALSE). Default is 999 if boot = TRUE.
+#' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
+#' If \code{boot = TRUE}, default is "weighted".
+#' @param nboot Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
 #'
 #' @return A list containing the following components:
@@ -36,8 +37,8 @@ NULL
 #' @export
 
 twfe_did_rc <- function(y, post, D, covariates = NULL, i.weights = NULL,
-                        boot = F, boot.type = "weighted", nboot = NULL,
-                        inffunc = F){
+                        boot = FALSE, boot.type = "weighted", nboot = NULL,
+                        inffunc = FALSE){
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
@@ -70,10 +71,10 @@ twfe_did_rc <- function(y, post, D, covariates = NULL, i.weights = NULL,
   #---------------------------------------------------------------------------
   #Estimate TWFE regression
   if(!is.null(x)){
-    reg <- stats::lm(y ~  dd:post + post + dd + x, x = T, weights = i.weights)
+    reg <- stats::lm(y ~  dd:post + post + dd + x, x = TRUE, weights = i.weights)
   }
   if(is.null(x)){
-    reg <- stats::lm(y ~  dd:post + post + dd, x = T, weights = i.weights)
+    reg <- stats::lm(y ~  dd:post + post + dd, x = TRUE, weights = i.weights)
   }
   twfe.att <- reg$coefficients["dd:post"]
   #-----------------------------------------------------------------------------
@@ -84,14 +85,14 @@ twfe_did_rc <- function(y, post, D, covariates = NULL, i.weights = NULL,
   sel.theta <- matrix(c(rep(0, dim(inf.reg)[2])))
 
   index.theta <- which(dimnames(reg$x)[[2]]=="dd:post",
-                       arr.ind = T)
+                       arr.ind = TRUE)
 
   sel.theta[index.theta, ] <- 1
   #-----------------------------------------------------------------------------
   #get the influence function of the TWFE regression
   twfe.inf.func <- as.vector(inf.reg %*% sel.theta)
   #-----------------------------------------------------------------------------
-  if (boot == F) {
+  if (boot == FALSE) {
     # Estimate of standard error
     se.twfe.att <- stats::sd(twfe.inf.func)/sqrt(length(twfe.inf.func))
     # Estimate of upper boudary of 95% CI
@@ -102,8 +103,8 @@ twfe_did_rc <- function(y, post, D, covariates = NULL, i.weights = NULL,
     twfe.boot <- NULL
   }
 
-  if (boot == T) {
-    if (is.null(nboot) == T) nboot = 999
+  if (boot == TRUE) {
+    if (is.null(nboot) == TRUE) nboot = 999
     if(boot.type == "multiplier"){
       # do multiplier bootstrap
       twfe.boot <- mboot.did(twfe.inf.func, nboot)
@@ -132,7 +133,7 @@ twfe_did_rc <- function(y, post, D, covariates = NULL, i.weights = NULL,
   }
 
 
-  if(inffunc==F) att.inf.func <- NULL
+  if(inffunc == FALSE) att.inf.func <- NULL
   return(list(ATT = twfe.att,
               se = se.twfe.att,
               uci = uci,

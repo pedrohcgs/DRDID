@@ -1,9 +1,10 @@
 NULL
 ###################################################################################
-#'  	Locally Efficient Doubly Robust Difference-in-Differences Estimators for the ATT
+#'  Locally efficient doubly robust DiD estimators for the ATT
 #'
 #' @description \code{drdid} is used to compute the locally efficient doubly robust estimators for the ATT
-#'  in DID setups. It can be used with panel or stationary repeated cross section data. Data should be store in "long" format.
+#'  in difference-in-differences (DiD) setups. It can be used with panel or stationary repeated cross section data.
+#'  Data should be store in "long" format.
 #'
 #' @param yname The name of the outcome variable.
 #' @param tname The name of the column containing the time periods.
@@ -14,7 +15,7 @@ NULL
 #' @param data The name of the data.frame that contains the data.
 #' @param panel Whether or not the data is a panel dataset. The panel dataset should be provided in long format -- that
 #'  is, where each row corresponds to a unit observed at a particular point in time.  The default is TRUE.
-#'  Whens \code{panel=TRUE}, the variable \code{idname} must be set.  When \code{panel=FALSE}, the data is treated
+#'  Whens \code{panel = TRUE}, the variable \code{idname} must be set.  When \code{panel = FALSE}, the data is treated
 #'  as stationary repeated cross sections.
 #' @param estMethod the method to estimate the nuisance parameters.
 #' The default is "imp" which uses weighted least squares to estimate the outcome regressions and
@@ -25,8 +26,8 @@ NULL
 #' @param weightsname The name of the column containing the sampling weights. If NULL, then every observation has the same weights.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is \code{FALSE} and analytical
 #'  standard errors are reported.
-#' @param boot.type Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
-#' If \code{boot==TRUE}, default is "weighted".
+#' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
+#' If \code{boot = TRUE}, default is "weighted".
 #' @param nboot Number of bootstrap repetitions (not relevant if boot = \code{FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is \code{FALSE}.
 #'
@@ -39,7 +40,8 @@ NULL
 #' \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 #'  \item{ps.flag}{Convergence Flag for the propensity score estimation
 #'  (only active if \code{estMethod = "imp"}.): =0 if \code{trust} algorithm converged,
-#'    =1 if IPT (original) algorithm converged (in case it was used), =2 if GLM logit estimator was used (i.e., if both \code{trust} and IPT
+#'    =1 if IPT (original) algorithm converged (in case it was used), =2 if
+#'    GLM logit estimator was used (i.e., if both \code{trust} and IPT
 #'    did not converged).}
 #' \item{call.param}{The matched call.}
 #' \item{argu}{Some arguments used in the call (panel, estMethod, boot, boot.type, nboot, type="dr")}
@@ -59,14 +61,14 @@ NULL
 #'
 #' @details
 #'
-#' When panel data are available (\code{panel = T}), the \code{drdid} function implements the
+#' When panel data are available (\code{panel = TRUE}), the \code{drdid} function implements the
 #' locally efficient doubly robust difference-in-differences (DID) estimator for the average treatment effect
 #' on the treated (ATT) defined in equation (3.1) in Sant'Anna and Zhao (2020). This estimator makes use of
 #' a logistic propensity score model for the probability of being in the treated group,
 #' and of a linear regression model for the outcome evolution among the comparison units.
 #'
 #'
-#' When only stationary repeated cross-section data are available (\code{panel = F}), the \code{drdid} function
+#' When only stationary repeated cross-section data are available (\code{panel = FALSE}), the \code{drdid} function
 #' implements the locally efficient doubly robust difference-in-differences (DID) estimator for the
 #' average treatment effect on the treated (ATT) defined in equation (3.4) in Sant'Anna and Zhao (2020).
 #' This estimator makes use of a logistic propensity score model for the probability of being in the
@@ -146,7 +148,7 @@ drdid <- function(yname, tname, idname, dname, xformla = NULL, data,
   #-----------------------------------------------------------------------------
   # Implement the methods
   # First panel data
-  if (dp$panel == T) {
+  if (dp$panel == TRUE) {
     if (dp$estMethod == "imp") {
       att_est <- drdid_imp_panel(
         y1 = dp$y1,
@@ -179,7 +181,7 @@ drdid <- function(yname, tname, idname, dname, xformla = NULL, data,
 
   }
   # Now repeated cross section
-  if (dp$panel == F) {
+  if (dp$panel == FALSE) {
     if (dp$estMethod == "imp") {
       att_est <- drdid_imp_rc(
         y = dp$y,

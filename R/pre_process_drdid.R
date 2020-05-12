@@ -38,7 +38,7 @@ pre_process_drdid <- function(yname,
   }
 
   # Flag for normalized
-  if ( (normalized!=TRUE) && (normalized!=FALSE)) {
+  if ( (normalized != TRUE) && (normalized != FALSE)) {
     warning("normalized = ",normalized,  " is not supported. Using 'TRUE'.")
     normalized <- TRUE
   }
@@ -113,7 +113,7 @@ pre_process_drdid <- function(yname,
   }
 
   # If repeated cross section, allow for null idname
-  if(is.null(idname) && (panel==F)){
+  if(is.null(idname) && (panel == FALSE)){
     dta$id <- seq(1:nrow(dta))
     idname <- "id"
   }
@@ -132,7 +132,7 @@ pre_process_drdid <- function(yname,
   # group will be denoted by D
   dta$D <- dta[, dname]
   # Post dummy will be denoted by post
-  dta$post <- as.numeric(dta[,tname]==tlist[2])
+  dta$post <- as.numeric(dta[,tname] == tlist[2])
   # matrix of covariates
   covariates <- stats::model.matrix(xformla, data=dta)
 

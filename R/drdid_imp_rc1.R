@@ -2,11 +2,11 @@
 NULL
 ###################################################################################
 #  Improved Doubly Robust DID estimator with Repeated Cross Section Data
-#' Improved Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data
+#' Improved doubly robust DiD estimator for the ATT, with repeated cross-section data
 #'
 #'
 #' @description \code{drdid_imp_rc1} is used to compute the doubly robust estimators for the ATT
-#'  in DID setups with stationary repeated cross-sectional data. The resulting estimator is also doubly robust for inference,
+#'  in difference-in-differences (DiD) setups with stationary repeated cross-sectional data. The resulting estimator is also doubly robust for inference,
 #'  though it is not locally efficient; see Section 3.2 of Sant'Anna and Zhao (2020).
 #'
 #' @param y An \eqn{n} x \eqn{1} vector of outcomes from the both pre and post-treatment periods.
@@ -17,9 +17,9 @@ NULL
 #' If covariates = NULL, this leads to an unconditional DID estimator.
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
-#' @param boot.type Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
-#' If boot==T, default is "weighted".
-#' @param nboot Number of bootstrap repetitions (not relevant if boot = FALSE). Default is 999 if boot = TRUE
+#' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
+#' If \code{boot = TRUE}, default is "weighted".
+#' @param nboot Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
 #'
 #' @return A list containing the following components:
@@ -33,7 +33,7 @@ NULL
 #'    did not converged).}
 #'  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 #'  \item{call.param}{The matched call.}
-#'  \item{argu}{Some arguments used (explicitly or not) in the call (panel = F, estMethod = "imp2", boot, boot.type, nboot, type="dr")}
+#'  \item{argu}{Some arguments used (explicitly or not) in the call (panel = FALSE, estMethod = "imp2", boot, boot.type, nboot, type="dr")}
 #'
 #' @references
 #' \cite{Graham, Bryan, Pinto, Cristine, and Egel, Daniel (2012),
@@ -76,8 +76,8 @@ NULL
 #' @export
 
 drdid_imp_rc1 <- function(y, post, D, covariates, i.weights = NULL,
-                          boot = F, boot.type =  "weighted", nboot = NULL,
-                          inffunc = F){
+                          boot = FALSE, boot.type =  "weighted", nboot = NULL,
+                          inffunc = FALSE){
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
@@ -107,9 +107,9 @@ drdid_imp_rc1 <- function(y, post, D, covariates, i.weights = NULL,
   ps.fit <- as.vector(pscore.ipt$pscore)
   ps.fit <- pmin(ps.fit, 1 - 1e-16)
   #Compute the Outcome regression for the control group
-  out.y.pre <- wols_rc(y, post, D, int.cov, ps.fit, i.weights, pre = T, treat = F)
+  out.y.pre <- wols_rc(y, post, D, int.cov, ps.fit, i.weights, pre = TRUE, treat = FALSE)
   out.y.pre <-  as.vector(out.y.pre$out.reg)
-  out.y.post <- wols_rc(y, post, D, int.cov, ps.fit, i.weights, pre = F, treat = F)
+  out.y.post <- wols_rc(y, post, D, int.cov, ps.fit, i.weights, pre = FALSE, treat = FALSE)
   out.y.post <-  as.vector(out.y.post$out.reg)
   # Combine the ORs
   out.y <- post * out.y.post + (1 - post) * out.y.pre
@@ -156,7 +156,7 @@ drdid_imp_rc1 <- function(y, post, D, covariates, i.weights = NULL,
   #get the influence function of the DR estimator (put all pieces together)
   dr.att.inf.func <- inf.treat - inf.cont
   #-----------------------------------------------------------------------------
-  if (boot == F) {
+  if (boot == FALSE) {
     # Estimate of standard error
     se.dr.att <- stats::sd(dr.att.inf.func)/sqrt(n)
     # Estimate of upper boudary of 95% CI
@@ -167,8 +167,8 @@ drdid_imp_rc1 <- function(y, post, D, covariates, i.weights = NULL,
     dr.boot <- NULL
   }
 
-  if (boot == T) {
-    if (is.null(nboot) == T) nboot = 999
+  if (boot == TRUE) {
+    if (is.null(nboot) == TRUE) nboot = 999
     if(boot.type == "multiplier"){
       # do multiplier bootstrap
       dr.boot <- mboot.did(dr.att.inf.func, nboot)
@@ -198,16 +198,16 @@ drdid_imp_rc1 <- function(y, post, D, covariates, i.weights = NULL,
   }
 
 
-  if(inffunc==F) dr.att.inf.func <- NULL
+  if(inffunc == FALSE) dr.att.inf.func <- NULL
   #---------------------------------------------------------------------
   # record the call
   call.param <- match.call()
   # Record all arguments used in the function
   argu <- mget(names(formals()), sys.frame(sys.nframe()))
   boot.type <- ifelse(argu$boot.type=="multiplier", "multiplier", "weighted")
-  boot <- ifelse(argu$boot==T, T, F)
+  boot <- ifelse(argu$boot == TRUE, TRUE, FALSE)
   argu <- list(
-    panel = F,
+    panel = FALSE,
     estMethod = "imp2",
     boot = boot,
     boot.type = boot.type,

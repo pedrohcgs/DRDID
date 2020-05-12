@@ -3,7 +3,7 @@
 \docType{data}
 \name{nsw_long}
 \alias{nsw_long}
-\title{National Supported Work Demonstration Dataset, in Long Format}
+\title{National Supported Work Demonstration dataset, in long format}
 \format{
 A data frame in "long" format with 38408 observations on the following and
 15 variables:

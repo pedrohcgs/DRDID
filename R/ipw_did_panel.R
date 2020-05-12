@@ -3,10 +3,10 @@ NULL
 ###################################################################################
 # Abadie's IPW DID estimator
 
-#' Inverse Probability Weighted Difference-in-Differences Estimator, with Panel Data
+#' Inverse probability weighted DiD estimator, with panel data
 #' @description \code{ipw_did_panel} is used to compute inverse probability weighted (IPW) estimators for the ATT
-#'  in DID setups with panel data. IPW weights are not normalized to sum up to one, that is, the estimator is of the
-#'  Horwitz-Thompson type.
+#'  in difference-in-differences (DiD) setups with panel data. IPW weights are not normalized to sum up to one,
+#'  that is, the estimator is of the Horwitz-Thompson type.
 #'
 
 #'
@@ -17,9 +17,9 @@ NULL
 #' If covariates = NULL, this leads to an unconditional DID estimator.
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
-#' @param boot.type Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
-#' If boot==T, default is "weighted".
-#' @param nboot Number of bootstrap repetitions (not relevant if boot = FALSE). Default is 999 if boot = TRUE.
+#' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
+#' If \code{boot = TRUE}, default is "weighted".
+#' @param nboot Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
 #'
 #'
@@ -31,7 +31,7 @@ NULL
 #' \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
 #' \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 #'  \item{call.param}{The matched call.}
-#'  \item{argu}{Some arguments used (explicitly or not) in the call (panel = T, normalized = F, boot, boot.type, nboot, type="ipw")}
+#'  \item{argu}{Some arguments used (explicitly or not) in the call (panel = TRUE, normalized = FALSE, boot, boot.type, nboot, type="ipw")}
 
 #' @references
 #' \cite{Abadie, Alberto (2005), "Semiparametric Difference-in-Differences Estimators",
@@ -61,8 +61,8 @@ NULL
 #' @export
 
 ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
-                         boot = F, boot.type = "weighted", nboot = NULL,
-                         inffunc = F){
+                         boot = FALSE, boot.type = "weighted", nboot = NULL,
+                         inffunc = FALSE){
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
@@ -123,7 +123,7 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   #get the influence function of the DR estimator (put all pieces together)
   att.inf.func <- (att.lin1 - att.lin2 - i.weights * D * ipw.att)/mean(i.weights * D)
   #-----------------------------------------------------------------------------
-  if (boot == F) {
+  if (boot == FALSE) {
     # Estimate of standard error
     se.att <- stats::sd(att.inf.func)/sqrt(n)
     # Estimate of upper boudary of 95% CI
@@ -134,8 +134,8 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
     #Create this null vector so we can export the bootstrap draws too.
     ipw.boot <- NULL
   }
-  if (boot == T) {
-    if (is.null(nboot) == T) nboot = 999
+  if (boot == TRUE) {
+    if (is.null(nboot) == TRUE) nboot = 999
     if(boot.type == "multiplier"){
       # do multiplier bootstrap
       ipw.boot <- mboot.did(att.inf.func, nboot)
@@ -163,17 +163,17 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
     }
 
   }
-  if(inffunc==F) att.inf.func <- NULL
+  if(inffunc == FALSE) att.inf.func <- NULL
   #---------------------------------------------------------------------
   # record the call
   call.param <- match.call()
   # Record all arguments used in the function
   argu <- mget(names(formals()), sys.frame(sys.nframe()))
   boot.type <- ifelse(argu$boot.type=="multiplier", "multiplier", "weighted")
-  boot <- ifelse(argu$boot==T, T, F)
+  boot <- ifelse(argu$boot == TRUE, TRUE, FALSE)
   argu <- list(
-    panel = T,
-    normalized = F,
+    panel = TRUE,
+    normalized = FALSE,
     boot = boot,
     boot.type = boot.type,
     nboot = nboot,

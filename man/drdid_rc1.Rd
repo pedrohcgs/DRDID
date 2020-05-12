@@ -2,7 +2,7 @@
 % Please edit documentation in R/drdid_rc1.R
 \name{drdid_rc1}
 \alias{drdid_rc1}
-\title{Doubly Robust Difference-in-Differences Estimator for the ATT, with Repeated Cross Section Data}
+\title{Doubly robust DiD estimator for the ATT, with repeated cross-section data}
 \usage{
 drdid_rc1(
   y,
@@ -10,10 +10,10 @@ drdid_rc1(
   D,
   covariates,
   i.weights = NULL,
-  boot = F,
+  boot = FALSE,
   boot.type = "weighted",
   nboot = NULL,
-  inffunc = F
+  inffunc = FALSE
 )
 }
 \arguments{
@@ -31,10 +31,10 @@ If covariates = NULL, this leads to an unconditional DID estimator.}
 
 \item{boot}{Logical argument to whether bootstrap should be used for inference. Default is FALSE.}
 
-\item{boot.type}{Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
-If boot==T, default is "weighted".}
+\item{boot.type}{Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
+If \code{boot = TRUE}, default is "weighted".}
 
-\item{nboot}{Number of bootstrap repetitions (not relevant if boot = FALSE). Default is 999 if boot = TRUE}
+\item{nboot}{Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.}
 
 \item{inffunc}{Logical argument to whether influence function should be returned. Default is FALSE.}
 }
@@ -47,12 +47,12 @@ A list containing the following components:
 \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
  \item{call.param}{The matched call.}
- \item{argu}{Some arguments used (explicitly or not) in the call (panel = F, estMethod = "trad2", boot, boot.type, nboot, type="dr")}
+ \item{argu}{Some arguments used (explicitly or not) in the call (panel = FALSE, estMethod = "trad2", boot, boot.type, nboot, type="dr")}
 }
 \description{
 \code{drdid_rc1} is used to compute the doubly robust estimators for the ATT
- in DID setups with stationary repeated cross-sectional data. The resulting estimator is not locally efficient;
-  see Section 3.2 of Sant'Anna and Zhao (2020).
+ in difference-in-differences (DiD) setups with stationary repeated cross-sectional data. The resulting estimator is
+ not locally efficient; see Section 3.2 of Sant'Anna and Zhao (2020).
 }
 \details{
 The \code{drdid_rc1} function implements the doubly robust difference-in-differences (DID)

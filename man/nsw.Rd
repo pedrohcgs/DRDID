@@ -3,7 +3,7 @@
 \docType{data}
 \name{nsw}
 \alias{nsw}
-\title{National Supported Work Demonstration Dataset}
+\title{National Supported Work Demonstration dataset}
 \format{
 A data frame in "wide" format with 19204 observations on the following and 14 variables:
 \describe{

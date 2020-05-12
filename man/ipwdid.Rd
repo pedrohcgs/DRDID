@@ -2,7 +2,7 @@
 % Please edit documentation in R/ipwdid.R
 \name{ipwdid}
 \alias{ipwdid}
-\title{Inverse Probability Weighted Difference-in-Differences Estimators for the ATT}
+\title{Inverse probability weighted DiD estimators for the ATT}
 \usage{
 ipwdid(
   yname,
@@ -36,7 +36,7 @@ ipwdid(
 
 \item{panel}{Whether or not the data is a panel dataset. The panel dataset should be provided in long format -- that
 is, where each row corresponds to a unit observed at a particular point in time.  The default is TRUE.
-When \code{panel=TRUE}, the variable \code{idname} must be set.  When \code{panel=FALSE}, the data is treated
+When \code{panel = TRUE}, the variable \code{idname} must be set.  When \code{panel = FALSE}, the data is treated
 as stationary repeated cross sections.}
 
 \item{normalized}{Logical argument to whether IPW weights should be normalized to sum up to one. Default is \code{TRUE}.}
@@ -46,8 +46,8 @@ as stationary repeated cross sections.}
 \item{boot}{Logical argument to whether bootstrap should be used for inference. Default is \code{FALSE} and analytical
 standard errors are reported.}
 
-\item{boot.type}{Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
-If \code{boot==TRUE}, default is "weighted".}
+\item{boot.type}{Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
+If \code{boot = TRUE}, default is "weighted".}
 
 \item{nboot}{Number of bootstrap repetitions (not relevant if boot = \code{FALSE}). Default is 999.}
 
@@ -65,9 +65,10 @@ A list containing the following components:
 \item{argu}{Some arguments used in the call (panel, normalized, boot, boot.type, nboot, type=="ipw")}
 }
 \description{
-\code{ipwdid} computes the inverse probability weighted estimators for the average treatment effect on the treated
- in DID setups. It can be used with panel or stationary repeated cross-sectional data, with or without
- normalized (stabilized) weights. See Abadie (2005) and Sant'Anna and Zhao (2020) for details.
+\code{ipwdid} computes the inverse probability weighted estimators for the average treatment effect
+ on the treated in difference-in-differences (DiD) setups. It can be used with panel or stationary repeated
+ cross-sectional data, with or without normalized (stabilized) weights. See Abadie (2005) and Sant'Anna and
+ Zhao (2020) for details.
 }
 \details{
 The \code{ipwdid} function implements the

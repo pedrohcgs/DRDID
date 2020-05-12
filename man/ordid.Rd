@@ -2,7 +2,7 @@
 % Please edit documentation in R/ordid.R
 \name{ordid}
 \alias{ordid}
-\title{Outcome Regression Difference-in-Differences Estimators for the ATT}
+\title{Outcome regression DiD estimators for the ATT}
 \usage{
 ordid(
   yname,
@@ -35,7 +35,7 @@ ordid(
 
 \item{panel}{Whether or not the data is a panel dataset. The panel dataset should be provided in long format -- that
 is, where each row corresponds to a unit observed at a particular point in time.  The default is TRUE.
-When \code{panel=TRUE}, the variable \code{idname} must be set.  When \code{panel=FALSE}, the data is treated
+When \code{panel = TRUE}, the variable \code{idname} must be set.  When \code{panel = FALSE}, the data is treated
 as stationary repeated cross sections.}
 
 \item{weightsname}{The name of the column containing the sampling weights. If NULL, then every observation has the same weights.}
@@ -43,8 +43,8 @@ as stationary repeated cross sections.}
 \item{boot}{Logical argument to whether bootstrap should be used for inference. Default is \code{FALSE} and analytical
 standard errors are reported.}
 
-\item{boot.type}{Type of bootstrap to be performed (not relevant if boot = FALSE). Options are "weighted" and "multiplier".
-If \code{boot==TRUE}, default is "weighted".}
+\item{boot.type}{Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
+If \code{boot = TRUE}, default is "weighted".}
 
 \item{nboot}{Number of bootstrap repetitions (not relevant if boot = \code{FALSE}). Default is 999.}
 
@@ -62,8 +62,9 @@ A list containing the following components:
 \item{argu}{Some arguments used in the call (panel, normalized, boot, boot.type, nboot, type=="or")}
 }
 \description{
-\code{ordid} computes the outcome regressions estimators for the average treatment effect on the treated
- in DID setups. It can be used with panel or repeated cross section data. See Sant'Anna and Zhao (2020) for details.
+\code{ordid} computes the outcome regressions estimators for the average treatment effect on the
+treated in difference-in-differences (DiD) setups. It can be used with panel or repeated cross section data.
+See Sant'Anna and Zhao (2020) for details.
 }
 \details{
 The \code{ordid} function implements

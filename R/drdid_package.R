@@ -1,9 +1,9 @@
 
 ###################################################################################
-#'  DRDID: A package for computing doubly robust difference-in-differences estimators
+#'  Doubly robust difference-in-differences estimators
 #'
-#' The \code{DRDID} package implements different estimators for the Average Treatment Effect on
-#' the Treated in Difference-in-Differences (DID) setups where the parallel trends assumption
+#' The \code{DRDID} package implements different estimators for the average treatment effect on
+#' the treated in difference-in-differences (DID) setups where the parallel trends assumption
 #' holds after you condition on a vector of pre-treatment covariates. The main estimators
 #' implemented here are the locally efficient, doubly-robust DID estimators proposed by
 #' Sant'Anna and Zhao (2020) <https://arxiv.org/abs/1812.01723>. A number of other DID
