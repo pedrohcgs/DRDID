@@ -1,7 +1,7 @@
 bibentry(bibtype = "Article",
          title   = "Doubly Robust Difference-in-Differences Estimators",
          author  = c(person("Pedro H. C.", "Sant\'Anna"),
-                    person("Jun B.", "Zhao")),,
+                    person("Jun", "Zhao")),,
          journal = "Journal of Econometrics",
          year    = "2020",
          volume  = "Forthcoming",

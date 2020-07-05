@@ -19,7 +19,7 @@ See the [package manual](https://pedrohcgs.github.io/DRDID/reference/index.html)
 
 
 If you end up using this package, please cite our paper:
-* Sant'Anna, Pedro H. C., and Zhao, Jun B. (2020), "Doubly Robust Difference-in-Differences Estimators", *Journal of Econometrics*, Forthcoming.
+* Sant'Anna, Pedro H. C., and Zhao, Jun (2020), "Doubly Robust Difference-in-Differences Estimators", *Journal of Econometrics*, Forthcoming.
 
 
 ## Installation
