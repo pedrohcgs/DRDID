@@ -3,14 +3,6 @@ destination: docs
 template:
   params:
     bootswatch: flatly
-  opengraph:
-    image:
-      src: man/figures/logo.png
-      alt: "Doubly Robust DID Estimators"
-    twitter:
-      creator: "@pedrohcgs"
-      card: summary_large_image
-      image: man/figures/logo.png
 
 authors:
   Pedro H. C. Sant'Anna:
