@@ -96,6 +96,6 @@ drdid_imp_panel(y1 = eval_lalonde_cps$re78, y0 = eval_lalonde_cps$re75,
 
 
 \cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
-"Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
-\url{https://arxiv.org/abs/1812.01723}}
+"Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Vol. 219 (1), pp. 101-122,
+\url{https://doi.org/10.1016/j.jeconom.2020.06.003}}
 }

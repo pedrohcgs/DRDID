@@ -74,6 +74,6 @@ Review of Economic Studies, vol. 72(1), p. 1-19, \url{https://doi.org/10.1111/00
 
 
 \cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
-"Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Forthcoming,
-\url{https://arxiv.org/abs/1812.01723}}
+"Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Vol. 219 (1), pp. 101-122,
+\url{https://doi.org/10.1016/j.jeconom.2020.06.003}}
 }

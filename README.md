@@ -12,14 +12,14 @@
 The `DRDID` R package implements different estimators for the Average Treatment Effect on the Treated (ATT) in Difference-in-Differences (DID) setups where the parallel trends assumption holds after conditioning on a vector of pre-treatment covariates.
 
 
-The main estimators implemented here are the locally efficient, doubly-robust DID estimators proposed by [Sant'Anna and Zhao (2020), Doubly Robust Difference-in-Differences Estimators](https://arxiv.org/abs/1812.01723). The package covers both panel data and repeated cross-section data setups with two treatment groups (treated and comparison group) and two time periods (pre-treatment and post-treatment).
+The main estimators implemented here are the locally efficient, doubly-robust DID estimators proposed by [Sant'Anna and Zhao (2020), Doubly Robust Difference-in-Differences Estimators](https://doi.org/10.1016/j.jeconom.2020.06.003). The package covers both panel data and repeated cross-section data setups with two treatment groups (treated and comparison group) and two time periods (pre-treatment and post-treatment).
 
 
 See the [package manual](https://pedrohcgs.github.io/DRDID/reference/index.html) for documentation of all package functions (with examples).
 
 
 If you end up using this package, please cite our paper:
-* Sant'Anna, Pedro H. C., and Zhao, Jun (2020), "Doubly Robust Difference-in-Differences Estimators", *Journal of Econometrics*, Forthcoming.
+* Sant'Anna, Pedro H. C., and Zhao, Jun (2020), ["Doubly Robust Difference-in-Differences Estimators"](https://doi.org/10.1016/j.jeconom.2020.06.003), *Journal of Econometrics*, Vol. 219 (1), pp. 101-122.
 
 
 ## Installation
