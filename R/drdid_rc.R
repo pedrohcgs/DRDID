@@ -88,6 +88,12 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   #Compute the Pscore by MLE
   pscore.tr <- stats::glm(D ~ -1 + int.cov, family = "binomial", weights = i.weights)
+  if(pscore.tr$converged == FALSE){
+    warning(" glm algorithm did not converge")
+  }
+  if(anyNA(pscore.tr$coefficients)){
+    stop("Propensity score model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
+  }
   ps.fit <- as.vector(pscore.tr$fitted.values)
   # Avoid divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-16)
@@ -95,11 +101,17 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   reg.cont.coeff.pre <- stats::coef(stats::lm(y ~ -1 + int.cov,
                                               subset = ((D==0) & (post==0)),
                                               weights = i.weights))
+  if(anyNA(reg.cont.coeff.pre)){
+    stop("Outcome regression model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
+  }
   out.y.cont.pre <-   as.vector(tcrossprod(reg.cont.coeff.pre, int.cov))
   #Compute the Outcome regression for the control group at the post-treatment period, using ols.
   reg.cont.coeff.post <- stats::coef(stats::lm(y ~ -1 + int.cov,
                                                subset = ((D==0) & (post==1)),
                                                weights = i.weights))
+  if(anyNA(reg.cont.coeff.post)){
+    stop("Outcome regression model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
+  }
   out.y.cont.post <-   as.vector(tcrossprod(reg.cont.coeff.post, int.cov))
   # Combine the ORs for control group
   out.y.cont <- post * out.y.cont.post + (1 - post) * out.y.cont.pre

@@ -10,8 +10,10 @@ pscore.cal <- function(D, int.cov, i.weights, n){
   #-----------------------------------------------------------------------------
   #-----------------------------------------------------------------------------
   # Initial conditions for pscore
-  init.gamma <- suppressWarnings(stats::coef(stats::glm(D ~ -1 + int.cov, family = "binomial"),
-                                             weights = i.weights))
+  pslogit <- suppressWarnings(stats::glm(D ~ -1 + int.cov, family = "binomial",
+                                         weights = i.weights))
+
+  init.gamma <- suppressWarnings(stats::coef(pslogit))
 
   #Compute IPT pscore
   pscore.cal <- suppressWarnings(trust::trust(loss.ps.cal, parinit = init.gamma, rinit=1,
@@ -40,6 +42,22 @@ pscore.cal <- function(D, int.cov, i.weights, n){
   #Compute fitted pscore and weights for regression
   pscore.index <- tcrossprod(gamma.cal, int.cov)
   pscore <- as.numeric(stats::plogis(pscore.index))
+
+  if(flag==1) {
+    warning("trust algorithm did not converge when estimating propensity score. \n Used IPT algorithm a la Graham et al (2012)")
+  }
+  if(flag==2) {
+    warning(" Used glm algorithm to estimate propensity score as trust and IPT method did not converge")
+
+    if(pslogit$converged == FALSE){
+      warning(" glm algorithm did not converge")
+    }
+
+  }
+
+  if(anyNA(pscore)){
+    stop("Propensity score model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
+  }
 
   # return pscore and flag
   return(list(pscore = pscore,

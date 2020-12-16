@@ -258,7 +258,7 @@ test_that("Error and Warning messages are working", {
   dta_long2$d <- 1
   dta_long2$d[1:4]<- 0
 
-  expect_warning(drdid(yname="y",
+  expect_error(drdid(yname="y",
                      tname = "post",
                      idname = "id",
                      dname = "d",

@@ -12,6 +12,10 @@ wols.br.panel <- function(deltaY, D, int.cov, pscore, i.weights){
                             subset = D==0,
                             weights = i.weights))
 
+  if(anyNA(beta.cal)){
+    stop("Outcome regression model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason")
+  }
+
   #get fitted values
   out.delta <-  as.numeric(tcrossprod(beta.cal, int.cov))
 

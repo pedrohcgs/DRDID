@@ -88,6 +88,12 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   #Pscore estimation (logit) and also its fitted values
   PS <- suppressWarnings(stats::glm(D ~ -1 + int.cov, family = "binomial", weights = i.weights))
+  if(PS$converged == FALSE){
+    warning(" glm algorithm did not converge")
+  }
+  if(anyNA(PS$coefficients)){
+    stop("Propensity score model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
+  }
   ps.fit <- as.vector(PS$fitted.values)
   # Do not divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-16)

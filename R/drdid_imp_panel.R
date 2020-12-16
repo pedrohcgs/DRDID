@@ -107,8 +107,8 @@ drdid_imp_panel <-function(y1, y0, D, covariates, i.weights = NULL, boot = FALSE
   } else if(min(i.weights) < 0) stop("i.weights must be non-negative")
   #-----------------------------------------------------------------------------
   #Compute the Pscore using the pscore.cal
-  pscore.br <- pscore.cal(D, int.cov, i.weights = i.weights, n = n)
-  ps.fit <- as.vector(pscore.br$pscore)
+  pscore.ipt <- pscore.cal(D, int.cov, i.weights = i.weights, n = n)
+  ps.fit <- as.vector(pscore.ipt$pscore)
   ps.fit <- pmin(ps.fit, 1 - 1e-16)
   #Compute the Outcome regression for the control group
   outcome.reg <- wols.br.panel(deltaY, D, int.cov, ps.fit, i.weights)
@@ -184,7 +184,7 @@ drdid_imp_panel <-function(y1, y0, D, covariates, i.weights = NULL, boot = FALSE
               uci = uci,
               lci = lci,
               boots = dr.boot,
-              ps.flag = pscore.br$flag,
+              ps.flag = pscore.ipt$flag,
               att.inf.func = dr.att.inf.func,
               call.param = call.param,
               argu = argu))

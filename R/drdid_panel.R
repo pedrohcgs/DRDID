@@ -90,6 +90,12 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   #Compute the Pscore by MLE
   pscore.tr <- stats::glm(D ~ -1 + int.cov, family = "binomial", weights = i.weights)
+  if(pscore.tr$converged == FALSE){
+    warning(" glm algorithm did not converge")
+  }
+  if(anyNA(pscore.tr$coefficients)){
+    stop("Propensity score model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
+  }
   ps.fit <- as.vector(pscore.tr$fitted.values)
   # Avoid divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-16)
@@ -97,6 +103,9 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   reg.coeff <- stats::coef(stats::lm(deltaY ~ -1 + int.cov,
                                      subset = D==0,
                                      weights = i.weights))
+  if(anyNA(reg.coeff)){
+    stop("Outcome regression model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
+  }
   out.delta <-   as.vector(tcrossprod(reg.coeff, int.cov))
   #-----------------------------------------------------------------------------
   #Compute Traditional Doubly Robust DID estimators

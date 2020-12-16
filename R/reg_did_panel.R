@@ -96,6 +96,9 @@ reg_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   reg.coeff <- stats::coef(stats::lm(deltaY ~ -1 + int.cov,
                                      subset = D==0,
                                      weights = i.weights))
+  if(anyNA(reg.coeff)){
+    stop("Outcome regression model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is probably the reason for it.")
+  }
   out.delta <-   as.vector(tcrossprod(reg.coeff, int.cov))
   #-----------------------------------------------------------------------------
   #Compute the OR-DID estimator

@@ -26,6 +26,9 @@ wols_rc <- function(y, post, D, int.cov, pscore, i.weights, pre = NULL, treat = 
   beta.wls <- stats::coef(stats::lm(y ~ -1 + int.cov,
                                     subset = subs==1,
                                     weights = or.weights))
+  if(anyNA(beta.wls)){
+    stop("Outcome regression model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason")
+  }
 
   #get fitted values
   out.delta <-  as.numeric(tcrossprod(beta.wls, int.cov))
