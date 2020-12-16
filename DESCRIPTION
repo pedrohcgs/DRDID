@@ -1,14 +1,14 @@
 Package: DRDID
 Type: Package
 Title: Doubly Robust Difference-in-Differences Estimators
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: c(person("Pedro H. C.", "Sant'Anna", email = "pedro.h.santanna@vanderbilt.edu",
               role = c("aut", "cre")),
               person("Jun", "Zhao", email = "jun.zhao@vanderbilt.edu",role = c("aut"))
             )
 Description: Implements the locally efficient doubly robust difference-in-differences (DiD)
     estimators for the average treatment effect proposed by Sant'Anna and Zhao (2020)
-    <arXiv:1812.01723>. The estimator combines inverse probability weighting and outcome
+    <doi:10.1016/j.jeconom.2020.06.003>. The estimator combines inverse probability weighting and outcome
     regression estimators (also implemented in the package) to form estimators with
     more attractive statistical properties. Two different estimation methods can be used
     to estimate the nuisance functions.
@@ -17,7 +17,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends:
-    R (>= 3.4)
+    R (>= 4.0)
 Imports:
     stats,
     trust,

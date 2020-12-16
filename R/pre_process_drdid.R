@@ -76,11 +76,11 @@ pre_process_drdid <- function(yname,
     }
   }
   # Flag for covariates
-  if (!is.null(xformla)) {
-    if(!all(is.element(BMisc::rhs.vars(xformla), base::colnames(dta)))){
-      stop("Some of the covariate names could not be found in the data provided. Double check the covariate names in xformla.")
-    }
-  }
+  #if (!is.null(xformla)) {
+  #  if(!all(is.element(BMisc::rhs.vars(xformla), base::colnames(dta)))){
+  #    stop("Some of the covariate names could not be found in the data provided. Double check the covariate names in xformla.")
+  #  }
+  #}
 
 
   # set weights if null
