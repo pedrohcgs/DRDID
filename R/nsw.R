@@ -32,11 +32,11 @@
 #' @references
 #'   \cite{Diamond, Alexis, and Sekhon, Jasjeet S. (2013),
 #'   'Genetic Matching for Estimating Causal Effects: A General Multivariate Matching Method for Achieving Balance
-#'    in Observational Studies' Review of Economics and Statistics, vol. 95 , pp. 932-945, \url{https://doi.org/10.1162/REST_a_00318}}
+#'    in Observational Studies' Review of Economics and Statistics, vol. 95 , pp. 932-945, \doi{10.1162/REST_a_00318}}
 #'
 #'
 #'   \cite{Smith, Jeffrey, and Todd, Petra (2005),
 #'    Does matching overcome LaLonde's critique of nonexperimental estimators?' Journal of Econometrics,
-#'    vol. 125, pp. 305-353, \url{https://doi.org/10.1016/j.jeconom.2004.04.011}}
+#'    vol. 125, pp. 305-353, \doi{10.1016/j.jeconom.2004.04.011}}
 #'
 "nsw"

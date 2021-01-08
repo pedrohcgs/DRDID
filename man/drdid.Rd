@@ -144,11 +144,10 @@ drdid(yname="y", tname = "post", idname = "id", dname = "d",
 \references{
 \cite{Graham, Bryan, Pinto, Cristine, and Egel, Daniel (2012),
 "Inverse Probability Tilting for Moment Condition Models with Missing Data."
- Review of Economic Studies, vol. 79 (3), pp. 1053-1079,
-\url{https://doi.org/10.1093/restud/rdr047}}
+ Review of Economic Studies, vol. 79 (3), pp. 1053-1079, \doi{10.1093/restud/rdr047}}
 
 
 \cite{Sant'Anna, Pedro H. C. and Zhao, Jun. (2020),
 "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Vol. 219 (1), pp. 101-122,
-\url{https://doi.org/10.1016/j.jeconom.2020.06.003}}
+ \doi{10.1016/j.jeconom.2020.06.003}}
 }

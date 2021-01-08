@@ -4,7 +4,8 @@ bibentry(bibtype = "Article",
                     person("Jun", "Zhao")),,
          journal = "Journal of Econometrics",
          year    = "2020",
-         volume  = "Forthcoming",
-         url     = "https://arxiv.org/abs/1812.01723",
+         volume  = "219",
+         pages = "101-122",
+         url     = "https://doi.org/10.1016/j.jeconom.2020.06.003",
          header = "To cite DRDID in publications use:"
 )
