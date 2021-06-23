@@ -2,5 +2,8 @@ pandoc: 2.7.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles: {}
-last_built: 2021-06-23T00:58Z
+last_built: 2021-06-23T01:06Z
+urls:
+  reference: https://pedrohcgs.github.io/DRDID/reference
+  article: https://pedrohcgs.github.io/DRDID/articles
 
