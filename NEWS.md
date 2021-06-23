@@ -1,4 +1,7 @@
-# DRDID 1.0.1 (unreleased, only on GitHub for the moment)
+# DRDID 1.0.2
+  * Fix issue with NA in covariates
+  
+# DRDID 1.0.1
   * Allows for treating covariates as factor and alike when computing DiD
   
   * Improve error and warning handling due to collinearity and convergence issues.
