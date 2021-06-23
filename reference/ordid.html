@@ -86,7 +86,7 @@ See Sant'Anna and Zhao (2020) for details." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DRDID</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@ See Sant'Anna and Zhao (2020) for details." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-la"></span>
+    <span class="fas fa-home fa-la"></span>
      
   </a>
 </li>
@@ -108,13 +108,13 @@ See Sant'Anna and Zhao (2020) for details." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/pedrohcgs/DRDID/">
-    <span class="fab fa fab fa-github fa-la"></span>
+    <span class="fab fa-github fa-la"></span>
      
   </a>
 </li>
 <li>
   <a href="http://twitter.com/pedrohcgs">
-    <span class="fab fa fab fa-twitter fa-lg"></span>
+    <span class="fab fa-twitter fa-lg"></span>
      
   </a>
 </li>
@@ -142,20 +142,20 @@ treated in difference-in-differences (DiD) setups. It can be used with panel or 
 See Sant'Anna and Zhao (2020) for details.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ordid</span>(
-  <span class='no'>yname</span>,
-  <span class='no'>tname</span>,
-  <span class='no'>idname</span>,
-  <span class='no'>dname</span>,
-  <span class='kw'>xformla</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>data</span>,
-  <span class='kw'>panel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>weightsname</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>boot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>boot.type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"weighted"</span>, <span class='st'>"multiplier"</span>),
-  <span class='kw'>nboot</span> <span class='kw'>=</span> <span class='fl'>999</span>,
-  <span class='kw'>inffunc</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>ordid</span><span class='op'>(</span>
+  <span class='va'>yname</span>,
+  <span class='va'>tname</span>,
+  <span class='va'>idname</span>,
+  <span class='va'>dname</span>,
+  xformla <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>data</span>,
+  panel <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  weightsname <span class='op'>=</span> <span class='cn'>NULL</span>,
+  boot <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  boot.type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"weighted"</span>, <span class='st'>"multiplier"</span><span class='op'>)</span>,
+  nboot <span class='op'>=</span> <span class='fl'>999</span>,
+  inffunc <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -253,12 +253,13 @@ doi: <a href='https://doi.org/10.1016/j.jeconom.2020.06.003'>10.1016/j.jeconom.2
 <span class='co'># Panel data case</span>
 <span class='co'># -----------------------------------------------</span>
 <span class='co'># Form the Lalonde sample with CPS comparison group</span>
-<span class='no'>eval_lalonde_cps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>nsw_long</span>, <span class='no'>nsw_long</span>$<span class='no'>treated</span> <span class='kw'>==</span> <span class='fl'>0</span> <span class='kw'>|</span> <span class='no'>nsw_long</span>$<span class='no'>sample</span> <span class='kw'>==</span> <span class='fl'>2</span>)
+<span class='va'>eval_lalonde_cps</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>nsw_long</span>, <span class='va'>nsw_long</span><span class='op'>$</span><span class='va'>treated</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>|</span> <span class='va'>nsw_long</span><span class='op'>$</span><span class='va'>sample</span> <span class='op'>==</span> <span class='fl'>2</span><span class='op'>)</span>
 
 <span class='co'># Implement OR DID with panel data</span>
-<span class='fu'>ordid</span>(<span class='kw'>yname</span><span class='kw'>=</span><span class='st'>"re"</span>, <span class='kw'>tname</span> <span class='kw'>=</span> <span class='st'>"year"</span>, <span class='kw'>idname</span> <span class='kw'>=</span> <span class='st'>"id"</span>, <span class='kw'>dname</span> <span class='kw'>=</span> <span class='st'>"experimental"</span>,
-      <span class='kw'>xformla</span><span class='kw'>=</span> ~ <span class='no'>age</span>+ <span class='no'>educ</span>+ <span class='no'>black</span>+ <span class='no'>married</span>+ <span class='no'>nodegree</span>+ <span class='no'>hisp</span>+ <span class='no'>re74</span>,
-      <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>eval_lalonde_cps</span>, <span class='kw'>panel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;  Call:
+<span class='fu'>ordid</span><span class='op'>(</span>yname<span class='op'>=</span><span class='st'>"re"</span>, tname <span class='op'>=</span> <span class='st'>"year"</span>, idname <span class='op'>=</span> <span class='st'>"id"</span>, dname <span class='op'>=</span> <span class='st'>"experimental"</span>,
+      xformla<span class='op'>=</span> <span class='op'>~</span> <span class='va'>age</span><span class='op'>+</span> <span class='va'>educ</span><span class='op'>+</span> <span class='va'>black</span><span class='op'>+</span> <span class='va'>married</span><span class='op'>+</span> <span class='va'>nodegree</span><span class='op'>+</span> <span class='va'>hisp</span><span class='op'>+</span> <span class='va'>re74</span>,
+      data <span class='op'>=</span> <span class='va'>eval_lalonde_cps</span>, panel <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  Call:
 #&gt; ordid(yname = "re", tname = "year", idname = "id", dname = "experimental", 
 #&gt;     xformla = ~age + educ + black + married + nodegree + hisp + 
 #&gt;         re74, data = eval_lalonde_cps, panel = TRUE)
@@ -279,10 +280,11 @@ doi: <a href='https://doi.org/10.1016/j.jeconom.2020.06.003'>10.1016/j.jeconom.2
 <span class='co'># use the simulated data provided in the package</span>
 <span class='co'># Implement OR DID with repeated cross-section data</span>
 <span class='co'># use Bootstrap to make inference with 199 bootstrap draws (just for illustration)</span>
-<span class='fu'>ordid</span>(<span class='kw'>yname</span><span class='kw'>=</span><span class='st'>"y"</span>, <span class='kw'>tname</span> <span class='kw'>=</span> <span class='st'>"post"</span>, <span class='kw'>idname</span> <span class='kw'>=</span> <span class='st'>"id"</span>, <span class='kw'>dname</span> <span class='kw'>=</span> <span class='st'>"d"</span>,
-      <span class='kw'>xformla</span><span class='kw'>=</span> ~ <span class='no'>x1</span> + <span class='no'>x2</span> + <span class='no'>x3</span> + <span class='no'>x4</span>,
-      <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>sim_rc</span>, <span class='kw'>panel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-      <span class='kw'>boot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>nboot</span> <span class='kw'>=</span> <span class='fl'>199</span>)</div><div class='output co'>#&gt;  Call:
+<span class='fu'>ordid</span><span class='op'>(</span>yname<span class='op'>=</span><span class='st'>"y"</span>, tname <span class='op'>=</span> <span class='st'>"post"</span>, idname <span class='op'>=</span> <span class='st'>"id"</span>, dname <span class='op'>=</span> <span class='st'>"d"</span>,
+      xformla<span class='op'>=</span> <span class='op'>~</span> <span class='va'>x1</span> <span class='op'>+</span> <span class='va'>x2</span> <span class='op'>+</span> <span class='va'>x3</span> <span class='op'>+</span> <span class='va'>x4</span>,
+      data <span class='op'>=</span> <span class='va'>sim_rc</span>, panel <span class='op'>=</span> <span class='cn'>FALSE</span>,
+      boot <span class='op'>=</span> <span class='cn'>TRUE</span>, nboot <span class='op'>=</span> <span class='fl'>199</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  Call:
 #&gt; ordid(yname = "y", tname = "post", idname = "id", dname = "d", 
 #&gt;     xformla = ~x1 + x2 + x3 + x4, data = sim_rc, panel = FALSE, 
 #&gt;     boot = TRUE, nboot = 199)
@@ -316,7 +318,7 @@ doi: <a href='https://doi.org/10.1016/j.jeconom.2020.06.003'>10.1016/j.jeconom.2
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
