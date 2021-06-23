@@ -134,7 +134,8 @@ pre_process_drdid <- function(yname,
   # Post dummy will be denoted by post
   dta$post <- as.numeric(dta[,tname] == tlist[2])
   # matrix of covariates
-  covariates <- stats::model.matrix(xformla, data=dta)
+  covariates <- stats::model.matrix(xformla,
+                                    model.frame(~ .,  data=dta, na.action=na.pass) )
 
   #check if covariates and group are time invariant in the panel data case.
   # matrix of covariates for pre-period and post periods
