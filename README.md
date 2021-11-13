@@ -1,7 +1,7 @@
 # Doubly Robust Difference-in-Differences <img src="man/figures/logo.png" align="right" alt="" width="95" />
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/DRDID)](https://CRAN.R-project.org/package=DRDID)
-[![Codecov test coverage](https://app.codecov.io/gh/pedrohcgs/DRDID/branch/master/graph/badge.svg)](https://app.codecov.io/gh/pedrohcgs/DRDID?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/pedrohcgs/DRDID/branch/master/graph/badge.svg)](https://app.codecov.io/gh/pedrohcgs/DRDID?branch=master)
 [![R build status](https://github.com/pedrohcgs/DRDID/workflows/R-CMD-check/badge.svg)](https://github.com/pedrohcgs/DRDID/actions)
 <!-- badges: end -->
 
