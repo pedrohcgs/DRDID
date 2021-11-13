@@ -64,7 +64,10 @@ NULL
 #' # -----------------------------------------------
 #' # Form the Lalonde sample with CPS comparison group
 #' eval_lalonde_cps <- subset(nsw_long, nsw_long$treated == 0 | nsw_long$sample == 2)
-#'
+#' # Further reduce sample to speed example
+#' set.seed(123)
+#' unit_random <- sample(unique(eval_lalonde_cps$id), 5000)
+#' eval_lalonde_cps <- eval_lalonde_cps[eval_lalonde_cps$id %in% unit_random,]
 #' # Implement OR DID with panel data
 #' ordid(yname="re", tname = "year", idname = "id", dname = "experimental",
 #'       xformla= ~ age+ educ+ black+ married+ nodegree+ hisp+ re74,

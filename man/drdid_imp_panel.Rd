@@ -76,6 +76,10 @@ but it is also doubly robust for inference; see Sant'Anna and Zhao (2020) for de
 \examples{
 # Form the Lalonde sample with CPS comparison group
 eval_lalonde_cps <- subset(nsw, nsw$treated == 0 | nsw$sample == 2)
+# Further reduce sample to speed example
+set.seed(123)
+unit_random <- sample(1:nrow(eval_lalonde_cps), 5000)
+eval_lalonde_cps <- eval_lalonde_cps[unit_random,]
 # Select some covariates
 covX = as.matrix(cbind(eval_lalonde_cps$age, eval_lalonde_cps$educ,
                              eval_lalonde_cps$black, eval_lalonde_cps$married,
