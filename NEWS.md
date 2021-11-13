@@ -1,3 +1,8 @@
+# DRDID 1.0.3
+  * Add new flags for non-unique idname
+  
+  * Better handle of factor variables as covariates
+
 # DRDID 1.0.2
   * Fix issue with NA in covariates
   

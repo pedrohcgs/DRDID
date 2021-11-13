@@ -44,7 +44,12 @@ pre_process_drdid <- function(yname,
   }
 
   # make sure dataset is a data.frame
-  dta <- as.data.frame(dta)
+  dta <- data
+  # this gets around RStudio's default of reading data as tibble
+  if (!all( class(dta) == "data.frame")) {
+    #warning("class of data object was not data.frame; converting...")
+    dta <- as.data.frame(dta)
+  }
 
 
   # Flag for yname
@@ -165,7 +170,9 @@ pre_process_drdid <- function(yname,
   dta$post <- as.numeric(dta[,tname] == tlist[2])
   # matrix of covariates
   covariates <- stats::model.matrix(xformla,
-                                    model.frame(~ .,  data=dta, na.action=na.pass) )
+                                    stats::model.frame(xformla,
+                                                       data = dta,
+                                                       na.action=na.pass) )
 
   #check if covariates and group are time invariant in the panel data case.
   # matrix of covariates for pre-period and post periods
