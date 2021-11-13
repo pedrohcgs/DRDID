@@ -1,5 +1,5 @@
 # DRDID 1.0.3
-  * Add new flags for non-unique idname
+  * Add new flags for non-unique unit identifier
   
   * Better handle of factor variables as covariates
 
