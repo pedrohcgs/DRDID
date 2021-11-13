@@ -89,20 +89,15 @@ pre_process_drdid <- function(yname,
   dta$w <- w
 
 
-
-  dta[, tname] <- as.numeric(dta[, tname])
-
   # make sure time periods are numeric
   if (! (is.numeric(dta[, tname])) ) {
-    dta[, tname] <- as.numeric(dta[, tname])
-    warning("data[, tname] was converted to numeric")
+    stop("data[, tname] must be numeric. Please convert it.")
 
   }
 
   #  make sure dname is numeric
   if (! (is.numeric(dta[, dname])) ) {
-    dta[, dname] <- as.numeric(dta[, dname])
-    warning("data[, dname] was converted to numeric")
+    stop("data[, dname] must be numeric. Please convert it.")
 
   }
 
@@ -110,8 +105,7 @@ pre_process_drdid <- function(yname,
   if (! is.null(idname)){
     #  make sure id is numeric
     if (! (is.numeric(dta[, idname])) ) {
-      dta[, idname] <- as.numeric(dta[, idname])
-      warning("data[, idname] was converted to be numeric")
+      stop("data[, idname] must be numeric. Please convert it.")
       }
 
     # Check if idname is unique by tname
@@ -209,7 +203,7 @@ pre_process_drdid <- function(yname,
 
   # warn if some groups are small
   if (nrow(gsize) > 0) {
-    warning(paste0(" Either treatment or the comparison group in your dataset is fairly small. Proceed with caution."))
+    stop(paste0(" Either treatment or the comparison group in your dataset is very small. Inference is not feasible "))
   }
   #-----------------------------------------------------------------------------
   # setup data in panel case

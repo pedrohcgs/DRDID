@@ -209,7 +209,7 @@ test_that("Error and Warning messages are working", {
 
   # Warning for more than two periods
   dta_long2$post <- ifelse(dta_long$post==0, "pre", "post")
-  expect_warning(drdid(yname="y",
+  expect_error(drdid(yname="y",
                        tname = "post",
                        idname = NULL,
                        dname = "d",
