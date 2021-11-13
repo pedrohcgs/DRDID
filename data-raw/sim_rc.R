@@ -76,7 +76,7 @@ post <- as.numeric(stats::runif(n) <= lambda)
 y <- post * y1 + (1 - post) * y0
 #-----------------------------------------------------------------------------
 #Gen id
-id <- 1:n
+id <- as.numeric(1:n)
 #-----------------------------------------------------------------------------
 # Put in a long data frame
 sim_rc <- as.data.frame(cbind(id = id, post = post, y = y, d = d,
