@@ -44,12 +44,8 @@ pre_process_drdid <- function(yname,
   }
 
   # make sure dataset is a data.frame
-  dta <- data
-  # this gets around RStudio's default of reading data as tibble
-  if (!all( class(dta) == "data.frame")) {
-    #warning("class of data object was not data.frame; converting...")
-    dta <- as.data.frame(dta)
-  }
+  dta <- as.data.frame(dta)
+
 
   # Flag for yname
   if ( !is.element(yname, base::colnames(dta))) {
@@ -87,6 +83,44 @@ pre_process_drdid <- function(yname,
   base::ifelse(is.null(weightsname), w <- rep(1,nrow(dta)), w <- dta[,weightsname])
   dta$w <- w
 
+
+
+  dta[, tname] <- as.numeric(dta[, tname])
+
+  # make sure time periods are numeric
+  if (! (is.numeric(dta[, tname])) ) {
+    dta[, tname] <- as.numeric(dta[, tname])
+    warning("data[, tname] was converted to numeric")
+
+  }
+
+  #  make sure dname is numeric
+  if (! (is.numeric(dta[, dname])) ) {
+    dta[, dname] <- as.numeric(dta[, dname])
+    warning("data[, dname] was converted to numeric")
+
+  }
+
+  #  make sure id is numeric
+  if (! is.null(idname)){
+    #  make sure id is numeric
+    if (! (is.numeric(dta[, idname])) ) {
+      dta[, idname] <- as.numeric(dta[, idname])
+      warning("data[, idname] was converted to be numeric")
+      }
+
+    # Check if idname is unique by tname
+    n_id_year = base::all( base::table(dta[, idname], dta[, tname]) <= 1)
+    if (! n_id_year) stop("The value of idname must be the unique (by tname)")
+
+    # make sure gname doesn't change across periods for particular individuals
+    if (!all(sapply( base::split(dta, dta[,idname]), function(df) {
+      length(unique(df[,dname]))==1
+    }))) {
+      stop("The value of dname must be the same across all periods for each particular unit")
+    }
+  }
+
   # figure out the time periods
   # list of dates from smallest to largest
   tlist <- unique(dta[,tname])[base::order(unique(dta[,tname]))]
@@ -102,10 +136,6 @@ pre_process_drdid <- function(yname,
          See package `did' for the cases with multiple groups and/or multiple time periods.")
   }
 
-  # check that time periods are numeric
-  if (!is.numeric(tlist)) {
-    warning("not guaranteed to order time periods correclty if they are not numeric")
-  }
 
   # put in blank xformla if no covariates
   if (is.null(xformla)) {
@@ -113,7 +143,7 @@ pre_process_drdid <- function(yname,
   }
 
   # If repeated cross section, allow for null idname
-  if(is.null(idname) && (panel == FALSE)){
+  if(is.null(idname) & (panel == FALSE)){
     dta$id <- seq(1:nrow(dta))
     idname <- "id"
   }
