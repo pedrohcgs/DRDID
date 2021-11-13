@@ -261,6 +261,10 @@ doi: <a href='https://doi.org/10.1016/j.jeconom.2020.06.003'>10.1016/j.jeconom.2
 <span class='r-in'><span class='co'># -----------------------------------------------</span></span>
 <span class='r-in'><span class='co'># Form the Lalonde sample with CPS comparison group</span></span>
 <span class='r-in'><span class='va'>eval_lalonde_cps</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>nsw_long</span>, <span class='va'>nsw_long</span><span class='op'>$</span><span class='va'>treated</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>|</span> <span class='va'>nsw_long</span><span class='op'>$</span><span class='va'>sample</span> <span class='op'>==</span> <span class='fl'>2</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># Further reduce sample to speed example</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>123</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>unit_random</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>eval_lalonde_cps</span><span class='op'>$</span><span class='va'>id</span><span class='op'>)</span>, <span class='fl'>5000</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>eval_lalonde_cps</span> <span class='op'>&lt;-</span> <span class='va'>eval_lalonde_cps</span><span class='op'>[</span><span class='va'>eval_lalonde_cps</span><span class='op'>$</span><span class='va'>id</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='va'>unit_random</span>,<span class='op'>]</span></span>
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># Implement IPW DID with panel data (normalized weights)</span></span>
 <span class='r-in'><span class='fu'>ipwdid</span><span class='op'>(</span>yname<span class='op'>=</span><span class='st'>"re"</span>, tname <span class='op'>=</span> <span class='st'>"year"</span>, idname <span class='op'>=</span> <span class='st'>"id"</span>, dname <span class='op'>=</span> <span class='st'>"experimental"</span>,</span>
@@ -274,7 +278,7 @@ doi: <a href='https://doi.org/10.1016/j.jeconom.2020.06.003'>10.1016/j.jeconom.2
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  IPW DID estimator for the ATT:</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>    ATT     Std. Error  t value    Pr(&gt;|t|)  [95% Conf. Interval] </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> -1021.6095  397.5322   -2.5699     0.0102   -1800.7726 -242.4464 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> -655.9068   687.8493   -0.9536     0.3403   -2004.0914  692.2778 </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> ------------------------------------------------------------------</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Estimator based on panel data.</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Hajek-type IPW estimator (weights sum up to 1).</span>
@@ -301,7 +305,7 @@ doi: <a href='https://doi.org/10.1016/j.jeconom.2020.06.003'>10.1016/j.jeconom.2
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  IPW DID estimator for the ATT:</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>    ATT     Std. Error  t value    Pr(&gt;|t|)  [95% Conf. Interval] </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>  -15.8033    9.826     -1.6083     0.1078    -34.7226    3.116   </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  -15.8033    9.7237    -1.6252     0.1041    -32.7867    1.1801  </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> ------------------------------------------------------------------</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Estimator based on (stationary) repeated cross-sections data.</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Hajek-type IPW estimator (weights sum up to 1).</span>

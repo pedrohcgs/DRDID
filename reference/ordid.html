@@ -254,7 +254,10 @@ doi: <a href='https://doi.org/10.1016/j.jeconom.2020.06.003'>10.1016/j.jeconom.2
 <span class='r-in'><span class='co'># -----------------------------------------------</span></span>
 <span class='r-in'><span class='co'># Form the Lalonde sample with CPS comparison group</span></span>
 <span class='r-in'><span class='va'>eval_lalonde_cps</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>nsw_long</span>, <span class='va'>nsw_long</span><span class='op'>$</span><span class='va'>treated</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>|</span> <span class='va'>nsw_long</span><span class='op'>$</span><span class='va'>sample</span> <span class='op'>==</span> <span class='fl'>2</span><span class='op'>)</span></span>
-<span class='r-in'></span>
+<span class='r-in'><span class='co'># Further reduce sample to speed example</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>123</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>unit_random</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>eval_lalonde_cps</span><span class='op'>$</span><span class='va'>id</span><span class='op'>)</span>, <span class='fl'>5000</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>eval_lalonde_cps</span> <span class='op'>&lt;-</span> <span class='va'>eval_lalonde_cps</span><span class='op'>[</span><span class='va'>eval_lalonde_cps</span><span class='op'>$</span><span class='va'>id</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='va'>unit_random</span>,<span class='op'>]</span></span>
 <span class='r-in'><span class='co'># Implement OR DID with panel data</span></span>
 <span class='r-in'><span class='fu'>ordid</span><span class='op'>(</span>yname<span class='op'>=</span><span class='st'>"re"</span>, tname <span class='op'>=</span> <span class='st'>"year"</span>, idname <span class='op'>=</span> <span class='st'>"id"</span>, dname <span class='op'>=</span> <span class='st'>"experimental"</span>,</span>
 <span class='r-in'>      xformla<span class='op'>=</span> <span class='op'>~</span> <span class='va'>age</span><span class='op'>+</span> <span class='va'>educ</span><span class='op'>+</span> <span class='va'>black</span><span class='op'>+</span> <span class='va'>married</span><span class='op'>+</span> <span class='va'>nodegree</span><span class='op'>+</span> <span class='va'>hisp</span><span class='op'>+</span> <span class='va'>re74</span>,</span>
@@ -267,7 +270,7 @@ doi: <a href='https://doi.org/10.1016/j.jeconom.2020.06.003'>10.1016/j.jeconom.2
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Outcome-Regression DID estimator for the ATT:</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>    ATT     Std. Error  t value    Pr(&gt;|t|)  [95% Conf. Interval] </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> -1300.6446  349.8365   -3.7179     2e-04    -1986.3241  -614.965 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> -1312.6766  597.2834   -2.1977     0.028    -2483.3521 -142.0011 </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> ------------------------------------------------------------------</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Estimator based on panel data.</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Outcome regression est. method: OLS.</span>
@@ -293,7 +296,7 @@ doi: <a href='https://doi.org/10.1016/j.jeconom.2020.06.003'>10.1016/j.jeconom.2
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Outcome-Regression DID estimator for the ATT:</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>    ATT     Std. Error  t value    Pr(&gt;|t|)  [95% Conf. Interval] </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>   -8.791     7.127     -1.2335     0.2174    -23.1097    5.5278  </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   -8.791      8.81     -0.9978     0.3184    -23.8673    6.2854  </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> ------------------------------------------------------------------</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Estimator based on (stationary) repeated cross-sections data.</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Outcome regression est. method: OLS.</span>

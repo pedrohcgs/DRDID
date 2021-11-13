@@ -226,6 +226,10 @@ doi: <a href='https://doi.org/10.1016/j.jeconom.2020.06.003'>10.1016/j.jeconom.2
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='r-in'><span class='co'># Form the Lalonde sample with CPS comparison group (data in wide format)</span></span>
 <span class='r-in'><span class='va'>eval_lalonde_cps</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>nsw</span>, <span class='va'>nsw</span><span class='op'>$</span><span class='va'>treated</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>|</span> <span class='va'>nsw</span><span class='op'>$</span><span class='va'>sample</span> <span class='op'>==</span> <span class='fl'>2</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># Further reduce sample to speed example</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>123</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>unit_random</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>eval_lalonde_cps</span><span class='op'>)</span>, <span class='fl'>5000</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>eval_lalonde_cps</span> <span class='op'>&lt;-</span> <span class='va'>eval_lalonde_cps</span><span class='op'>[</span><span class='va'>unit_random</span>,<span class='op'>]</span></span>
 <span class='r-in'><span class='co'># Select some covariates</span></span>
 <span class='r-in'><span class='va'>covX</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>eval_lalonde_cps</span><span class='op'>$</span><span class='va'>age</span>, <span class='va'>eval_lalonde_cps</span><span class='op'>$</span><span class='va'>educ</span>,</span>
 <span class='r-in'>                       <span class='va'>eval_lalonde_cps</span><span class='op'>$</span><span class='va'>black</span>, <span class='va'>eval_lalonde_cps</span><span class='op'>$</span><span class='va'>married</span>,</span>
@@ -243,7 +247,7 @@ doi: <a href='https://doi.org/10.1016/j.jeconom.2020.06.003'>10.1016/j.jeconom.2
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Locally efficient DR DID estimator for the ATT:</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>    ATT     Std. Error  t value    Pr(&gt;|t|)  [95% Conf. Interval] </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> -871.3271   396.0332   -2.2001     0.0278   -1647.5521  -95.1022 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> -507.6113   692.9738   -0.7325     0.4639   -1865.8399  850.6173 </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> ------------------------------------------------------------------</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Estimator based on panel data.</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  Outcome regression est. method: OLS.</span>
