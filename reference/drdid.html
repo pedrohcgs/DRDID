@@ -282,97 +282,41 @@ see Sant'Anna and Zhao (2020) for details.</p>
 </cite></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># -----------------------------------------------</span>
-<span class='co'># Panel data case</span>
-<span class='co'># -----------------------------------------------</span>
-<span class='co'># Form the Lalonde sample with CPS comparison group</span>
-<span class='va'>eval_lalonde_cps</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>nsw_long</span>, <span class='va'>nsw_long</span><span class='op'>$</span><span class='va'>treated</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>|</span> <span class='va'>nsw_long</span><span class='op'>$</span><span class='va'>sample</span> <span class='op'>==</span> <span class='fl'>2</span><span class='op'>)</span>
-<span class='co'># -----------------------------------------------</span>
-<span class='co'># Implement improved DR locally efficient DID with panel data</span>
-<span class='fu'>drdid</span><span class='op'>(</span>yname<span class='op'>=</span><span class='st'>"re"</span>, tname <span class='op'>=</span> <span class='st'>"year"</span>, idname <span class='op'>=</span> <span class='st'>"id"</span>, dname <span class='op'>=</span> <span class='st'>"experimental"</span>,
-      xformla<span class='op'>=</span> <span class='op'>~</span> <span class='va'>age</span><span class='op'>+</span> <span class='va'>educ</span><span class='op'>+</span> <span class='va'>black</span><span class='op'>+</span> <span class='va'>married</span><span class='op'>+</span> <span class='va'>nodegree</span><span class='op'>+</span> <span class='va'>hisp</span><span class='op'>+</span> <span class='va'>re74</span>,
-      data <span class='op'>=</span> <span class='va'>eval_lalonde_cps</span>, panel <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;  Call:
-#&gt; drdid(yname = "re", tname = "year", idname = "id", dname = "experimental", 
-#&gt;     xformla = ~age + educ + black + married + nodegree + hisp + 
-#&gt;         re74, data = eval_lalonde_cps, panel = TRUE)
-#&gt; ------------------------------------------------------------------
-#&gt;  Further improved locally efficient DR DID estimator for the ATT:
-#&gt;  
-#&gt;    ATT     Std. Error  t value    Pr(&gt;|t|)  [95% Conf. Interval] 
-#&gt; -901.2703   393.6247   -2.2897     0.022    -1672.7747  -129.766 
-#&gt; ------------------------------------------------------------------
-#&gt;  Estimator based on panel data.
-#&gt;  Outcome regression est. method: weighted least squares.
-#&gt;  Propensity score est. method: inverse prob. tilting.
-#&gt;  Analytical standard error.
-#&gt; ------------------------------------------------------------------
-#&gt;  See Sant'Anna and Zhao (2020) for details.</div><div class='input'>
-<span class='co'>#Implement "traditional" DR locally efficient DID with panel data</span>
-<span class='fu'>drdid</span><span class='op'>(</span>yname<span class='op'>=</span><span class='st'>"re"</span>, tname <span class='op'>=</span> <span class='st'>"year"</span>, idname <span class='op'>=</span> <span class='st'>"id"</span>, dname <span class='op'>=</span> <span class='st'>"experimental"</span>,
-      xformla<span class='op'>=</span> <span class='op'>~</span> <span class='va'>age</span><span class='op'>+</span> <span class='va'>educ</span><span class='op'>+</span> <span class='va'>black</span><span class='op'>+</span> <span class='va'>married</span><span class='op'>+</span> <span class='va'>nodegree</span><span class='op'>+</span> <span class='va'>hisp</span><span class='op'>+</span> <span class='va'>re74</span>,
-      data <span class='op'>=</span> <span class='va'>eval_lalonde_cps</span>, panel <span class='op'>=</span> <span class='cn'>TRUE</span>, estMethod <span class='op'>=</span> <span class='st'>"trad"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;  Call:
-#&gt; drdid(yname = "re", tname = "year", idname = "id", dname = "experimental", 
-#&gt;     xformla = ~age + educ + black + married + nodegree + hisp + 
-#&gt;         re74, data = eval_lalonde_cps, panel = TRUE, estMethod = "trad")
-#&gt; ------------------------------------------------------------------
-#&gt;  Locally efficient DR DID estimator for the ATT:
-#&gt;  
-#&gt;    ATT     Std. Error  t value    Pr(&gt;|t|)  [95% Conf. Interval] 
-#&gt; -871.3271   396.0332   -2.2001     0.0278   -1647.5521  -95.1022 
-#&gt; ------------------------------------------------------------------
-#&gt;  Estimator based on panel data.
-#&gt;  Outcome regression est. method: OLS.
-#&gt;  Propensity score est. method: maximum likelihood.
-#&gt;  Analytical standard error.
-#&gt; ------------------------------------------------------------------
-#&gt;  See Sant'Anna and Zhao (2020) for details.</div><div class='input'>
-<span class='co'># -----------------------------------------------</span>
-<span class='co'># Repeated cross section case</span>
-<span class='co'># -----------------------------------------------</span>
-<span class='co'># use the simulated data provided in the package</span>
-<span class='co'>#Implement "improved" DR locally efficient DID with repeated cross-section data</span>
-<span class='fu'>drdid</span><span class='op'>(</span>yname<span class='op'>=</span><span class='st'>"y"</span>, tname <span class='op'>=</span> <span class='st'>"post"</span>, idname <span class='op'>=</span> <span class='st'>"id"</span>, dname <span class='op'>=</span> <span class='st'>"d"</span>,
-      xformla<span class='op'>=</span> <span class='op'>~</span> <span class='va'>x1</span> <span class='op'>+</span> <span class='va'>x2</span> <span class='op'>+</span> <span class='va'>x3</span> <span class='op'>+</span> <span class='va'>x4</span>,
-      data <span class='op'>=</span> <span class='va'>sim_rc</span>, panel <span class='op'>=</span> <span class='cn'>FALSE</span>, estMethod <span class='op'>=</span> <span class='st'>"imp"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;  Call:
-#&gt; drdid(yname = "y", tname = "post", idname = "id", dname = "d", 
-#&gt;     xformla = ~x1 + x2 + x3 + x4, data = sim_rc, panel = FALSE, 
-#&gt;     estMethod = "imp")
-#&gt; ------------------------------------------------------------------
-#&gt;  Further improved locally efficient DR DID estimator for the ATT:
-#&gt;  
-#&gt;    ATT     Std. Error  t value    Pr(&gt;|t|)  [95% Conf. Interval] 
-#&gt;  -0.2089     0.2003    -1.0425     0.2972    -0.6015     0.1838  
-#&gt; ------------------------------------------------------------------
-#&gt;  Estimator based on (stationary) repeated cross-sections data.
-#&gt;  Outcome regression est. method: weighted least squares.
-#&gt;  Propensity score est. method: inverse prob. tilting.
-#&gt;  Analytical standard error.
-#&gt; ------------------------------------------------------------------
-#&gt;  See Sant'Anna and Zhao (2020) for details.</div><div class='input'>
-<span class='co'>#Implement "traditional" DR locally efficient DID with repeated cross-section data</span>
-<span class='fu'>drdid</span><span class='op'>(</span>yname<span class='op'>=</span><span class='st'>"y"</span>, tname <span class='op'>=</span> <span class='st'>"post"</span>, idname <span class='op'>=</span> <span class='st'>"id"</span>, dname <span class='op'>=</span> <span class='st'>"d"</span>,
-      xformla<span class='op'>=</span> <span class='op'>~</span> <span class='va'>x1</span> <span class='op'>+</span> <span class='va'>x2</span> <span class='op'>+</span> <span class='va'>x3</span> <span class='op'>+</span> <span class='va'>x4</span>,
-      data <span class='op'>=</span> <span class='va'>sim_rc</span>, panel <span class='op'>=</span> <span class='cn'>FALSE</span>, estMethod <span class='op'>=</span> <span class='st'>"trad"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;  Call:
-#&gt; drdid(yname = "y", tname = "post", idname = "id", dname = "d", 
-#&gt;     xformla = ~x1 + x2 + x3 + x4, data = sim_rc, panel = FALSE, 
-#&gt;     estMethod = "trad")
-#&gt; ------------------------------------------------------------------
-#&gt;  Locally efficient DR DID estimator for the ATT:
-#&gt;  
-#&gt;    ATT     Std. Error  t value    Pr(&gt;|t|)  [95% Conf. Interval] 
-#&gt;  -0.1678     0.2009    -0.8352     0.4036    -0.5616     0.226   
-#&gt; ------------------------------------------------------------------
-#&gt;  Estimator based on (stationary) repeated cross-sections data.
-#&gt;  Outcome regression est. method: OLS.
-#&gt;  Propensity score est. method: maximum likelihood.
-#&gt;  Analytical standard error.
-#&gt; ------------------------------------------------------------------
-#&gt;  See Sant'Anna and Zhao (2020) for details.</div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># -----------------------------------------------</span></span>
+<span class='r-in'><span class='co'># Panel data case</span></span>
+<span class='r-in'><span class='co'># -----------------------------------------------</span></span>
+<span class='r-in'><span class='co'># Form the Lalonde sample with CPS comparison group</span></span>
+<span class='r-in'><span class='va'>eval_lalonde_cps</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>nsw_long</span>, <span class='va'>nsw_long</span><span class='op'>$</span><span class='va'>treated</span> <span class='op'>==</span> <span class='fl'>0</span> <span class='op'>|</span> <span class='va'>nsw_long</span><span class='op'>$</span><span class='va'>sample</span> <span class='op'>==</span> <span class='fl'>2</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># -----------------------------------------------</span></span>
+<span class='r-in'><span class='co'># Implement improved DR locally efficient DID with panel data</span></span>
+<span class='r-in'><span class='fu'>drdid</span><span class='op'>(</span>yname<span class='op'>=</span><span class='st'>"re"</span>, tname <span class='op'>=</span> <span class='st'>"year"</span>, idname <span class='op'>=</span> <span class='st'>"id"</span>, dname <span class='op'>=</span> <span class='st'>"experimental"</span>,</span>
+<span class='r-in'>      xformla<span class='op'>=</span> <span class='op'>~</span> <span class='va'>age</span><span class='op'>+</span> <span class='va'>educ</span><span class='op'>+</span> <span class='va'>black</span><span class='op'>+</span> <span class='va'>married</span><span class='op'>+</span> <span class='va'>nodegree</span><span class='op'>+</span> <span class='va'>hisp</span><span class='op'>+</span> <span class='va'>re74</span>,</span>
+<span class='r-in'>      data <span class='op'>=</span> <span class='va'>eval_lalonde_cps</span>, panel <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-err co'><span class='r-pr'>#&gt;</span> <span class='error'>Error in as.data.frame(dta):</span> object 'dta' not found</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'>#Implement "traditional" DR locally efficient DID with panel data</span></span>
+<span class='r-in'><span class='fu'>drdid</span><span class='op'>(</span>yname<span class='op'>=</span><span class='st'>"re"</span>, tname <span class='op'>=</span> <span class='st'>"year"</span>, idname <span class='op'>=</span> <span class='st'>"id"</span>, dname <span class='op'>=</span> <span class='st'>"experimental"</span>,</span>
+<span class='r-in'>      xformla<span class='op'>=</span> <span class='op'>~</span> <span class='va'>age</span><span class='op'>+</span> <span class='va'>educ</span><span class='op'>+</span> <span class='va'>black</span><span class='op'>+</span> <span class='va'>married</span><span class='op'>+</span> <span class='va'>nodegree</span><span class='op'>+</span> <span class='va'>hisp</span><span class='op'>+</span> <span class='va'>re74</span>,</span>
+<span class='r-in'>      data <span class='op'>=</span> <span class='va'>eval_lalonde_cps</span>, panel <span class='op'>=</span> <span class='cn'>TRUE</span>, estMethod <span class='op'>=</span> <span class='st'>"trad"</span><span class='op'>)</span></span>
+<span class='r-err co'><span class='r-pr'>#&gt;</span> <span class='error'>Error in as.data.frame(dta):</span> object 'dta' not found</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># -----------------------------------------------</span></span>
+<span class='r-in'><span class='co'># Repeated cross section case</span></span>
+<span class='r-in'><span class='co'># -----------------------------------------------</span></span>
+<span class='r-in'><span class='co'># use the simulated data provided in the package</span></span>
+<span class='r-in'><span class='co'>#Implement "improved" DR locally efficient DID with repeated cross-section data</span></span>
+<span class='r-in'><span class='fu'>drdid</span><span class='op'>(</span>yname<span class='op'>=</span><span class='st'>"y"</span>, tname <span class='op'>=</span> <span class='st'>"post"</span>, idname <span class='op'>=</span> <span class='st'>"id"</span>, dname <span class='op'>=</span> <span class='st'>"d"</span>,</span>
+<span class='r-in'>      xformla<span class='op'>=</span> <span class='op'>~</span> <span class='va'>x1</span> <span class='op'>+</span> <span class='va'>x2</span> <span class='op'>+</span> <span class='va'>x3</span> <span class='op'>+</span> <span class='va'>x4</span>,</span>
+<span class='r-in'>      data <span class='op'>=</span> <span class='va'>sim_rc</span>, panel <span class='op'>=</span> <span class='cn'>FALSE</span>, estMethod <span class='op'>=</span> <span class='st'>"imp"</span><span class='op'>)</span></span>
+<span class='r-err co'><span class='r-pr'>#&gt;</span> <span class='error'>Error in as.data.frame(dta):</span> object 'dta' not found</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'>#Implement "traditional" DR locally efficient DID with repeated cross-section data</span></span>
+<span class='r-in'><span class='fu'>drdid</span><span class='op'>(</span>yname<span class='op'>=</span><span class='st'>"y"</span>, tname <span class='op'>=</span> <span class='st'>"post"</span>, idname <span class='op'>=</span> <span class='st'>"id"</span>, dname <span class='op'>=</span> <span class='st'>"d"</span>,</span>
+<span class='r-in'>      xformla<span class='op'>=</span> <span class='op'>~</span> <span class='va'>x1</span> <span class='op'>+</span> <span class='va'>x2</span> <span class='op'>+</span> <span class='va'>x3</span> <span class='op'>+</span> <span class='va'>x4</span>,</span>
+<span class='r-in'>      data <span class='op'>=</span> <span class='va'>sim_rc</span>, panel <span class='op'>=</span> <span class='cn'>FALSE</span>, estMethod <span class='op'>=</span> <span class='st'>"trad"</span><span class='op'>)</span></span>
+<span class='r-err co'><span class='r-pr'>#&gt;</span> <span class='error'>Error in as.data.frame(dta):</span> object 'dta' not found</span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

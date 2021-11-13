@@ -242,27 +242,28 @@ doi: <a href='https://doi.org/10.1016/j.jeconom.2020.06.003'>10.1016/j.jeconom.2
 </cite></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># use the simulated data</span>
-<span class='va'>covX</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>sim_rc</span><span class='op'>[</span>,<span class='fl'>5</span><span class='op'>:</span><span class='fl'>8</span><span class='op'>]</span><span class='op'>)</span>
-<span class='co'># Implement the improved, locally efficient DR DID estimator</span>
-<span class='fu'>drdid_imp_rc</span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>sim_rc</span><span class='op'>$</span><span class='va'>y</span>, post <span class='op'>=</span> <span class='va'>sim_rc</span><span class='op'>$</span><span class='va'>post</span>, D <span class='op'>=</span> <span class='va'>sim_rc</span><span class='op'>$</span><span class='va'>d</span>,
-             covariates<span class='op'>=</span> <span class='va'>covX</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;  Call:
-#&gt; drdid_imp_rc(y = sim_rc$y, post = sim_rc$post, D = sim_rc$d, 
-#&gt;     covariates = covX)
-#&gt; ------------------------------------------------------------------
-#&gt;  Further improved locally efficient DR DID estimator for the ATT:
-#&gt;  
-#&gt;    ATT     Std. Error  t value    Pr(&gt;|t|)  [95% Conf. Interval] 
-#&gt;  -0.2089     0.2003    -1.0425     0.2972    -0.6015     0.1838  
-#&gt; ------------------------------------------------------------------
-#&gt;  Estimator based on (stationary) repeated cross-sections data.
-#&gt;  Outcome regression est. method: weighted least squares.
-#&gt;  Propensity score est. method: inverse prob. tilting.
-#&gt;  Analytical standard error.
-#&gt; ------------------------------------------------------------------
-#&gt;  See Sant'Anna and Zhao (2020) for details.</div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># use the simulated data</span></span>
+<span class='r-in'><span class='va'>covX</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>sim_rc</span><span class='op'>[</span>,<span class='fl'>5</span><span class='op'>:</span><span class='fl'>8</span><span class='op'>]</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># Implement the improved, locally efficient DR DID estimator</span></span>
+<span class='r-in'><span class='fu'>drdid_imp_rc</span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>sim_rc</span><span class='op'>$</span><span class='va'>y</span>, post <span class='op'>=</span> <span class='va'>sim_rc</span><span class='op'>$</span><span class='va'>post</span>, D <span class='op'>=</span> <span class='va'>sim_rc</span><span class='op'>$</span><span class='va'>d</span>,</span>
+<span class='r-in'>             covariates<span class='op'>=</span> <span class='va'>covX</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  Call:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> drdid_imp_rc(y = sim_rc$y, post = sim_rc$post, D = sim_rc$d, </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     covariates = covX)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ------------------------------------------------------------------</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  Further improved locally efficient DR DID estimator for the ATT:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    ATT     Std. Error  t value    Pr(&gt;|t|)  [95% Conf. Interval] </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  -0.2089     0.2003    -1.0425     0.2972    -0.6015     0.1838  </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ------------------------------------------------------------------</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  Estimator based on (stationary) repeated cross-sections data.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  Outcome regression est. method: weighted least squares.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  Propensity score est. method: inverse prob. tilting.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  Analytical standard error.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ------------------------------------------------------------------</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  See Sant'Anna and Zhao (2020) for details.</span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
