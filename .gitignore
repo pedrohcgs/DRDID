@@ -2,8 +2,4 @@
 .Rhistory
 .RData
 .Ruserdata
-inst/doc
-doc
-docs/
-pkgdown/
-docs
+
