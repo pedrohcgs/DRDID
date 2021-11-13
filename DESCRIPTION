@@ -12,7 +12,7 @@ Description: Implements the locally efficient doubly robust difference-in-differ
     regression estimators (also implemented in the package) to form estimators with
     more attractive statistical properties. Two different estimation methods can be used
     to estimate the nuisance functions.
-URL: https://pedrohcgs.github.io/DRDID, https://pedrohcgs.github.io/DRDID/, https://github.com/pedrohcgs/DRDID
+URL: https://pedrohcgs.github.io/DRDID/, https://github.com/pedrohcgs/DRDID
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -27,8 +27,7 @@ Suggests:
     knitr,
     rmarkdown,
     spelling,
-    testthat,
-    covr
+    testthat
 Date: 2021-11-012
 Language: en-US
 BugReports: https://github.com/pedrohcgs/DRDID/issues

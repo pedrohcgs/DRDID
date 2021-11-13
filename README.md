@@ -1,10 +1,7 @@
 # Doubly Robust Difference-in-Differences <img src="man/figures/logo.png" align="right" alt="" width="95" />
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/DRDID)](https://CRAN.R-project.org/package=DRDID)
-[![Travis build status](https://travis-ci.com/pedrohcgs/DRDID.svg?branch=master)](https://travis-ci.com/pedrohcgs/DRDID)
-[![Codecov test coverage](https://codecov.io/gh/pedrohcgs/DRDID/branch/master/graph/badge.svg)](https://codecov.io/gh/pedrohcgs/DRDID?branch=master)
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#stable)
+[![Codecov test coverage](https://app.codecov.io/gh/pedrohcgs/DRDID/branch/master/graph/badge.svg)](https://app.codecov.io/gh/pedrohcgs/DRDID?branch=master)
 [![R build status](https://github.com/pedrohcgs/DRDID/workflows/R-CMD-check/badge.svg)](https://github.com/pedrohcgs/DRDID/actions)
 <!-- badges: end -->
 
