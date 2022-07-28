@@ -23,8 +23,8 @@ If you end up using this package, please cite our paper:
 To install the most recent version of the `DRDID` package from GitHub:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("pedrohcgs/DRDID")
+# install.packages("remotes")
+remotes::install_github("pedrohcgs/DRDID")
 ```
 
 ## Short example
