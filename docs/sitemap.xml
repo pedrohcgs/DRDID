@@ -1,69 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/index.html</loc>
+    <loc>https://psantanna.com/DRDID/404.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/DRDID-package.html</loc>
+    <loc>https://psantanna.com/DRDID/authors.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/drdid.html</loc>
+    <loc>https://psantanna.com/DRDID/index.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/drdid_imp_panel.html</loc>
+    <loc>https://psantanna.com/DRDID/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/drdid_imp_rc.html</loc>
+    <loc>https://psantanna.com/DRDID/news/index.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/drdid_imp_rc1.html</loc>
+    <loc>https://psantanna.com/DRDID/reference/DRDID-package.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/drdid_panel.html</loc>
+    <loc>https://psantanna.com/DRDID/reference/drdid.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/drdid_rc.html</loc>
+    <loc>https://psantanna.com/DRDID/reference/drdid_imp_panel.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/drdid_rc1.html</loc>
+    <loc>https://psantanna.com/DRDID/reference/drdid_imp_rc.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/ipwdid.html</loc>
+    <loc>https://psantanna.com/DRDID/reference/drdid_imp_rc1.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/ipw_did_panel.html</loc>
+    <loc>https://psantanna.com/DRDID/reference/drdid_panel.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/ipw_did_rc.html</loc>
+    <loc>https://psantanna.com/DRDID/reference/drdid_rc.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/nsw.html</loc>
+    <loc>https://psantanna.com/DRDID/reference/drdid_rc1.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/nsw_long.html</loc>
+    <loc>https://psantanna.com/DRDID/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/ordid.html</loc>
+    <loc>https://psantanna.com/DRDID/reference/ipwdid.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/reg_did_panel.html</loc>
+    <loc>https://psantanna.com/DRDID/reference/ipw_did_panel.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/reg_did_rc.html</loc>
+    <loc>https://psantanna.com/DRDID/reference/ipw_did_rc.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/sim_rc.html</loc>
+    <loc>https://psantanna.com/DRDID/reference/nsw.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/std_ipw_did_panel.html</loc>
+    <loc>https://psantanna.com/DRDID/reference/nsw_long.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/std_ipw_did_rc.html</loc>
+    <loc>https://psantanna.com/DRDID/reference/ordid.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/twfe_did_panel.html</loc>
+    <loc>https://psantanna.com/DRDID/reference/reg_did_panel.html</loc>
   </url>
   <url>
-    <loc>https://pedrohcgs.github.io/DRDID/reference/twfe_did_rc.html</loc>
+    <loc>https://psantanna.com/DRDID/reference/reg_did_rc.html</loc>
+  </url>
+  <url>
+    <loc>https://psantanna.com/DRDID/reference/sim_rc.html</loc>
+  </url>
+  <url>
+    <loc>https://psantanna.com/DRDID/reference/std_ipw_did_panel.html</loc>
+  </url>
+  <url>
+    <loc>https://psantanna.com/DRDID/reference/std_ipw_did_rc.html</loc>
+  </url>
+  <url>
+    <loc>https://psantanna.com/DRDID/reference/twfe_did_panel.html</loc>
+  </url>
+  <url>
+    <loc>https://psantanna.com/DRDID/reference/twfe_did_rc.html</loc>
   </url>
 </urlset>

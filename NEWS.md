@@ -1,5 +1,6 @@
 # DRDID 1.0.5
   * drop collinear variables in pre_process_drdid.R (useful in drdid command but not other commands)
+  
   * Add compatibility with R 3.5
   
 # DRDID 1.0.4

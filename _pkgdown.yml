@@ -1,25 +1,21 @@
-url: https://pedrohcgs.github.io/DRDID
-
+url: https://psantanna.com/DRDID
 destination: docs
-
 template:
   params:
     bootswatch: flatly
   opengraph:
     image:
       src: man/figures/logo.png
-      alt: "Doubly Robust DID Estimators"
+      alt: Doubly Robust DID Estimators
     twitter:
-      creator: "@pedrohcgs"
+      creator: '@pedrohcgs'
       card: summary_large_image
       image: man/figures/logo.png
-
 authors:
   Pedro H. C. Sant'Anna:
     href: https://pedrohcgs.github.io/
-
 navbar:
-  title: "DRDID"
+  title: DRDID
   structure:
     left:
     - home
@@ -47,92 +43,58 @@ navbar:
     twitter:
       icon: fab fa-twitter fa-lg
       href: http://twitter.com/pedrohcgs
-
 reference:
-  - title: "Locally efficient DR DID estimators"
-    desc: >
-      The following functions implement the locally efficient doubly robust
-      difference-in-differences estimators propose by Sant'Anna and Zhao (2020).
+- title: Locally efficient DR DID estimators
+  desc: |
+    The following functions implement the locally efficient doubly robust difference-in-differences estimators propose by Sant'Anna and Zhao (2020).
 
+    The resulting estimator remains consistent for the ATT even if either the propensity score or the outcome regression models are misspecified. If all working models are correctly specified, then the estimator achieves the semiparametric efficiency bound.
+  contents:
+  - drdid
+  - drdid_imp_panel
+  - drdid_panel
+  - drdid_rc
+  - drdid_imp_rc
+- title: DR DID estimators that are not locally efficient
+  desc: |
+    When only repeated cross-section data are available, not all DR DID estimators are locally efficient, see Sant'Anna and Zhao (2020). The following functions implement these DR DID estimators that are not locally efficient, though, in practice, we recommend users to favor the estimators in the category above in detriment of these.
+  contents:
+  - drdid_rc1
+  - drdid_imp_rc1
+- title: IPW DID estimators
+  desc: |
+    The following functions implement the inverse probability weighted (IPW) difference-in-differences estimators propose by Abadie (2005), with either normalized/stabilized weights (Hajek-type estimators) or with unnormalized weigts (Horvitz-Thompson-type estimators).
 
-      The resulting estimator remains consistent for the ATT even if either the
-      propensity score or the outcome regression models are misspecified. If all working models are correctly specified, then
-      the estimator achieves the semiparametric efficiency bound.
+    The resulting IPW DID estimator is consistent for the ATT only if the propensity score is correctly specified.
+  contents:
+  - ipwdid
+  - ipw_did_panel
+  - std_ipw_did_panel
+  - ipw_did_rc
+  - std_ipw_did_rc
+- title: Outcome regression DID estimators
+  desc: |
+    The following functions implement the outcome regression (OR) based difference-in-differences estimators for the ATT, see e.g. Heckman, Ichimura, and Todd (1997).
 
-    contents:
-      - drdid
-      - drdid_imp_panel
-      - drdid_panel
-      - drdid_rc
-      - drdid_imp_rc
+    The resulting OR DID estimator is consistent for the ATT only if the outcome regression model for the evolution of the outcomes for the comparison group is correctly specified.
+  contents:
+  - ordid
+  - reg_did_panel
+  - reg_did_rc
+- title: TWFE DID estimators
+  desc: |
+    The following functions implement the two-way fixed-effects (TWFE) difference-in-differences estimators for the ATT.
+    As illustrated by Sant'Anna and Zhao (2020) in their simulation exercise, this class of estimators in general do not recover the ATT in DID setups with covariates. As so, we encourage users to adopt alternative specifications.
+  contents:
+  - twfe_did_panel
+  - twfe_did_rc
+- title: Data
+  desc: |
+    Available datasets in the package.
+  contents:
+  - nsw
+  - nsw_long
+  - sim_rc
+- title: Package Documentation
+  contents: DRDID-package
 
-  - title: "DR DID estimators that are not locally efficient"
-    desc: >
-      When only repeated cross-section data are available, not all DR DID estimators are
-      locally efficient, see Sant'Anna and Zhao (2020). The following functions implement
-      these DR DID estimators that are not locally efficient, though, in practice, we recommend
-      users to favor the estimators in the category above in detriment of these.
-
-    contents:
-      - drdid_rc1
-      - drdid_imp_rc1
-
-  - title: "IPW DID estimators"
-    desc: >
-      The following functions implement the inverse probability weighted (IPW)
-      difference-in-differences estimators propose by Abadie (2005), with either
-      normalized/stabilized weights (Hajek-type estimators) or with unnormalized weigts
-      (Horvitz-Thompson-type estimators).
-
-
-      The resulting IPW DID estimator is consistent
-      for the ATT only if the propensity score is correctly specified.
-
-    contents:
-      - ipwdid
-      - ipw_did_panel
-      - std_ipw_did_panel
-      - ipw_did_rc
-      - std_ipw_did_rc
-
-  - title: "Outcome regression DID estimators"
-    desc: >
-      The following functions implement the outcome regression (OR) based
-      difference-in-differences estimators for the ATT, see e.g. Heckman, Ichimura, and
-      Todd (1997).
-
-
-      The resulting OR DID estimator is consistent for the ATT only if the
-      outcome regression model for the evolution of the outcomes for the comparison group
-      is correctly specified.
-
-    contents:
-      - ordid
-      - reg_did_panel
-      - reg_did_rc
-  - title: "TWFE DID estimators"
-    desc: >
-      The following functions implement the two-way fixed-effects (TWFE)
-      difference-in-differences estimators for the ATT.
-
-      As illustrated by
-      Sant'Anna and Zhao (2020) in their simulation exercise, this class of estimators
-      in general do not recover the ATT in DID setups with covariates. As so, we
-      encourage users to adopt alternative specifications.
-
-    contents:
-      - twfe_did_panel
-      - twfe_did_rc
-
-  - title: "Data"
-    desc: >
-      Available datasets in the package.
-
-    contents:
-      - nsw
-      - nsw_long
-      - sim_rc
-
-  - title: "Package Documentation"
-    contents:
-      - DRDID-package
