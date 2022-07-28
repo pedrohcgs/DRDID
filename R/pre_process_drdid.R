@@ -168,6 +168,12 @@ pre_process_drdid <- function(yname,
                                                        data = dta,
                                                        na.action=na.pass) )
 
+  # Drop collinear covariates
+  qr.covariates <-  base::qr(covariates, tol=1e-6, LAPACK = FALSE)
+  rnk_covariates <- qr.covariates$rank
+  keep_x <- qr.covariates$pivot[seq_len(rnk_covariates)]
+  covariates <- covariates[,keep_x]
+
   #check if covariates and group are time invariant in the panel data case.
   # matrix of covariates for pre-period and post periods
   covariates_pre <- stats::model.matrix(xformla, data=subset(dta, dta$post==0))
