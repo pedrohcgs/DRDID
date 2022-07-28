@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://pedrohcgs.github.io/DRDID/404.html</loc>
+  </url>
+  <url>
+    <loc>https://pedrohcgs.github.io/DRDID/authors.html</loc>
+  </url>
+  <url>
     <loc>https://pedrohcgs.github.io/DRDID/index.html</loc>
+  </url>
+  <url>
+    <loc>https://pedrohcgs.github.io/DRDID/news/index.html</loc>
   </url>
   <url>
     <loc>https://pedrohcgs.github.io/DRDID/reference/DRDID-package.html</loc>
@@ -26,6 +35,9 @@
   </url>
   <url>
     <loc>https://pedrohcgs.github.io/DRDID/reference/drdid_rc1.html</loc>
+  </url>
+  <url>
+    <loc>https://pedrohcgs.github.io/DRDID/reference/index.html</loc>
   </url>
   <url>
     <loc>https://pedrohcgs.github.io/DRDID/reference/ipw_did_panel.html</loc>
