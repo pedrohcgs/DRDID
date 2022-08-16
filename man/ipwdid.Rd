@@ -36,7 +36,7 @@ ipwdid(
 
 \item{panel}{Whether or not the data is a panel dataset. The panel dataset should be provided in long format -- that
 is, where each row corresponds to a unit observed at a particular point in time.  The default is TRUE.
-When \code{panel = TRUE}, the variable \code{idname} must be set.  When \code{panel = FALSE}, the data is treated
+When \code{panel = FALSE}, the data is treated
 as stationary repeated cross sections.}
 
 \item{normalized}{Logical argument to whether IPW weights should be normalized to sum up to one. Default is \code{TRUE}.}
