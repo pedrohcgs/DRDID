@@ -106,7 +106,7 @@ pre_process_drdid <- function(yname,
     #  make sure id is numeric
     if (! (is.numeric(dta[, idname])) ) {
       stop("data[, idname] must be numeric. Please convert it.")
-      }
+    }
 
     # Check if idname is unique by tname
     n_id_year = base::all( base::table(dta[, idname], dta[, tname]) <= 1)
@@ -239,7 +239,7 @@ pre_process_drdid <- function(yname,
 
     # Remove NAs
     dta <- dta[stats::complete.cases(dta), ]
-    covariates <- dta[,-c(1:4)]
+    covariates <- base::as.matrix(dta[,-c(1:4)])
     # Drop collinear covariates
     qr.covariates <-  base::qr(covariates,
                                tol=1e-6,
@@ -289,7 +289,8 @@ pre_process_drdid <- function(yname,
 
     # Remove NAs
     dta <- dta[stats::complete.cases(dta), ]
-    covariates <- dta[,-c(1:4)]
+    covariates <- base::as.matrix(dta[,-c(1:4)])
+
     # Drop collinear covariates
     qr.covariates <-  base::qr(covariates,
                                tol=1e-6,
