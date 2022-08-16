@@ -65,11 +65,15 @@ pre_process_drdid <- function(yname,
     stop("dname = ",dname,  " could not be found in the data provided.")
   }
   # Flag for idname
-  if(panel){
-    if ( !is.element(idname, base::colnames(dta))) {
-      stop("idname = ",idname,  " could not be found in the data provided.")
-    }
+  if ( !is.element(idname, base::colnames(dta))) {
+    stop("idname = ",idname,  " could not be found in the data provided.")
   }
+  #
+  # if(panel){
+  #   if ( !is.element(idname, base::colnames(dta))) {
+  #     stop("idname = ",idname,  " could not be found in the data provided.")
+  #   }
+  # }
   # Flag for weightsname
   if(!is.null(weightsname)){
     if ( !is.element(weightsname, base::colnames(dta))) {
