@@ -145,11 +145,11 @@ pre_process_drdid <- function(yname,
     xformla <- ~1
   }
 
-  # If repeated cross section, allow for null idname
-  if(is.null(idname) & (panel == FALSE)){
-    dta$id <- seq(1:nrow(dta))
-    idname <- "id"
-  }
+  # # If repeated cross section, allow for null idname
+  # if(is.null(idname) & (panel == FALSE)){
+  #   dta$id <- seq(1:nrow(dta))
+  #   idname <- "id"
+  # }
 
   # sort data with respect to id and time
   dta <- dta[base::order(dta[,idname], dta[,tname]),]
