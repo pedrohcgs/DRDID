@@ -3,6 +3,8 @@
   
   * Add compatibility with R 3.5
   
+  * Ensure the idname is always provided (regardless of panel data or repeated cross section data setup)
+  
 # DRDID 1.0.4
   * Fixed links
   
