@@ -125,7 +125,7 @@ reg_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   weights.ols <- i.weights * (1 - D)
   wols.x <- weights.ols * int.cov
   wols.eX <- weights.ols * (deltaY - out.delta) * int.cov
-  XpX.inv <- solve(crossprod(wols.x, int.cov)/n)
+  XpX.inv <- qr.solve(crossprod(wols.x, int.cov)/n)
   asy.lin.rep.ols <-  wols.eX %*% XpX.inv
   #-----------------------------------------------------------------------------
   # Now, the influence function of the "treat" component
