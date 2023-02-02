@@ -1,3 +1,13 @@
+# DRDID 1.0.5
+  * drop collinear variables in pre_process_drdid.R (useful in drdid command but not other commands)
+  
+  * Add compatibility with R 3.5
+  
+  * Ensure the idname is always provided (regardless of panel data or repeated cross section data setup)
+  
+# DRDID 1.0.4
+  * Fixed links
+  
 # DRDID 1.0.3
   * Add new flags for non-unique unit identifier
   
