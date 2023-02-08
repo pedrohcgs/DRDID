@@ -3,9 +3,7 @@
 on:
   push:
     branches: [main, master]
-  release:
-    types: [published]
-  workflow_dispatch:
+    tags: ['*']
 
 name: pkgdown
 

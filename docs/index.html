@@ -24,7 +24,7 @@
     regression estimators (also implemented in the package) to form estimators with
     more attractive statistical properties. Two different estimation methods can be used
     to estimate the nuisance functions.">
-<meta property="og:image" content="https://psantanna.com/DRDID/reference/figures/logo.png">
+<meta property="og:image" content="https://pedrohcgs.github.io/DRDID/reference/figures/logo.png">
 <meta property="og:image:alt" content="Doubly Robust DID Estimators">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@pedrohcgs">
@@ -35,8 +35,6 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
-
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -49,7 +47,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">DRDID</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
       </span>
     </div>
 
@@ -70,13 +68,13 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/pedrohcgs/DRDID/" class="external-link">
+  <a href="https://github.com/pedrohcgs/DRDID/">
     <span class="fab fa-github fa-la"></span>
      
   </a>
 </li>
 <li>
-  <a href="http://twitter.com/pedrohcgs" class="external-link">
+  <a href="http://twitter.com/pedrohcgs">
     <span class="fab fa-twitter fa-lg"></span>
      
   </a>
@@ -93,101 +91,102 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div class="section level1">
-<div class="page-header"><h1 id="doubly-robust-difference-in-differences-">Doubly Robust Difference-in-Differences <img src="reference/figures/logo.png" align="right" alt="" width="95"><a class="anchor" aria-label="anchor" href="#doubly-robust-difference-in-differences-"></a>
+<div id="doubly-robust-difference-in-differences-" class="section level1">
+<div class="page-header"><h1 class="hasAnchor">
+<a href="#doubly-robust-difference-in-differences-" class="anchor"></a>Doubly Robust Difference-in-Differences <img src="reference/figures/logo.png" align="right" alt="" width="95">
 </h1></div>
 <!-- badges: start -->
 
 <p>The <code>DRDID</code> R package implements different estimators for the Average Treatment Effect on the Treated (ATT) in Difference-in-Differences (DID) setups where the parallel trends assumption holds after conditioning on a vector of pre-treatment covariates.</p>
-<p>The main estimators implemented here are the locally efficient, doubly-robust DID estimators proposed by <a href="https://doi.org/10.1016/j.jeconom.2020.06.003" class="external-link">Sant’Anna and Zhao (2020), Doubly Robust Difference-in-Differences Estimators</a>. The package covers both panel data and repeated cross-section data setups with two treatment groups (treated and comparison group) and two time periods (pre-treatment and post-treatment).</p>
-<p>See the <a href="https://psantanna.com/DRDID/reference/index.html">package manual</a> for documentation of all package functions (with examples).</p>
-<p>If you end up using this package, please cite our paper: * Sant’Anna, Pedro H. C., and Zhao, Jun (2020), <a href="https://doi.org/10.1016/j.jeconom.2020.06.003" class="external-link">“Doubly Robust Difference-in-Differences Estimators”</a>, <em>Journal of Econometrics</em>, Vol. 219 (1), pp. 101-122.</p>
-<div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h2>
+<p>The main estimators implemented here are the locally efficient, doubly-robust DID estimators proposed by <a href="https://doi.org/10.1016/j.jeconom.2020.06.003">Sant’Anna and Zhao (2020), Doubly Robust Difference-in-Differences Estimators</a>. The package covers both panel data and repeated cross-section data setups with two treatment groups (treated and comparison group) and two time periods (pre-treatment and post-treatment).</p>
+<p>See the <a href="https://pedrohcgs.github.io/DRDID/reference/index.html">package manual</a> for documentation of all package functions (with examples).</p>
+<p>If you end up using this package, please cite our paper:</p>
+<ul>
+<li>Sant’Anna, Pedro H. C., and Zhao, Jun (2020), <a href="https://doi.org/10.1016/j.jeconom.2020.06.003">“Doubly Robust Difference-in-Differences Estimators”</a>, <em>Journal of Econometrics</em>, Vol. 219 (1), pp. 101-122.</li>
+</ul>
+<div id="installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h2>
 <p>To install the most recent version of the <code>DRDID</code> package from GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"pedrohcgs/DRDID"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"pedrohcgs/DRDID"</span><span class="op">)</span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="short-example">Short example<a class="anchor" aria-label="anchor" href="#short-example"></a>
-</h2>
+<div id="short-example" class="section level2">
+<h2 class="hasAnchor">
+<a href="#short-example" class="anchor"></a>Short example</h2>
 <p>The following is a portion of the empirical illustration considered by Sant’Anna and Zhao (2020) that uses the LaLonde sample from the NSW experiment and considers data from the Current Population Survey (CPS) to form a non-experimental comparison group.</p>
 <p>Let’s first get the data ready:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://psantanna.com/DRDID/">DRDID</a></span><span class="op">)</span></span>
-<span><span class="co"># Load data in long format that comes in the DRDID package</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">nsw_long</span><span class="op">)</span></span>
-<span><span class="co"># Form the Lalonde sample with CPS comparison group</span></span>
-<span><span class="va">eval_lalonde_cps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">nsw_long</span>, <span class="va">nsw_long</span><span class="op">$</span><span class="va">treated</span> <span class="op">==</span> <span class="fl">0</span> <span class="op">|</span> <span class="va">nsw_long</span><span class="op">$</span><span class="va">sample</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://pedrohcgs.github.io/DRDID">DRDID</a></span><span class="op">)</span>
+<span class="co"># Load data in long format that comes in the DRDID package</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">nsw_long</span><span class="op">)</span>
+<span class="co"># Form the Lalonde sample with CPS comparison group</span>
+<span class="va">eval_lalonde_cps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">nsw_long</span>, <span class="va">nsw_long</span><span class="op">$</span><span class="va">treated</span> <span class="op">==</span> <span class="fl">0</span> <span class="op">|</span> <span class="va">nsw_long</span><span class="op">$</span><span class="va">sample</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
 <p>Now, to estimate the ATT using the Improved Locally Efficient Doubly Robust DID estimator, we can use the <strong>drdid</strong> function:</p>
-<pre class="{r}"><code><span><span class="co"># Implement improved locally efficient DR DID:</span></span>
-<span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/drdid.html">drdid</a></span><span class="op">(</span>yname <span class="op">=</span> <span class="st">"re"</span>, tname <span class="op">=</span> <span class="st">"year"</span>, idname <span class="op">=</span> <span class="st">"id"</span>, dname <span class="op">=</span> <span class="st">"experimental"</span>,</span>
-<span>             xformla<span class="op">=</span> <span class="op">~</span> <span class="va">age</span> <span class="op">+</span> <span class="va">educ</span> <span class="op">+</span> <span class="va">black</span> <span class="op">+</span> <span class="va">married</span> <span class="op">+</span> <span class="va">nodegree</span> <span class="op">+</span> <span class="va">hisp</span> <span class="op">+</span> <span class="va">re74</span>,</span>
-<span>             data <span class="op">=</span> <span class="va">eval_lalonde_cps</span>, panel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></code></pre>
-<p>For additional details on the usage of the <strong>drdid</strong> function, see <a href="https://psantanna.com/DRDID/reference/drdid.html">check the manual</a>.</p>
-<p>To implement IPW and outcome regression DID estimators, check <a href="https://psantanna.com/DRDID/reference/ipwdid.html">here</a> and <a href="https://psantanna.com/DRDID/reference/ordid.html">here</a>, respectively.</p>
+<pre class="{r}"><code># Implement improved locally efficient DR DID:
+out &lt;- drdid(yname = "re", tname = "year", idname = "id", dname = "experimental",
+             xformla= ~ age + educ + black + married + nodegree + hisp + re74,
+             data = eval_lalonde_cps, panel = TRUE)
+summary(out)
+</code></pre>
+<p>For additional details on the usage of the <strong>drdid</strong> function, see <a href="https://pedrohcgs.github.io/DRDID/reference/drdid.html">check the manual</a>.</p>
+<p>To implement IPW and outcome regression DID estimators, check <a href="https://pedrohcgs.github.io/DRDID/reference/ipwdid.html">here</a> and <a href="https://pedrohcgs.github.io/DRDID/reference/ordid.html">here</a>, respectively.</p>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2 data-toc-skip>Links</h2>
+<h2>Links</h2>
 <ul class="list-unstyled">
-<li><a href="https://cloud.r-project.org/package=DRDID" class="external-link">View on CRAN</a></li>
-<li><a href="https://github.com/pedrohcgs/DRDID/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/pedrohcgs/DRDID/issues" class="external-link">Report a bug</a></li>
+<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=DRDID">https://​cloud.r-project.org/​package=DRDID</a>
+</li>
+<li>Browse source code at <br><a href="https://github.com/pedrohcgs/DRDID/">https://​github.com/​pedrohcgs/​DRDID/​</a>
+</li>
+<li>Report a bug at <br><a href="https://github.com/pedrohcgs/DRDID/issues">https://​github.com/​pedrohcgs/​DRDID/​issues</a>
+</li>
 </ul>
 </div>
-
 <div class="license">
-<h2 data-toc-skip>License</h2>
+<h2>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.r-project.org/Licenses/GPL-3" class="external-link">GPL-3</a></li>
+<li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>
 </ul>
 </div>
-
-
 <div class="citation">
-<h2 data-toc-skip>Citation</h2>
+<h2>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing DRDID</a></li>
+<li><a href="authors.html">Citing DRDID</a></li>
 </ul>
 </div>
-
 <div class="developers">
-<h2 data-toc-skip>Developers</h2>
+<h2>Developers</h2>
 <ul class="list-unstyled">
 <li>
-<a href="https://pedrohcgs.github.io/" class="external-link">Pedro H. C. Sant'Anna</a> <br><small class="roles"> Author, maintainer </small>  </li>
+<a href="https://pedrohcgs.github.io/">Pedro H. C. Sant'Anna</a> <br><small class="roles"> Author, maintainer </small>  </li>
 <li>Jun Zhao <br><small class="roles"> Author </small>  </li>
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
+  <div class="dev-status">
+<h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://CRAN.R-project.org/package=DRDID" class="external-link"><img src="https://www.r-pkg.org/badges/version/DRDID" alt="CRAN status"></a></li>
-<li><a href="https://app.codecov.io/gh/pedrohcgs/DRDID?branch=master" class="external-link"><img src="https://codecov.io/gh/pedrohcgs/DRDID/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
-<li><a href="https://github.com/pedrohcgs/DRDID/actions" class="external-link"><img src="https://github.com/pedrohcgs/DRDID/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://CRAN.R-project.org/package=DRDID"><img src="https://www.r-pkg.org/badges/version/DRDID" alt="CRAN status"></a></li>
+<li><a href="https://codecov.io/gh/pedrohcgs/DRDID?branch=master"><img src="https://codecov.io/gh/pedrohcgs/DRDID/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://github.com/pedrohcgs/DRDID/actions"><img src="https://github.com/pedrohcgs/DRDID/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 </ul>
 </div>
-
-  </div>
+</div>
 </div>
 
 
       <footer><div class="copyright">
-  <p></p>
-<p>Developed by <a href="https://pedrohcgs.github.io/" class="external-link">Pedro H. C. Sant’Anna</a>, Jun Zhao.</p>
+  <p>Developed by <a href="https://pedrohcgs.github.io/">Pedro H. C. Sant'Anna</a>, Jun Zhao.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
@@ -195,8 +194,6 @@
 
   
 
-
-  
 
   </body>
 </html>

@@ -16,7 +16,7 @@ NULL
 #' @param data The name of the data.frame that contains the data.
 #' @param panel Whether or not the data is a panel dataset. The panel dataset should be provided in long format -- that
 #'  is, where each row corresponds to a unit observed at a particular point in time.  The default is TRUE.
-#'  When \code{panel = FALSE}, the data is treated
+#'  When \code{panel = TRUE}, the variable \code{idname} must be set.  When \code{panel = FALSE}, the data is treated
 #'  as stationary repeated cross sections.
 #' @param normalized Logical argument to whether IPW weights should be normalized to sum up to one. Default is \code{TRUE}.
 #' @param weightsname The name of the column containing the sampling weights. If NULL, then every observation has the same weights.
