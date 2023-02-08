@@ -144,8 +144,13 @@
         <th colspan="2">
           <h2 id="section-locally-efficient-dr-did-estimators" class="hasAnchor"><a href="#section-locally-efficient-dr-did-estimators" class="anchor"></a>Locally efficient DR DID estimators</h2>
           <p class="section-desc">
-<p>The following functions implement the locally efficient doubly robust difference-in-differences estimators propose by Sant’Anna and Zhao (2020).</p>
-<p>The resulting estimator remains consistent for the ATT even if either the propensity score or the outcome regression models are misspecified. If all working models are correctly specified, then the estimator achieves the semiparametric efficiency bound.</p>
+<p>The following functions implement the locally efficient doubly robust
+difference-in-differences estimators propose by Sant’Anna and Zhao
+(2020).</p>
+<p>The resulting estimator remains consistent for the ATT even if either
+the propensity score or the outcome regression models are misspecified.
+If all working models are correctly specified, then the estimator
+achieves the semiparametric efficiency bound.</p>
 </p>
         </th>
       </tr>
@@ -189,7 +194,11 @@
       <tr>
         <th colspan="2">
           <h2 id="section-dr-did-estimators-that-are-not-locally-efficient" class="hasAnchor"><a href="#section-dr-did-estimators-that-are-not-locally-efficient" class="anchor"></a>DR DID estimators that are not locally efficient</h2>
-          <p class="section-desc"><p>When only repeated cross-section data are available, not all DR DID estimators are locally efficient, see Sant’Anna and Zhao (2020). The following functions implement these DR DID estimators that are not locally efficient, though, in practice, we recommend users to favor the estimators in the category above in detriment of these.</p></p>
+          <p class="section-desc"><p>When only repeated cross-section data are available, not all DR DID
+estimators are locally efficient, see Sant’Anna and Zhao (2020). The
+following functions implement these DR DID estimators that are not
+locally efficient, though, in practice, we recommend users to favor the
+estimators in the category above in detriment of these.</p></p>
         </th>
       </tr>
       
@@ -215,8 +224,12 @@
         <th colspan="2">
           <h2 id="section-ipw-did-estimators" class="hasAnchor"><a href="#section-ipw-did-estimators" class="anchor"></a>IPW DID estimators</h2>
           <p class="section-desc">
-<p>The following functions implement the inverse probability weighted (IPW) difference-in-differences estimators propose by Abadie (2005), with either normalized/stabilized weights (Hajek-type estimators) or with unnormalized weigts (Horvitz-Thompson-type estimators).</p>
-<p>The resulting IPW DID estimator is consistent for the ATT only if the propensity score is correctly specified.</p>
+<p>The following functions implement the inverse probability weighted
+(IPW) difference-in-differences estimators propose by Abadie (2005),
+with either normalized/stabilized weights (Hajek-type estimators) or
+with unnormalized weigts (Horvitz-Thompson-type estimators).</p>
+<p>The resulting IPW DID estimator is consistent for the ATT only if the
+propensity score is correctly specified.</p>
 </p>
         </th>
       </tr>
@@ -261,8 +274,12 @@
         <th colspan="2">
           <h2 id="section-outcome-regression-did-estimators" class="hasAnchor"><a href="#section-outcome-regression-did-estimators" class="anchor"></a>Outcome regression DID estimators</h2>
           <p class="section-desc">
-<p>The following functions implement the outcome regression (OR) based difference-in-differences estimators for the ATT, see e.g. Heckman, Ichimura, and Todd (1997).</p>
-<p>The resulting OR DID estimator is consistent for the ATT only if the outcome regression model for the evolution of the outcomes for the comparison group is correctly specified.</p>
+<p>The following functions implement the outcome regression (OR) based
+difference-in-differences estimators for the ATT, see e.g. Heckman,
+Ichimura, and Todd (1997).</p>
+<p>The resulting OR DID estimator is consistent for the ATT only if the
+outcome regression model for the evolution of the outcomes for the
+comparison group is correctly specified.</p>
 </p>
         </th>
       </tr>
@@ -294,7 +311,12 @@
       <tr>
         <th colspan="2">
           <h2 id="section-twfe-did-estimators" class="hasAnchor"><a href="#section-twfe-did-estimators" class="anchor"></a>TWFE DID estimators</h2>
-          <p class="section-desc"><p>The following functions implement the two-way fixed-effects (TWFE) difference-in-differences estimators for the ATT. As illustrated by Sant’Anna and Zhao (2020) in their simulation exercise, this class of estimators in general do not recover the ATT in DID setups with covariates. As so, we encourage users to adopt alternative specifications.</p></p>
+          <p class="section-desc"><p>The following functions implement the two-way fixed-effects (TWFE)
+difference-in-differences estimators for the ATT. As illustrated by
+Sant’Anna and Zhao (2020) in their simulation exercise, this class of
+estimators in general do not recover the ATT in DID setups with
+covariates. As so, we encourage users to adopt alternative
+specifications.</p></p>
         </th>
       </tr>
       
