@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://psantanna.com/DRDID/404.html</loc>
+  </url>
+  <url>
+    <loc>https://psantanna.com/DRDID/authors.html</loc>
+  </url>
+  <url>
     <loc>https://psantanna.com/DRDID/index.html</loc>
+  </url>
+  <url>
+    <loc>https://psantanna.com/DRDID/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>https://psantanna.com/DRDID/news/index.html</loc>
   </url>
   <url>
     <loc>https://psantanna.com/DRDID/reference/DRDID-package.html</loc>
@@ -26,6 +38,9 @@
   </url>
   <url>
     <loc>https://psantanna.com/DRDID/reference/drdid_rc1.html</loc>
+  </url>
+  <url>
+    <loc>https://psantanna.com/DRDID/reference/index.html</loc>
   </url>
   <url>
     <loc>https://psantanna.com/DRDID/reference/ipwdid.html</loc>
