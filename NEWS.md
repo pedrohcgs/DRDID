@@ -1,3 +1,13 @@
+# DRDID 1.0.5
+  * drop collinear variables in pre_process_drdid.R (useful in drdid command but not other commands)
+  
+  * Add compatibility with R 3.5
+  
+  * Improve invertibility of outcome regression design matrix
+  
+# DRDID 1.0.4
+  * Fixed links
+  
 # DRDID 1.0.3
   * Add new flags for non-unique unit identifier
   
@@ -18,6 +28,5 @@
   * Created wrapper function `drdid`, `ordid` and `ipwdid` to implement doubly-robust, outcome regression and inverse probability weighted DID estimators.
   
   * Add dataset used in the empirical application of Sant'Anna and Zhao (2020).
-
 
 
