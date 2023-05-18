@@ -100,7 +100,7 @@
 
 <p>The <code>DRDID</code> R package implements different estimators for the Average Treatment Effect on the Treated (ATT) in Difference-in-Differences (DID) setups where the parallel trends assumption holds after conditioning on a vector of pre-treatment covariates.</p>
 <p>The main estimators implemented here are the locally efficient, doubly-robust DID estimators proposed by <a href="https://doi.org/10.1016/j.jeconom.2020.06.003" class="external-link">Sant’Anna and Zhao (2020), Doubly Robust Difference-in-Differences Estimators</a>. The package covers both panel data and repeated cross-section data setups with two treatment groups (treated and comparison group) and two time periods (pre-treatment and post-treatment).</p>
-<p>See the <a href="https://pedrohcgs.github.io/DRDID/reference/index.html" class="external-link">package manual</a> for documentation of all package functions (with examples).</p>
+<p>See the <a href="https://psantanna.com/DRDID/reference/index.html">package manual</a> for documentation of all package functions (with examples).</p>
 <p>If you end up using this package, please cite our paper: * Sant’Anna, Pedro H. C., and Zhao, Jun (2020), <a href="https://doi.org/10.1016/j.jeconom.2020.06.003" class="external-link">“Doubly Robust Difference-in-Differences Estimators”</a>, <em>Journal of Econometrics</em>, Vol. 219 (1), pp. 101-122.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -127,8 +127,8 @@
 <span>             xformla<span class="op">=</span> <span class="op">~</span> <span class="va">age</span> <span class="op">+</span> <span class="va">educ</span> <span class="op">+</span> <span class="va">black</span> <span class="op">+</span> <span class="va">married</span> <span class="op">+</span> <span class="va">nodegree</span> <span class="op">+</span> <span class="va">hisp</span> <span class="op">+</span> <span class="va">re74</span>,</span>
 <span>             data <span class="op">=</span> <span class="va">eval_lalonde_cps</span>, panel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></code></pre>
-<p>For additional details on the usage of the <strong>drdid</strong> function, see <a href="https://pedrohcgs.github.io/DRDID/reference/drdid.html" class="external-link">check the manual</a>.</p>
-<p>To implement IPW and outcome regression DID estimators, check <a href="https://pedrohcgs.github.io/DRDID/reference/ipwdid.html" class="external-link">here</a> and <a href="https://pedrohcgs.github.io/DRDID/reference/ordid.html" class="external-link">here</a>, respectively.</p>
+<p>For additional details on the usage of the <strong>drdid</strong> function, see <a href="https://psantanna.com/DRDID/reference/drdid.html">check the manual</a>.</p>
+<p>To implement IPW and outcome regression DID estimators, check <a href="https://psantanna.com/DRDID/reference/ipwdid.html">here</a> and <a href="https://psantanna.com/DRDID/reference/ordid.html">here</a>, respectively.</p>
 </div>
 </div>
   </div>
