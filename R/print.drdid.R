@@ -4,7 +4,7 @@
 #'
 #' @param x A drdid object
 #' @param ... Other params (required as generic function, but not used)
-#'
+#' @importFrom utils write.table
 #' @export
 #' @noRd
 # Define new print function
@@ -86,7 +86,8 @@ print.drdid <- function(x, ...) {
   print(x$call)
   cat("------------------------------------------------------------------")
   cat("\n", estMeth1, "\n")
-  print.matrix.drdid(rbind(header, body))
+  utils::write.table(format(rbind(header, body), justify= "centre", digits=2, nsmall=2),
+                     row.names=FALSE, col.names=FALSE, quote=FALSE, sep=" ")
   cat("------------------------------------------------------------------")
   # Panel data?
   cat("\n", panel)
