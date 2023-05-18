@@ -6,10 +6,10 @@
 \title{Doubly robust difference-in-differences estimators}
 \description{
 The \code{DRDID} package implements different estimators for the average treatment effect on
-the treated in difference-in-differences (DID) setups where the parallel trends assumption
+the treated in difference-in-differences (DiD) setups where the parallel trends assumption
 holds after you condition on a vector of pre-treatment covariates. The main estimators
-implemented here are the locally efficient, doubly-robust DID estimators proposed by
-Sant'Anna and Zhao (2020) <https://arxiv.org/abs/1812.01723>. A number of other DID
+implemented here are the locally efficient, doubly-robust DiD estimators proposed by
+Sant'Anna and Zhao (2020) <https://arxiv.org/abs/1812.01723>. A number of other DiD
 estimators discussed in Sant'Anna and Zhao (2020) are also implemented.
 }
 \references{

@@ -25,7 +25,7 @@ and post = 0 if observation belongs to pre-treatment period.)}
 \item{D}{An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).}
 
 \item{covariates}{An \eqn{n} x \eqn{k} matrix of covariates to be used in the propensity score and regression estimation.
-If covariates = NULL, this leads to an unconditional DID estimator.}
+If covariates = NULL, this leads to an unconditional DiD estimator.}
 
 \item{i.weights}{An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.}
 
@@ -40,8 +40,8 @@ If \code{boot = TRUE}, default is "weighted".}
 }
 \value{
 A list containing the following components:
-\item{ATT}{The DR DID point estimate}
-\item{se}{ The DR DID standard error}
+\item{ATT}{The DR DiD point estimate}
+\item{se}{ The DR DiD standard error}
 \item{uci}{Estimate of the upper bound of a 95\% CI for the ATT}
 \item{lci}{Estimate of the lower bound of a 95\% CI for the ATT}
 \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
@@ -58,7 +58,7 @@ A list containing the following components:
  also doubly robust for inference; see Section 3.2 of Sant'Anna and Zhao (2020).
 }
 \details{
-The \code{drdid_imp_rc} function implements the locally efficient doubly robust difference-in-differences (DID)
+The \code{drdid_imp_rc} function implements the locally efficient doubly robust difference-in-differences (DiD)
 estimator for the average treatment effect on the treated (ATT) defined in equation (3.4)
 in Sant'Anna and Zhao (2020). This estimator makes use of a logistic propensity score model for the probability
 of being in the treated group, and of (separate) linear regression models for the outcome of both
@@ -78,7 +78,7 @@ but it is also doubly robust for inference; see Sant'Anna and Zhao (2020) for de
 \examples{
 # use the simulated data
 covX = as.matrix(sim_rc[,5:8])
-# Implement the improved, locally efficient DR DID estimator
+# Implement the improved, locally efficient DR DiD estimator
 drdid_imp_rc(y = sim_rc$y, post = sim_rc$post, D = sim_rc$d,
              covariates= covX)
 

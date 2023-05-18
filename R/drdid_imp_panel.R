@@ -1,7 +1,7 @@
 #' @import stats trust
 NULL
 ###################################################################################
-# Improved Doubly Robust DID estimator with panel data
+# Improved Doubly Robust DiD estimator with panel data
 
 #' Improved locally efficient doubly robust DiD estimator for the ATT, with panel data
 #'
@@ -13,7 +13,7 @@ NULL
 #' @param y0 An \eqn{n} x \eqn{1} vector of outcomes from the pre-treatment period.
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).
 #' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the propensity score and regression estimation.
-#' If covariates = NULL, this leads to an unconditional DID estimator.
+#' If covariates = NULL, this leads to an unconditional DiD estimator.
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
 #' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
@@ -22,8 +22,8 @@ NULL
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
 #'
 #' @return A list containing the following components:
-#'  \item{ATT}{The DID point estimate.}
-#'  \item{se}{The DID standard error.}
+#'  \item{ATT}{The DiD point estimate.}
+#'  \item{se}{The DiD standard error.}
 #'  \item{uci}{The upper bound of the 95\% CI for the ATT.}
 #'  \item{lci}{The lower bound of the 95\% CI for the ATT}
 #'  \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is \code{NULL}.}
@@ -47,7 +47,7 @@ NULL
 #'
 #' @details
 #'
-#' The \code{drdid_imp_panel} function implements the locally efficient doubly robust difference-in-differences (DID)
+#' The \code{drdid_imp_panel} function implements the locally efficient doubly robust difference-in-differences (DiD)
 #' estimator for the average treatment effect on the treated (ATT) defined in equation (3.1)
 #' in Sant'Anna and Zhao (2020). This estimator makes use of a logistic propensity score model for the probability
 #' of being in the treated group, and of a linear regression model for the outcome evolution among the comparison units.
@@ -77,7 +77,7 @@ NULL
 #'                              eval_lalonde_cps$nodegree, eval_lalonde_cps$hisp,
 #'                              eval_lalonde_cps$re74))
 #'
-#' # Implement improved DR locally efficient DID with panel data
+#' # Implement improved DR locally efficient DiD with panel data
 #' drdid_imp_panel(y1 = eval_lalonde_cps$re78, y0 = eval_lalonde_cps$re75,
 #'                 D = eval_lalonde_cps$experimental,
 #'                 covariates = covX)
@@ -117,7 +117,7 @@ drdid_imp_panel <-function(y1, y0, D, covariates, i.weights = NULL, boot = FALSE
   outcome.reg <- wols.br.panel(deltaY, D, int.cov, ps.fit, i.weights)
   out.delta <-  as.vector(outcome.reg$out.reg)
 
-  #Compute Bias-Reduced Doubly Robust DID estimators
+  #Compute Bias-Reduced Doubly Robust DiD estimators
   dr.att.summand.num <- as.vector((1 - (1 - D)/(1 - ps.fit)) * (deltaY - out.delta))
   dr.att <- mean(i.weights * dr.att.summand.num)/mean(D * i.weights)
 

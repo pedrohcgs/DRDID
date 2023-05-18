@@ -19,8 +19,8 @@ NULL
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
 #'
 #' @return A list containing the following components:
-#'  \item{ATT}{The TWFE DID point estimate}
-#'  \item{se}{The TWFE DID standard error}
+#'  \item{ATT}{The TWFE DiD point estimate}
+#'  \item{se}{The TWFE DiD standard error}
 #'  \item{uci}{Estimate of the upper bound of a 95\% CI for the TWFE parameter.}
 #'  \item{lci}{Estimate of the lower bound of a 95\% CI for the TWFE parameter.}
 #'  \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
@@ -37,7 +37,7 @@ NULL
 #'                        eval_lalonde_cps$black, eval_lalonde_cps$married,
 #'                        eval_lalonde_cps$nodegree, eval_lalonde_cps$hisp,
 #'                        eval_lalonde_cps$re74))
-#' # Implement TWFE DID with panel data
+#' # Implement TWFE DiD with panel data
 #' twfe_did_panel(y1 = eval_lalonde_cps$re78, y0 = eval_lalonde_cps$re75,
 #'                D = eval_lalonde_cps$experimental,
 #'                covariates = covX)

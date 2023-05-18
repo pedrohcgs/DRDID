@@ -1,7 +1,7 @@
 #' @import stats
 NULL
 ###################################################################################
-# 'Improved' and locally efficient Doubly Robust DID estimator with Repeated Cross Section Data
+# 'Improved' and locally efficient Doubly Robust DiD estimator with Repeated Cross Section Data
 #' Improved locally efficient doubly robust DiD estimator for the ATT, with repeated cross-section data
 #'
 #' @description \code{drdid_imp_rc} is used to compute the locally efficient doubly robust estimators for the ATT
@@ -13,7 +13,7 @@ NULL
 #'             and post = 0 if observation belongs to pre-treatment period.)
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).
 #' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the propensity score and regression estimation.
-#' If covariates = NULL, this leads to an unconditional DID estimator.
+#' If covariates = NULL, this leads to an unconditional DiD estimator.
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
 #' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
@@ -22,8 +22,8 @@ NULL
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
 #'
 #' @return A list containing the following components:
-#' \item{ATT}{The DR DID point estimate}
-#' \item{se}{ The DR DID standard error}
+#' \item{ATT}{The DR DiD point estimate}
+#' \item{se}{ The DR DiD standard error}
 #' \item{uci}{Estimate of the upper bound of a 95\% CI for the ATT}
 #' \item{lci}{Estimate of the lower bound of a 95\% CI for the ATT}
 #' \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
@@ -46,7 +46,7 @@ NULL
 #'
 #' @details
 #'
-#' The \code{drdid_imp_rc} function implements the locally efficient doubly robust difference-in-differences (DID)
+#' The \code{drdid_imp_rc} function implements the locally efficient doubly robust difference-in-differences (DiD)
 #' estimator for the average treatment effect on the treated (ATT) defined in equation (3.4)
 #' in Sant'Anna and Zhao (2020). This estimator makes use of a logistic propensity score model for the probability
 #' of being in the treated group, and of (separate) linear regression models for the outcome of both
@@ -66,7 +66,7 @@ NULL
 #' @examples
 #' # use the simulated data
 #' covX = as.matrix(sim_rc[,5:8])
-#' # Implement the improved, locally efficient DR DID estimator
+#' # Implement the improved, locally efficient DR DiD estimator
 #' drdid_imp_rc(y = sim_rc$y, post = sim_rc$post, D = sim_rc$d,
 #'              covariates= covX)
 #'

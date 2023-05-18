@@ -41,10 +41,10 @@ as stationary repeated cross sections.}
 
 \item{estMethod}{the method to estimate the nuisance parameters.
 The default is "imp" which uses weighted least squares to estimate the outcome regressions and
-inverse probability tilting to the estimate the the propensity score, leading to the improved locally efficient  DR DID estimator
+inverse probability tilting to the estimate the the propensity score, leading to the improved locally efficient  DR DiD estimator
 proposed by Sant'Anna and Zhao (2020). The other alternative is "trad",
 which then uses OLS to estimate outcome regressions and maximum likelihood to estimate propensity score. This leads
-to the "traditional" locally efficient DR DID estimator proposed by Sant'Anna and Zhao (2020).}
+to the "traditional" locally efficient DR DiD estimator proposed by Sant'Anna and Zhao (2020).}
 
 \item{weightsname}{The name of the column containing the sampling weights. If NULL, then every observation has the same weights.}
 
@@ -60,8 +60,8 @@ If \code{boot = TRUE}, default is "weighted".}
 }
 \value{
 A list containing the following components:
-\item{ATT}{The DR DID point estimate}
-\item{se}{ The DR DID standard error}
+\item{ATT}{The DR DiD point estimate}
+\item{se}{ The DR DiD standard error}
 \item{uci}{Estimate of the upper bound of a 95\% CI for the ATT}
 \item{lci}{Estimate of the lower bound of a 95\% CI for the ATT}
 \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
@@ -81,14 +81,14 @@ A list containing the following components:
 }
 \details{
 When panel data are available (\code{panel = TRUE}), the \code{drdid} function implements the
-locally efficient doubly robust difference-in-differences (DID) estimator for the average treatment effect
+locally efficient doubly robust difference-in-differences (DiD) estimator for the average treatment effect
 on the treated (ATT) defined in equation (3.1) in Sant'Anna and Zhao (2020). This estimator makes use of
 a logistic propensity score model for the probability of being in the treated group,
 and of a linear regression model for the outcome evolution among the comparison units.
 
 
 When only stationary repeated cross-section data are available (\code{panel = FALSE}), the \code{drdid} function
-implements the locally efficient doubly robust difference-in-differences (DID) estimator for the
+implements the locally efficient doubly robust difference-in-differences (DiD) estimator for the
 average treatment effect on the treated (ATT) defined in equation (3.4) in Sant'Anna and Zhao (2020).
 This estimator makes use of a logistic propensity score model for the probability of being in the
 treated group, and of (separate) linear regression models for the outcome of both treated and comparison units,
@@ -120,12 +120,12 @@ set.seed(123)
 unit_random <- sample(unique(eval_lalonde_cps$id), 5000)
 eval_lalonde_cps <- eval_lalonde_cps[eval_lalonde_cps$id \%in\% unit_random,]
 # -----------------------------------------------
-# Implement improved DR locally efficient DID with panel data
+# Implement improved DR locally efficient DiD with panel data
 drdid(yname="re", tname = "year", idname = "id", dname = "experimental",
       xformla= ~ age+ educ+ black+ married+ nodegree+ hisp+ re74,
       data = eval_lalonde_cps, panel = TRUE)
 
-#Implement "traditional" DR locally efficient DID with panel data
+#Implement "traditional" DR locally efficient DiD with panel data
 drdid(yname="re", tname = "year", idname = "id", dname = "experimental",
       xformla= ~ age+ educ+ black+ married+ nodegree+ hisp+ re74,
       data = eval_lalonde_cps, panel = TRUE, estMethod = "trad")
@@ -134,12 +134,12 @@ drdid(yname="re", tname = "year", idname = "id", dname = "experimental",
 # Repeated cross section case
 # -----------------------------------------------
 # use the simulated data provided in the package
-#Implement "improved" DR locally efficient DID with repeated cross-section data
+#Implement "improved" DR locally efficient DiD with repeated cross-section data
 drdid(yname="y", tname = "post", idname = "id", dname = "d",
       xformla= ~ x1 + x2 + x3 + x4,
       data = sim_rc, panel = FALSE, estMethod = "imp")
 
-#Implement "traditional" DR locally efficient DID with repeated cross-section data
+#Implement "traditional" DR locally efficient DiD with repeated cross-section data
 drdid(yname="y", tname = "post", idname = "id", dname = "d",
       xformla= ~ x1 + x2 + x3 + x4,
       data = sim_rc, panel = FALSE, estMethod = "trad")

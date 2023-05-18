@@ -24,7 +24,7 @@ reg_did_panel(
 \item{D}{An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).}
 
 \item{covariates}{An \eqn{n} x \eqn{k} matrix of covariates to be used in the regression estimation.
-If covariates = NULL, this leads to an unconditional DID estimator.}
+If covariates = NULL, this leads to an unconditional DiD estimator.}
 
 \item{i.weights}{An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.}
 
@@ -39,8 +39,8 @@ If \code{boot = TRUE}, default is "weighted".}
 }
 \value{
 A list containing the following components:
- \item{ATT}{The Reg DID point estimate}
- \item{se}{The Reg DID standard error}
+ \item{ATT}{The OR DiD point estimate}
+ \item{se}{The OR DiD standard error}
  \item{uci}{Estimate of the upper bound of a 95\% CI for the ATT}
  \item{lci}{Estimate of the lower bound of a 95\% CI for the ATT}
  \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
@@ -54,7 +54,7 @@ treated in difference-in-differences (DiD) setups with panel data.
 }
 \details{
 The \code{reg_did_panel} function implements
-outcome regression difference-in-differences (DID) estimator for the average treatment effect
+outcome regression difference-in-differences (DiD) estimator for the average treatment effect
 on the treated (ATT) defined in equation (2.2) of Sant'Anna and Zhao (2020) when panel data are available.
 The estimator follows the same spirit of the nonparametric estimators proposed by Heckman, Ichimura and Todd (1997),
 though here the the outcome regression models are assumed to be linear in covariates (parametric),
@@ -73,7 +73,7 @@ covX = as.matrix(cbind(eval_lalonde_cps$age, eval_lalonde_cps$educ,
                        eval_lalonde_cps$black, eval_lalonde_cps$married,
                        eval_lalonde_cps$nodegree, eval_lalonde_cps$hisp,
                        eval_lalonde_cps$re74))
-# Implement OR DID with panel data
+# Implement OR DiD with panel data
 reg_did_panel(y1 = eval_lalonde_cps$re78, y0 = eval_lalonde_cps$re75,
                D = eval_lalonde_cps$experimental,
                covariates = covX)

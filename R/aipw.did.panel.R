@@ -1,5 +1,5 @@
 ###################################################################################
-# DR DID estimator for the ATT with panel Data
+# DR DiD estimator for the ATT with panel Data
 
 
 aipw.did.panel <- function(deltaY, D, ps, out.reg, i.weights){

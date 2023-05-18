@@ -25,7 +25,7 @@ and post = 0 if observation belongs to pre-treatment period.)}
 \item{D}{An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).}
 
 \item{covariates}{An \eqn{n} x \eqn{k} matrix of covariates to be used in the propensity score estimation.
-If covariates = NULL, this leads to an unconditional DID estimator.}
+If covariates = NULL, this leads to an unconditional DiD estimator.}
 
 \item{i.weights}{An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.}
 
@@ -40,8 +40,8 @@ If \code{boot = TRUE}, default is "weighted".}
 }
 \value{
 A list containing the following components:
-\item{ATT}{The IPW DID point estimate.}
-\item{se}{ The IPW DID standard error}
+\item{ATT}{The IPW DiD point estimate.}
+\item{se}{ The IPW DiD standard error}
 \item{uci}{Estimate of the upper bound of a 95\% CI for the ATT}
 \item{lci}{Estimate of the lower bound of a 95\% CI for the ATT}
 \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
@@ -57,7 +57,7 @@ A list containing the following components:
 \examples{
 # use the simulated data provided in the package
 covX = as.matrix(sim_rc[,5:8])
-# Implement unnormalized IPW DID estimator
+# Implement unnormalized IPW DiD estimator
 ipw_did_rc(y = sim_rc$y, post = sim_rc$post, D = sim_rc$d,
            covariates= covX)
 

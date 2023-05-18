@@ -28,8 +28,8 @@ NULL
 #' @param inffunc Logical argument to whether influence function should be returned. Default is \code{FALSE}.
 #'
 #' @return A list containing the following components:
-#' \item{ATT}{The IPW DID point estimate}
-#' \item{se}{ The IPW DID standard error}
+#' \item{ATT}{The IPW DiD point estimate}
+#' \item{se}{ The IPW DiD standard error}
 #' \item{uci}{Estimate of the upper bound of a 95\% CI for the ATT}
 #' \item{lci}{Estimate of the lower bound of a 95\% CI for the ATT}
 #' \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
@@ -59,7 +59,7 @@ NULL
 #' unit_random <- sample(unique(eval_lalonde_cps$id), 5000)
 #' eval_lalonde_cps <- eval_lalonde_cps[eval_lalonde_cps$id %in% unit_random,]
 #'
-#' # Implement IPW DID with panel data (normalized weights)
+#' # Implement IPW DiD with panel data (normalized weights)
 #' ipwdid(yname="re", tname = "year", idname = "id", dname = "experimental",
 #'       xformla= ~ age+ educ+ black+ married+ nodegree+ hisp+ re74,
 #'       data = eval_lalonde_cps, panel = TRUE)
@@ -68,7 +68,7 @@ NULL
 #' # Repeated cross section case
 #' # -----------------------------------------------
 #' # use the simulated data provided in the package
-#' #Implement IPW DID with repeated cross-section data (normalized weights)
+#' #Implement IPW DiD with repeated cross-section data (normalized weights)
 #' # use Bootstrap to make inference with 199 bootstrap draws (just for illustration)
 #' ipwdid(yname="y", tname = "post", idname = "id", dname = "d",
 #'       xformla= ~ x1 + x2 + x3 + x4,
@@ -78,7 +78,7 @@ NULL
 #' @details
 #'
 #' The \code{ipwdid} function implements the
-#' inverse probability weighted (IPW) difference-in-differences (DID) estimator for the average treatment effect
+#' inverse probability weighted (IPW) difference-in-differences (DiD) estimator for the average treatment effect
 #' on the treated (ATT) proposed by Abadie (2005) (\code{normalized = FALSE}) or Hajek-type version
 #' defined in equations (4.1) and (4.2) in Sant'Anna and Zhao (2020), when either panel data or
 #' stationary repeated cross-sectional data are available. This estimator makes use of

@@ -10,7 +10,7 @@ NULL
 #'             and post = 0 if observation belongs to pre-treatment period.)
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).
 #' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the regression estimation.
-#' If covariates = NULL, this leads to an unconditional DID estimator.
+#' If covariates = NULL, this leads to an unconditional DiD estimator.
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
 #' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
@@ -19,8 +19,8 @@ NULL
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
 #'
 #' @return A list containing the following components:
-#'  \item{ATT}{The Reg DID point estimate}
-#'  \item{se}{The Reg DID standard error}
+#'  \item{ATT}{The OR DiD point estimate}
+#'  \item{se}{The OR DiD standard error}
 #'  \item{uci}{Estimate of the upper bound of a 95\% CI for the ATT}
 #'  \item{lci}{Estimate of the lower bound of a 95\% CI for the ATT}
 #'  \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
@@ -31,7 +31,7 @@ NULL
 #' @details
 #'
 #' The \code{reg_did_rc} function implements
-#' outcome regression difference-in-differences (DID) estimator for the average treatment effect
+#' outcome regression difference-in-differences (DiD) estimator for the average treatment effect
 #' on the treated (ATT) defined in equation (2.2) of Sant'Anna and Zhao (2020) when stationary repeated cross-sectional
 #' data are available.  The estimator follows the same spirit of the nonparametric estimators proposed by Heckman, Ichimura and Todd (1997),
 #' though here the the outcome regression models are assumed to be linear in covariates (parametric),
@@ -53,7 +53,7 @@ NULL
 #' @examples
 #' # use the simulated data provided in the package
 #' covX = as.matrix(sim_rc[,5:8])
-#' # Implement OR DID estimator
+#' # Implement OR DiD estimator
 #' reg_did_rc(y = sim_rc$y, post = sim_rc$post, D = sim_rc$d,
 #'            covariates= covX)
 #'
@@ -105,7 +105,7 @@ reg_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   }
   out.y.post <-   as.vector(tcrossprod(reg.coeff.post, int.cov))
   #-----------------------------------------------------------------------------
-  #Compute the OR DID estimators
+  #Compute the OR DiD estimators
   # First, the weights
   w.treat.pre <- i.weights * D * (1 - post)
   w.treat.post <- i.weights * D * post

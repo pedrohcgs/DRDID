@@ -1,5 +1,5 @@
 ###################################################################################
-# DR DID estimator with Repeated Cross Section Data
+# DR DiD estimator with Repeated Cross Section Data
 
 aipw_did_rc1 <- function(y, post, D, ps, out.reg, i.weights){
   #-----------------------------------------------------------------------------

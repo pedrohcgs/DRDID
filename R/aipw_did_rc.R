@@ -1,5 +1,5 @@
 ###################################################################################
-# Locally Efficient DR DID estimator with Repeated Cross Section Data
+# Locally Efficient DR DiD estimator with Repeated Cross Section Data
 ###################################################################################
 
 aipw_did_rc <- function(y, post, D, ps,

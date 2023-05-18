@@ -24,7 +24,7 @@ drdid_panel(
 \item{D}{An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).}
 
 \item{covariates}{An \eqn{n} x \eqn{k} matrix of covariates to be used in the propensity score and regression estimation.
-If covariates = NULL, this leads to an unconditional DID estimator.}
+If covariates = NULL, this leads to an unconditional DiD estimator.}
 
 \item{i.weights}{An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.}
 
@@ -39,8 +39,8 @@ If \code{boot = TRUE}, default is "weighted".}
 }
 \value{
 A list containing the following components:
-\item{ATT}{The DR DID point estimate.}
-\item{se}{ The DR DID standard error.}
+\item{ATT}{The DR DiD point estimate.}
+\item{se}{ The DR DiD standard error.}
 \item{uci}{Estimate of the upper bound of a 95\% CI for the ATT.}
 \item{lci}{Estimate of the lower bound of a 95\% CI for the ATT.}
 \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL.}
@@ -53,7 +53,7 @@ A list containing the following components:
  in difference-in-differences (DiD) setups with panel data.
 }
 \details{
-The \code{drdid_panel} function implements the locally efficient doubly robust difference-in-differences (DID)
+The \code{drdid_panel} function implements the locally efficient doubly robust difference-in-differences (DiD)
 estimator for the average treatment effect on the treated (ATT) defined in equation (3.1)
 in Sant'Anna and Zhao (2020). This estimator makes use of a logistic propensity score model for the probability
 of being in the treated group, and of a linear regression model for the outcome evolution among the comparison units.
@@ -75,7 +75,7 @@ covX = as.matrix(cbind(eval_lalonde_cps$age, eval_lalonde_cps$educ,
                        eval_lalonde_cps$nodegree, eval_lalonde_cps$hisp,
                        eval_lalonde_cps$re74))
 
-# Implement traditional DR locally efficient DID with panel data
+# Implement traditional DR locally efficient DiD with panel data
 drdid_panel(y1 = eval_lalonde_cps$re78, y0 = eval_lalonde_cps$re75,
              D = eval_lalonde_cps$experimental,
              covariates = covX)
