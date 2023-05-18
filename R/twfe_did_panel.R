@@ -101,7 +101,7 @@ twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
     #-----------------------------------------------------------------------------
     #Elemenets for influence functions
     inf.reg <- (i.weights * reg$x * reg$residuals) %*%
-      base::solve(crossprod(i.weights * reg$x, reg$x) / dim(reg$x)[1])
+      base::qr.solve(crossprod(i.weights * reg$x, reg$x) / dim(reg$x)[1])
 
     sel.theta <- matrix(c(rep(0, dim(inf.reg)[2])))
 

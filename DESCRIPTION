@@ -1,10 +1,10 @@
 Package: DRDID
 Type: Package
 Title: Doubly Robust Difference-in-Differences Estimators
-Version: 1.0.5
-Authors@R: c(person("Pedro H. C.", "Sant'Anna", email = "pedro.h.santanna@vanderbilt.edu",
+Version: 1.0.6
+Authors@R: c(person("Pedro H. C.", "Sant'Anna", email = "pedrosantanna@causal-solutions.com",
               role = c("aut", "cre")),
-              person("Jun", "Zhao", email = "jun.zhao@vanderbilt.edu",role = c("aut"))
+              person("Jun", "Zhao", email = "beanzhaojun11@gmail.com",role = c("aut"))
             )
 Description: Implements the locally efficient doubly robust difference-in-differences (DiD)
     estimators for the average treatment effect proposed by Sant'Anna and Zhao (2020)
@@ -23,12 +23,12 @@ Imports:
     stats,
     trust,
     BMisc (>= 1.4.1)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Suggests:
     knitr,
     rmarkdown,
     spelling,
     testthat
-Date: 2023-02-08
+Date: 2023-05-18
 Language: en-US
 BugReports: https://github.com/pedrohcgs/DRDID/issues

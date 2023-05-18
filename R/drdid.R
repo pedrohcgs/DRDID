@@ -15,7 +15,7 @@ NULL
 #' @param data The name of the data.frame that contains the data.
 #' @param panel Whether or not the data is a panel dataset. The panel dataset should be provided in long format -- that
 #'  is, where each row corresponds to a unit observed at a particular point in time.  The default is TRUE.
-#'  Whens \code{panel = TRUE}, the variable \code{idname} must be set.  When \code{panel = FALSE}, the data is treated
+#'  When \code{panel = FALSE}, the data is treated
 #'  as stationary repeated cross sections.
 #' @param estMethod the method to estimate the nuisance parameters.
 #' The default is "imp" which uses weighted least squares to estimate the outcome regressions and

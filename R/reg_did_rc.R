@@ -129,14 +129,14 @@ reg_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   weights.ols.pre <- i.weights * (1 - D) * (1 - post)
   wols.x.pre <- weights.ols.pre * int.cov
   wols.eX.pre <- weights.ols.pre * (y - out.y.pre) * int.cov
-  XpX.inv.pre <- solve(crossprod(wols.x.pre, int.cov)/n)
+  XpX.inv.pre <- qr.solve(crossprod(wols.x.pre, int.cov)/n)
   asy.lin.rep.ols.pre <-  wols.eX.pre %*% XpX.inv.pre
 
   # Asymptotic linear representation of OLS parameters in post-period
   weights.ols.post <- i.weights * (1 - D) * post
   wols.x.post <- weights.ols.post * int.cov
   wols.eX.post <- weights.ols.post * (y - out.y.post) * int.cov
-  XpX.inv.post <- solve(crossprod(wols.x.post, int.cov)/n)
+  XpX.inv.post <- qr.solve(crossprod(wols.x.post, int.cov)/n)
   asy.lin.rep.ols.post <-  wols.eX.post %*% XpX.inv.post
   #-----------------------------------------------------------------------------
   # Now, the influence function of the "treat" component

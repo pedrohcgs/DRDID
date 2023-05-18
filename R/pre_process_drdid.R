@@ -65,11 +65,15 @@ pre_process_drdid <- function(yname,
     stop("dname = ",dname,  " could not be found in the data provided.")
   }
   # Flag for idname
-  if(panel){
-    if ( !is.element(idname, base::colnames(dta))) {
-      stop("idname = ",idname,  " could not be found in the data provided.")
-    }
+  if ( !is.element(idname, base::colnames(dta))) {
+    stop("idname = ",idname,  " could not be found in the data provided.")
   }
+  #
+  # if(panel){
+  #   if ( !is.element(idname, base::colnames(dta))) {
+  #     stop("idname = ",idname,  " could not be found in the data provided.")
+  #   }
+  # }
   # Flag for weightsname
   if(!is.null(weightsname)){
     if ( !is.element(weightsname, base::colnames(dta))) {
@@ -106,7 +110,7 @@ pre_process_drdid <- function(yname,
     #  make sure id is numeric
     if (! (is.numeric(dta[, idname])) ) {
       stop("data[, idname] must be numeric. Please convert it.")
-      }
+    }
 
     # Check if idname is unique by tname
     n_id_year = base::all( base::table(dta[, idname], dta[, tname]) <= 1)
@@ -141,11 +145,11 @@ pre_process_drdid <- function(yname,
     xformla <- ~1
   }
 
-  # If repeated cross section, allow for null idname
-  if(is.null(idname) & (panel == FALSE)){
-    dta$id <- seq(1:nrow(dta))
-    idname <- "id"
-  }
+  # # If repeated cross section, allow for null idname
+  # if(is.null(idname) & (panel == FALSE)){
+  #   dta$id <- seq(1:nrow(dta))
+  #   idname <- "id"
+  # }
 
   # sort data with respect to id and time
   dta <- dta[base::order(dta[,idname], dta[,tname]),]
@@ -170,8 +174,10 @@ pre_process_drdid <- function(yname,
 
   #check if covariates and group are time invariant in the panel data case.
   # matrix of covariates for pre-period and post periods
-  covariates_pre <- stats::model.matrix(xformla, data=subset(dta, dta$post==0))
-  covariates_post <- stats::model.matrix(xformla, data=subset(dta, dta$post==1))
+  covariates_pre <- stats::model.matrix(xformla,
+                                        data=subset(dta, dta$post==0))
+  covariates_post <- stats::model.matrix(xformla,
+                                         data=subset(dta, dta$post==1))
 
   d_pre <- subset(dta$D, dta$post==0)
   d_post <- subset(dta$D, dta$post==1)
@@ -192,14 +198,17 @@ pre_process_drdid <- function(yname,
 
 
   # check against very small groups
-  gsize <- stats::aggregate(dta$D, by=list(dta$D), function(x) length(x)/length(tlist))
+  gsize <- stats::aggregate(dta$D,
+                            by=list(dta$D),
+                            function(x) length(x)/length(tlist))
 
   # how many in each group before give warning
   # 5 is just a buffer, could pick something else, but seems to work fine
   reqsize <- length(BMisc::rhs.vars(xformla)) + 5
 
   # which groups to warn about
-  gsize <- subset(gsize, gsize$x < reqsize) # x is name of column from gsize
+  gsize <- subset(gsize,
+                  gsize$x < reqsize) # x is name of column from gsize
 
   # warn if some groups are small
   if (nrow(gsize) > 0) {
@@ -212,12 +221,43 @@ pre_process_drdid <- function(yname,
     dta <- BMisc::makeBalancedPanel(dta, idname, tname)
 
     # Only use this smaller dataset
-    dta <- as.data.frame(cbind(y = dta$y, D = dta$D, post = dta$post, w = dta$w, covariates))
+    dta <- as.data.frame(cbind(y = dta$y,
+                               D = dta$D,
+                               post = dta$post,
+                               w = dta$w,
+                               covariates))
+
+    # Check if we have missing values
+    missing_X_flag <- base::anyNA(dta[,-c(1:4)])
+    missing_D_flag <- base::anyNA(dta$D)
+    missing_post_flag <- base::anyNA(dta$post)
+    missing_y_flag <- base::anyNA(dta$y)
+    missing_w_flag <- base::anyNA(dta$w)
+
+    # Warning messages
+    if(missing_X_flag) warning("Some covariates are missing (NA). We are dropping those observations")
+    if(missing_D_flag) warning("Some treatment indicators are missing (NA). We are dropping those observations")
+    if(missing_post_flag) warning("Some post-treatment indicators are missing (NA). We are dropping those observations")
+    if(missing_w_flag) warning("Some weights are missing (NA). We are dropping those observations")
+    if(missing_y_flag) warning("Some outcomes are missing (NA). We are dropping those observations")
+
+    # Remove NAs
+    dta <- dta[stats::complete.cases(dta), ]
+    covariates <- base::as.matrix(dta[,-c(1:4)])
+    # Drop collinear covariates
+    qr.covariates <-  base::qr(covariates,
+                               tol=1e-6,
+                               LAPACK = FALSE)
+    rnk_covariates <- qr.covariates$rank
+    keep_x <- qr.covariates$pivot[seq_len(rnk_covariates)]
+    covariates <- covariates[,keep_x]
+
+
 
     out <- list(y1 = subset(dta$y, dta$post==1),
                 y0 = subset(dta$y, dta$post==0),
                 D = subset(dta$D, dta$post==1),
-                covariates = subset(dta[,-c(1:4)], dta$post==1),
+                covariates = subset(covariates, dta$post==1),
                 i.weights = subset(dta$w, dta$post==1),
                 panel = panel,
                 estMethod = estMethod,
@@ -231,14 +271,43 @@ pre_process_drdid <- function(yname,
   }
   else {
     # Only use this smaller dataset
-    dta <- as.data.frame(cbind(y = dta$y, D = dta$D, post = dta$post, w = dta$w, covariates))
+    dta <- as.data.frame(cbind(y = dta$y,
+                               D = dta$D,
+                               post = dta$post,
+                               w = dta$w,
+                               covariates))
+
+    # Check if we have missing values
+    missing_X_flag <- base::anyNA(dta[,-c(1:4)])
+    missing_D_flag <- base::anyNA(dta$D)
+    missing_post_flag <- base::anyNA(dta$post)
+    missing_y_flag <- base::anyNA(dta$y)
+    missing_w_flag <- base::anyNA(dta$w)
+
+    # Warning messages
+    if(missing_X_flag) warning("Some covariates are missing (NA). We are dropping those observations")
+    if(missing_D_flag) warning("Some treatment indicators are missing (NA). We are dropping those observations")
+    if(missing_post_flag) warning("Some post-treatment indicators are missing (NA). We are dropping those observations")
+    if(missing_w_flag) warning("Some weights are missing (NA). We are dropping those observations")
+    if(missing_y_flag) warning("Some outcomes are missing (NA). We are dropping those observations")
+
     # Remove NAs
     dta <- dta[stats::complete.cases(dta), ]
+    covariates <- base::as.matrix(dta[,-c(1:4)])
+
+    # Drop collinear covariates
+    qr.covariates <-  base::qr(covariates,
+                               tol=1e-6,
+                               LAPACK = FALSE)
+    rnk_covariates <- qr.covariates$rank
+    keep_x <- qr.covariates$pivot[seq_len(rnk_covariates)]
+    covariates <- covariates[,keep_x]
+
 
     out <- list(y = dta$y,
                 D = dta$D,
                 post = dta$post,
-                covariates = dta[,-c(1:4)],
+                covariates = covariates,
                 i.weights = dta$w,
                 panel = panel,
                 estMethod = estMethod,
