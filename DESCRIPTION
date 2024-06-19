@@ -22,8 +22,11 @@ Depends:
 Imports:
     stats,
     trust,
-    BMisc (>= 1.4.1)
-RoxygenNote: 7.2.3
+    BMisc (>= 1.4.1),
+    Rcpp (>= 1.0.12)
+LinkingTo: 
+    Rcpp (>= 1.0.12)
+RoxygenNote: 7.3.1
 Suggests:
     knitr,
     rmarkdown,

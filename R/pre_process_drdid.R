@@ -1,4 +1,7 @@
-# FUnction that pre-process the data to use with drdid, ipwdid and ordid
+#' @importFrom Rcpp sourceCpp
+NULL
+
+# Function that pre-process the data to use with drdid, ipwdid and ordid
 
 pre_process_drdid <- function(yname,
                               tname,
@@ -116,12 +119,8 @@ pre_process_drdid <- function(yname,
     n_id_year = base::all( base::table(dta[, idname], dta[, tname]) <= 1)
     if (! n_id_year) stop("The value of idname must be the unique (by tname)")
 
-    # make sure gname doesn't change across periods for particular individuals
-    if (!all(sapply( base::split(dta, dta[,idname]), function(df) {
-      length(unique(df[,dname]))==1
-    }))) {
-      stop("The value of dname must be the same across all periods for each particular unit")
-    }
+    # Check if dname is unique by idname
+    checkTreatmentUniqueness(dta, idname, dname)
   }
 
   # figure out the time periods
