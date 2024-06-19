@@ -93,8 +93,8 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>The <code>DRDID</code> R package implements different estimators for the Average Treatment Effect on the Treated (ATT) in Difference-in-Differences (DID) setups where the parallel trends assumption holds after conditioning on a vector of pre-treatment covariates.</p>
-<p>The main estimators implemented here are the locally efficient, doubly-robust DID estimators proposed by <a href="https://doi.org/10.1016/j.jeconom.2020.06.003" class="external-link">Sant’Anna and Zhao (2020), Doubly Robust Difference-in-Differences Estimators</a>. The package covers both panel data and repeated cross-section data setups with two treatment groups (treated and comparison group) and two time periods (pre-treatment and post-treatment).</p>
+<p>The <code>DRDID</code> R package implements different estimators for the Average Treatment Effect on the Treated (ATT) in Difference-in-Differences (DiD) setups where the parallel trends assumption holds after conditioning on a vector of pre-treatment covariates.</p>
+<p>The main estimators implemented here are the locally efficient, doubly-robust DiD estimators proposed by <a href="https://doi.org/10.1016/j.jeconom.2020.06.003" class="external-link">Sant’Anna and Zhao (2020), Doubly Robust Difference-in-Differences Estimators</a>. The package covers both panel data and repeated cross-section data setups with two treatment groups (treated and comparison group) and two time periods (pre-treatment and post-treatment).</p>
 <p>See the <a href="https://psantanna.com/DRDID/reference/index.html">package manual</a> for documentation of all package functions (with examples).</p>
 <p>If you end up using this package, please cite our paper: * Sant’Anna, Pedro H. C., and Zhao, Jun (2020), <a href="https://doi.org/10.1016/j.jeconom.2020.06.003" class="external-link">“Doubly Robust Difference-in-Differences Estimators”</a>, <em>Journal of Econometrics</em>, Vol. 219 (1), pp. 101-122.</p>
 <div class="section level2">
@@ -116,10 +116,10 @@
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">nsw_long</span><span class="op">)</span></span>
 <span><span class="co"># Form the Lalonde sample with CPS comparison group</span></span>
 <span><span class="va">eval_lalonde_cps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">nsw_long</span>, <span class="va">nsw_long</span><span class="op">$</span><span class="va">treated</span> <span class="op">==</span> <span class="fl">0</span> <span class="op">|</span> <span class="va">nsw_long</span><span class="op">$</span><span class="va">sample</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p>Now, to estimate the ATT using the Improved Locally Efficient Doubly Robust DID estimator, we can use the <strong>drdid</strong> function: ```{r} # Implement improved locally efficient DR DID: out &lt;- drdid(yname = “re”, tname = “year”, idname = “id”, dname = “experimental”, xformla= ~ age + educ + black + married + nodegree + hisp + re74, data = eval_lalonde_cps, panel = TRUE) summary(out)</p>
+<p>Now, to estimate the ATT using the Improved Locally Efficient Doubly Robust DiD estimator, we can use the <strong>drdid</strong> function: ```{r} # Implement improved locally efficient DR DiD: out &lt;- drdid(yname = “re”, tname = “year”, idname = “id”, dname = “experimental”, xformla= ~ age + educ + black + married + nodegree + hisp + re74, data = eval_lalonde_cps, panel = TRUE) summary(out)</p>
 <p>```</p>
 <p>For additional details on the usage of the <strong>drdid</strong> function, see <a href="https://psantanna.com/DRDID/reference/drdid.html">check the manual</a>.</p>
-<p>To implement IPW and outcome regression DID estimators, check <a href="https://psantanna.com/DRDID/reference/ipwdid.html">here</a> and <a href="https://psantanna.com/DRDID/reference/ordid.html">here</a>, respectively.</p>
+<p>To implement IPW and outcome regression DiD estimators, check <a href="https://psantanna.com/DRDID/reference/ipwdid.html">here</a> and <a href="https://psantanna.com/DRDID/reference/ordid.html">here</a>, respectively.</p>
 </div>
 </div>
   </div>
