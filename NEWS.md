@@ -1,3 +1,6 @@
+# DRDID 1.0.7
+  * Speed up data-processing using Rcpp
+
 # DRDID 1.0.6
   * Use qr.solve as default (instead of solve)
   
