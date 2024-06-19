@@ -2,7 +2,6 @@
 % Please edit documentation in R/drdid_package.R
 \docType{package}
 \name{DRDID-package}
-\alias{DRDID}
 \alias{DRDID-package}
 \title{Doubly robust difference-in-differences estimators}
 \description{
@@ -20,22 +19,4 @@ estimators discussed in Sant'Anna and Zhao (2020) are also implemented.
 "Doubly Robust Difference-in-Differences Estimators." Journal of Econometrics, Vol. 219 (1), pp. 101-122,
 \doi{10.1016/j.jeconom.2020.06.003}}
 }
-}
-\seealso{
-Useful links:
-\itemize{
-  \item \url{https://psantanna.com/DRDID/}
-  \item \url{https://github.com/pedrohcgs/DRDID}
-  \item Report bugs at \url{https://github.com/pedrohcgs/DRDID/issues}
-}
-
-}
-\author{
-\strong{Maintainer}: Pedro H. C. Sant'Anna \email{pedrosantanna@causal-solutions.com}
-
-Authors:
-\itemize{
-  \item Jun Zhao \email{beanzhaojun11@gmail.com}
-}
-
 }

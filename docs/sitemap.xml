@@ -10,9 +10,6 @@
     <loc>https://psantanna.com/DRDID/index.html</loc>
   </url>
   <url>
-    <loc>https://psantanna.com/DRDID/LICENSE-text.html</loc>
-  </url>
-  <url>
     <loc>https://psantanna.com/DRDID/news/index.html</loc>
   </url>
   <url>
@@ -43,13 +40,13 @@
     <loc>https://psantanna.com/DRDID/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://psantanna.com/DRDID/reference/ipwdid.html</loc>
-  </url>
-  <url>
     <loc>https://psantanna.com/DRDID/reference/ipw_did_panel.html</loc>
   </url>
   <url>
     <loc>https://psantanna.com/DRDID/reference/ipw_did_rc.html</loc>
+  </url>
+  <url>
+    <loc>https://psantanna.com/DRDID/reference/ipwdid.html</loc>
   </url>
   <url>
     <loc>https://psantanna.com/DRDID/reference/nsw.html</loc>
