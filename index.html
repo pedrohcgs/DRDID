@@ -12,18 +12,13 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Doubly Robust Difference-in-Differences Estimators">
-<meta property="og:description" content="Implements the locally efficient doubly robust difference-in-differences (DiD)
-    estimators for the average treatment effect proposed by Sant'Anna and Zhao (2020)
-    &lt;doi:10.1016/j.jeconom.2020.06.003&gt;. The estimator combines inverse probability weighting and outcome
-    regression estimators (also implemented in the package) to form estimators with
-    more attractive statistical properties. Two different estimation methods can be used
-    to estimate the nuisance functions.">
+<meta property="og:description" content="Implements the locally efficient doubly robust difference-in-differences (DiD) estimators for the average treatment effect proposed by Sant'Anna and Zhao (2020) &lt;doi:10.1016/j.jeconom.2020.06.003&gt;. The estimator combines inverse probability weighting and outcome regression estimators (also implemented in the package) to form estimators with more attractive statistical properties. Two different estimation methods can be used to estimate the nuisance functions.">
 <meta property="og:image" content="https://psantanna.com/DRDID/reference/figures/logo.png">
 <meta property="og:image:alt" content="Doubly Robust DiD Estimators">
 <meta name="twitter:card" content="summary_large_image">
@@ -121,12 +116,8 @@
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">nsw_long</span><span class="op">)</span></span>
 <span><span class="co"># Form the Lalonde sample with CPS comparison group</span></span>
 <span><span class="va">eval_lalonde_cps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">nsw_long</span>, <span class="va">nsw_long</span><span class="op">$</span><span class="va">treated</span> <span class="op">==</span> <span class="fl">0</span> <span class="op">|</span> <span class="va">nsw_long</span><span class="op">$</span><span class="va">sample</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p>Now, to estimate the ATT using the Improved Locally Efficient Doubly Robust DID estimator, we can use the <strong>drdid</strong> function:</p>
-<pre class="{r}"><code><span><span class="co"># Implement improved locally efficient DR DID:</span></span>
-<span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/drdid.html">drdid</a></span><span class="op">(</span>yname <span class="op">=</span> <span class="st">"re"</span>, tname <span class="op">=</span> <span class="st">"year"</span>, idname <span class="op">=</span> <span class="st">"id"</span>, dname <span class="op">=</span> <span class="st">"experimental"</span>,</span>
-<span>             xformla<span class="op">=</span> <span class="op">~</span> <span class="va">age</span> <span class="op">+</span> <span class="va">educ</span> <span class="op">+</span> <span class="va">black</span> <span class="op">+</span> <span class="va">married</span> <span class="op">+</span> <span class="va">nodegree</span> <span class="op">+</span> <span class="va">hisp</span> <span class="op">+</span> <span class="va">re74</span>,</span>
-<span>             data <span class="op">=</span> <span class="va">eval_lalonde_cps</span>, panel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></code></pre>
+<p>Now, to estimate the ATT using the Improved Locally Efficient Doubly Robust DID estimator, we can use the <strong>drdid</strong> function: ```{r} # Implement improved locally efficient DR DID: out &lt;- drdid(yname = “re”, tname = “year”, idname = “id”, dname = “experimental”, xformla= ~ age + educ + black + married + nodegree + hisp + re74, data = eval_lalonde_cps, panel = TRUE) summary(out)</p>
+<p>```</p>
 <p>For additional details on the usage of the <strong>drdid</strong> function, see <a href="https://psantanna.com/DRDID/reference/drdid.html">check the manual</a>.</p>
 <p>To implement IPW and outcome regression DID estimators, check <a href="https://psantanna.com/DRDID/reference/ipwdid.html">here</a> and <a href="https://psantanna.com/DRDID/reference/ordid.html">here</a>, respectively.</p>
 </div>
@@ -187,7 +178,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
 </div>
 
       </footer>
