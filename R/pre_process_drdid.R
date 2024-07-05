@@ -253,11 +253,13 @@ pre_process_drdid <- function(yname,
 
 
 
+
     out <- list(y1 = subset(dta$y, dta$post==1),
                 y0 = subset(dta$y, dta$post==0),
                 D = subset(dta$D, dta$post==1),
                 covariates = subset(covariates, dta$post==1),
-                i.weights = subset(dta$w, dta$post==1),
+                # Normalize weights
+                i.weights = subset(dta$w, dta$post==1)/mean(subset(dta$w, dta$post==1)),
                 panel = panel,
                 estMethod = estMethod,
                 normalized = normalized,
@@ -307,7 +309,8 @@ pre_process_drdid <- function(yname,
                 D = dta$D,
                 post = dta$post,
                 covariates = covariates,
-                i.weights = dta$w,
+                # Normalize weights
+                i.weights = dta$w/mean(dta$w),
                 panel = panel,
                 estMethod = estMethod,
                 normalized = normalized,

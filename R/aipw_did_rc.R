@@ -8,6 +8,7 @@ aipw_did_rc <- function(y, post, D, ps,
                         i.weights){
   #-----------------------------------------------------------------------------
   # First, the weights
+  i.weights <- i.weights/mean(i.weights)
   w.treat.pre <- i.weights * D * (1 - post)
   w.treat.post <- i.weights * D * post
   w.cont.pre <- i.weights * ps * (1 - D) * (1 - post)/(1 - ps)

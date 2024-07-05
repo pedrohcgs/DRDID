@@ -19,7 +19,7 @@ NULL
 #'  When \code{panel = FALSE}, the data is treated
 #'  as stationary repeated cross sections.
 #' @param normalized Logical argument to whether IPW weights should be normalized to sum up to one. Default is \code{TRUE}.
-#' @param weightsname The name of the column containing the sampling weights. If NULL, then every observation has the same weights.
+#' @param weightsname The name of the column containing the sampling weights. If NULL, then every observation has the same weights. The weights are normalized and therefore enforced to have mean 1 across all observations.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is \code{FALSE} and analytical
 #'  standard errors are reported.
 #' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".

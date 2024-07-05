@@ -1,5 +1,6 @@
 # DRDID 1.0.7
   * Speed up data-processing using Rcpp
+  * The weights are now enforced to be normalized and have mean 1 across all observations.
 
 # DRDID 1.0.6
   * Use qr.solve as default (instead of solve)

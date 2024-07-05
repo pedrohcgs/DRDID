@@ -41,7 +41,7 @@ as stationary repeated cross sections.}
 
 \item{normalized}{Logical argument to whether IPW weights should be normalized to sum up to one. Default is \code{TRUE}.}
 
-\item{weightsname}{The name of the column containing the sampling weights. If NULL, then every observation has the same weights.}
+\item{weightsname}{The name of the column containing the sampling weights. If NULL, then every observation has the same weights. The weights are normalized and therefore enforced to have mean 1 across all observations.}
 
 \item{boot}{Logical argument to whether bootstrap should be used for inference. Default is \code{FALSE} and analytical
 standard errors are reported.}

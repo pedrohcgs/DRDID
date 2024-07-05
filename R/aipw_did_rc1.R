@@ -5,6 +5,8 @@ aipw_did_rc1 <- function(y, post, D, ps, out.reg, i.weights){
   #-----------------------------------------------------------------------------
   # Compute the AIPW estimator
   # Compute  standardized IPW estimator
+  i.weights <- i.weights/mean(i.weights)
+
   w.treat.pre <- i.weights * D * (1 - post)
   w.treat.post <- i.weights * D * post
   w.cont.pre <- i.weights * ps * (1 - D) * (1 - post)/ (1 - ps)

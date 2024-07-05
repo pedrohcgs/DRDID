@@ -17,7 +17,7 @@ NULL
 #'  is, where each row corresponds to a unit observed at a particular point in time.  The default is TRUE.
 #'  When \code{panel = FALSE}, the data is treated
 #'  as stationary repeated cross sections.
-#' @param weightsname The name of the column containing the sampling weights. If NULL, then every observation has the same weights.
+#' @param weightsname The name of the column containing the sampling weights. If NULL, then every observation has the same weights. The weights are normalized and therefore enforced to have mean 1 across all observations.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is \code{FALSE} and analytical
 #'  standard errors are reported.
 #' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".

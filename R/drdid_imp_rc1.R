@@ -100,6 +100,9 @@ drdid_imp_rc1 <- function(y, post, D, covariates, i.weights = NULL,
   if(is.null(i.weights)) {
     i.weights <- as.vector(rep(1, n))
   } else if(min(i.weights) < 0) stop("i.weights must be non-negative")
+
+  # Normalize weights
+  i.weights <- i.weights/mean(i.weights)
   #-----------------------------------------------------------------------------
   #Compute the Pscore using the pscore.cal
   pscore.ipt <- pscore.cal(D, int.cov, i.weights = i.weights, n = n)

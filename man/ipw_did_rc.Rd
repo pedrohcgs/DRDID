@@ -27,7 +27,7 @@ and post = 0 if observation belongs to pre-treatment period.)}
 \item{covariates}{An \eqn{n} x \eqn{k} matrix of covariates to be used in the propensity score estimation.
 If covariates = NULL, this leads to an unconditional DiD estimator.}
 
-\item{i.weights}{An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights.}
+\item{i.weights}{An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights. The weights are normalized and therefore enforced to have mean 1 across all observations.}
 
 \item{boot}{Logical argument to whether bootstrap should be used for inference. Default is FALSE.}
 

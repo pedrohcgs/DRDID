@@ -46,7 +46,7 @@ proposed by Sant'Anna and Zhao (2020). The other alternative is "trad",
 which then uses OLS to estimate outcome regressions and maximum likelihood to estimate propensity score. This leads
 to the "traditional" locally efficient DR DiD estimator proposed by Sant'Anna and Zhao (2020).}
 
-\item{weightsname}{The name of the column containing the sampling weights. If NULL, then every observation has the same weights.}
+\item{weightsname}{The name of the column containing the sampling weights. If NULL, then every observation has the same weights. The weights are normalized and therefore enforced to have mean 1 across all observations.}
 
 \item{boot}{Logical argument to whether bootstrap should be used for inference. Default is \code{FALSE} and analytical
 standard errors are reported.}

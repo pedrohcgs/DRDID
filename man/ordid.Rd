@@ -38,7 +38,7 @@ is, where each row corresponds to a unit observed at a particular point in time.
 When \code{panel = FALSE}, the data is treated
 as stationary repeated cross sections.}
 
-\item{weightsname}{The name of the column containing the sampling weights. If NULL, then every observation has the same weights.}
+\item{weightsname}{The name of the column containing the sampling weights. If NULL, then every observation has the same weights. The weights are normalized and therefore enforced to have mean 1 across all observations.}
 
 \item{boot}{Logical argument to whether bootstrap should be used for inference. Default is \code{FALSE} and analytical
 standard errors are reported.}

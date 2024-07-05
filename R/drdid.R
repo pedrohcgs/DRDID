@@ -23,7 +23,7 @@ NULL
 #' proposed by Sant'Anna and Zhao (2020). The other alternative is "trad",
 #' which then uses OLS to estimate outcome regressions and maximum likelihood to estimate propensity score. This leads
 #' to the "traditional" locally efficient DR DiD estimator proposed by Sant'Anna and Zhao (2020).
-#' @param weightsname The name of the column containing the sampling weights. If NULL, then every observation has the same weights.
+#' @param weightsname The name of the column containing the sampling weights. If NULL, then every observation has the same weights. The weights are normalized and therefore enforced to have mean 1 across all observations.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is \code{FALSE} and analytical
 #'  standard errors are reported.
 #' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".

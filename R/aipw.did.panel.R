@@ -5,6 +5,7 @@
 aipw.did.panel <- function(deltaY, D, ps, out.reg, i.weights){
   #-----------------------------------------------------------------------------
   # Compute the AIPW estimator
+  i.weights <- i.weights/mean(i.weights)
   w.treat <- i.weights * D
   w.cont <- i.weights * (1 - D) * ps / (1 - ps)
 

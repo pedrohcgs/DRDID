@@ -4,7 +4,7 @@
 # Pre = T stands for pre-treatment period
 # treat = F  stands for control group
 
-wols_rc <- function(y, post, D, int.cov, pscore, i.weights, pre = NULL, treat = F){
+wols_rc <- function(y, post, D, int.cov, pscore, i.weights, pre = NULL, treat = FALSE){
   #-----------------------------------------------------------------------------
   # Do not divide by zero
   #pscore <- pmin(pscore, 1 - 1e-16)
