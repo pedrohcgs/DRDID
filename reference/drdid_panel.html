@@ -100,7 +100,7 @@ If covariates = NULL, this leads to an unconditional DiD estimator.</p></dd>
 
 
 <dt>i.weights</dt>
-<dd><p>An \(n\) x \(1\) vector of weights to be used. If NULL, then every observation has the same weights.</p></dd>
+<dd><p>An \(n\) x \(1\) vector of weights to be used. If NULL, then every observation has the same weights. The weights are normalized and therefore enforced to have mean 1 across all observations.</p></dd>
 
 
 <dt>boot</dt>
