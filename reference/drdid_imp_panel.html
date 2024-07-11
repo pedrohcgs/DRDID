@@ -5,7 +5,7 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]--></head><body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-reference-topic">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -27,7 +27,7 @@
       <ul class="nav navbar-nav"><li>
   <a href="../index.html">
     <span class="fas fa-home fa-la"></span>
-     
+
   </a>
 </li>
 <li>
@@ -39,26 +39,26 @@
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/pedrohcgs/DRDID/" class="external-link">
     <span class="fab fa-github fa-la"></span>
-     
+
   </a>
 </li>
 <li>
   <a href="http://twitter.com/pedrohcgs" class="external-link">
     <span class="fab fa-twitter fa-lg"></span>
-     
+
   </a>
 </li>
       </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Improved locally efficient doubly robust DiD estimator for the ATT, with panel data</h1>
-    <small class="dont-index">Source: <a href="https://github.com/pedrohcgs/DRDID/blob/HEAD/R/drdid_imp_panel.R" class="external-link"><code>R/drdid_imp_panel.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/pedrohcgs/DRDID/blob/v1.0.7/R/drdid_imp_panel.R" class="external-link"><code>R/drdid_imp_panel.R</code></a></small>
     <div class="hidden name"><code>drdid_imp_panel.Rd</code></div>
     </div>
 
@@ -84,49 +84,49 @@
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>y1</dt>
+
+
+<dl><dt id="arg-y-">y1<a class="anchor" aria-label="anchor" href="#arg-y-"></a></dt>
 <dd><p>An \(n\) x \(1\) vector of outcomes from the post-treatment period.</p></dd>
 
 
-<dt>y0</dt>
+<dt id="arg-y-">y0<a class="anchor" aria-label="anchor" href="#arg-y-"></a></dt>
 <dd><p>An \(n\) x \(1\) vector of outcomes from the pre-treatment period.</p></dd>
 
 
-<dt>D</dt>
+<dt id="arg-d">D<a class="anchor" aria-label="anchor" href="#arg-d"></a></dt>
 <dd><p>An \(n\) x \(1\) vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).</p></dd>
 
 
-<dt>covariates</dt>
+<dt id="arg-covariates">covariates<a class="anchor" aria-label="anchor" href="#arg-covariates"></a></dt>
 <dd><p>An \(n\) x \(k\) matrix of covariates to be used in the propensity score and regression estimation.
 If covariates = NULL, this leads to an unconditional DiD estimator.</p></dd>
 
 
-<dt>i.weights</dt>
+<dt id="arg-i-weights">i.weights<a class="anchor" aria-label="anchor" href="#arg-i-weights"></a></dt>
 <dd><p>An \(n\) x \(1\) vector of weights to be used. If NULL, then every observation has the same weights. The weights are normalized and therefore enforced to have mean 1 across all observations.</p></dd>
 
 
-<dt>boot</dt>
+<dt id="arg-boot">boot<a class="anchor" aria-label="anchor" href="#arg-boot"></a></dt>
 <dd><p>Logical argument to whether bootstrap should be used for inference. Default is FALSE.</p></dd>
 
 
-<dt>boot.type</dt>
+<dt id="arg-boot-type">boot.type<a class="anchor" aria-label="anchor" href="#arg-boot-type"></a></dt>
 <dd><p>Type of bootstrap to be performed (not relevant if <code>boot = FALSE</code>). Options are "weighted" and "multiplier".
 If <code>boot = TRUE</code>, default is "weighted".</p></dd>
 
 
-<dt>nboot</dt>
+<dt id="arg-nboot">nboot<a class="anchor" aria-label="anchor" href="#arg-nboot"></a></dt>
 <dd><p>Number of bootstrap repetitions (not relevant if <code>boot = FALSE</code>). Default is 999.</p></dd>
 
 
-<dt>inffunc</dt>
+<dt id="arg-inffunc">inffunc<a class="anchor" aria-label="anchor" href="#arg-inffunc"></a></dt>
 <dd><p>Logical argument to whether influence function should be returned. Default is FALSE.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p>A list containing the following components:</p>
+    <p>A list containing the following components:</p>
 <dl><dt>ATT</dt>
 <dd><p>The DiD point estimate.</p></dd>
 
@@ -234,15 +234,15 @@ but it is also doubly robust for inference; see Sant'Anna and Zhao (2020) for de
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
       </footer></div>
 
-  
 
 
-  
+
+
 
   </body></html>
 
