@@ -97,7 +97,7 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   #Compute the Pscore by MLE
   #pscore.tr <- stats::glm(D ~ -1 + int.cov, family = "binomial", weights = i.weights)
-  pscore.tr <- suppressWarnings(parglm::parglm(D ~ -1 + int.cov, family = "binomial", weights = i.weights, nthreads = (parallel::detectCores() - 1)))
+  pscore.tr <- suppressWarnings(parglm::parglm(D ~ -1 + int.cov, family = "binomial", weights = i.weights))
   if(pscore.tr$converged == FALSE){
     warning(" glm algorithm did not converge")
   }
