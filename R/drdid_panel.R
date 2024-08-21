@@ -96,7 +96,8 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   i.weights <- i.weights/mean(i.weights)
   #-----------------------------------------------------------------------------
   #Compute the Pscore by MLE
-  pscore.tr <- stats::glm(D ~ -1 + int.cov, family = "binomial", weights = i.weights)
+  #pscore.tr <- stats::glm(D ~ -1 + int.cov, family = "binomial", weights = i.weights)
+  pscore.tr <- suppressWarnings(parglm::parglm(D ~ -1 + int.cov, family = "binomial", weights = i.weights, nthreads = (parallel::detectCores() - 1)))
   if(pscore.tr$converged == FALSE){
     warning(" glm algorithm did not converge")
   }
@@ -107,9 +108,16 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   # Avoid divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-16)
   #Compute the Outcome regression for the control group using wols
-  reg.coeff <- stats::coef(stats::lm(deltaY ~ -1 + int.cov,
-                                     subset = D==0,
-                                     weights = i.weights))
+  # reg.coeff <- stats::coef(stats::lm(deltaY ~ -1 + int.cov,
+  #                                    subset = D==0,
+  #                                    weights = i.weights))
+  control_filter <- (D == 0)
+  reg.coeff <- stats::coef(fastglm::fastglm(
+                            x = int.cov[control_filter, , drop = FALSE],
+                            y = deltaY[control_filter],
+                            weights = i.weights[control_filter],
+                            family = gaussian(link = "identity")
+  ))
   if(anyNA(reg.coeff)){
     stop("Outcome regression model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
   }

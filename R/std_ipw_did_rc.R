@@ -81,7 +81,8 @@ std_ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   i.weights <- i.weights/mean(i.weights)
   #-----------------------------------------------------------------------------
   #Pscore estimation (logit) and also its fitted values
-  PS <- suppressWarnings(stats::glm(D ~ -1 + int.cov, family = "binomial", weights = i.weights))
+  #PS <- suppressWarnings(stats::glm(D ~ -1 + int.cov, family = "binomial", weights = i.weights))
+  PS <- suppressWarnings(parglm::parglm(D ~ -1 + int.cov, family = "binomial", weights = i.weights, nthreads = (parallel::detectCores() - 1)))
   ps.fit <- as.vector(PS$fitted.values)
   # Do not divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-16)
