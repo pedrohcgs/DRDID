@@ -1,10 +1,15 @@
-# DRDID 1.0.8.902
+# DRDID 1.0.8.903
   * Restore solve as default to invert matrix, as it is faster than qr.solve for small matrices.
+  
   * Improve error handling for non-invertible matrices.
-  * Changing estimation methods for fastglm and parglm (in place of lm and glm)
+  
+  * Changing estimation methods for fastglm and parglm (in place of lm and glm).
+  
+  * Do not let estimated propensity score be above 1 - 1e-6 (instead of 1 - e-16).
 
 # DRDID 1.0.7
   * Speed up data processing using Rcpp
+  
   * The weights are now enforced to be normalized and have mean 1 across all observations.
 
 # DRDID 1.0.6
@@ -34,6 +39,7 @@
   
 # DRDID 1.0.0
   * First official version of package, functions for computing a variety of difference-in-differences (DiD) estimators for the ATT. 
+  
   * Documentation is improved compared to the devel version, including examples for every function now.
   
   * Created wrapper function `drdid`, `ordid` and `ipwdid` to implement doubly-robust, outcome regression and inverse probability weighted DID estimators.

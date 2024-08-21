@@ -90,9 +90,12 @@ std_ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   #Pscore estimation (logit) and also its fitted values
   #PS <- suppressWarnings(stats::glm(D ~ -1 + int.cov, family = "binomial", weights = i.weights))
   PS <- suppressWarnings(parglm::parglm(D ~ -1 + int.cov, family = "binomial", weights = i.weights))
+  if(PS$converged == FALSE){
+    warning("Propernsity score estimation did not converge.")
+  }
   ps.fit <- as.vector(PS$fitted.values)
   # Do not divide by zero
-  ps.fit <- pmin(ps.fit, 1 - 1e-16)
+  ps.fit <- pmin(ps.fit, 1 - 1e-6)
   #-----------------------------------------------------------------------------
   #Compute IPW estimator
   # First, the weights

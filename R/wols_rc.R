@@ -7,7 +7,7 @@
 wols_rc <- function(y, post, D, int.cov, pscore, i.weights, pre = NULL, treat = FALSE){
   #-----------------------------------------------------------------------------
   # Do not divide by zero
-  #pscore <- pmin(pscore, 1 - 1e-16)
+  #pscore <- pmin(pscore, 1 - 1e-6)
   or.weights <- as.vector(i.weights * pscore/(1 - pscore))
 
   if((pre == T) & (treat==T)) {

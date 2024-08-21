@@ -88,7 +88,7 @@ ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   }
   ps.fit <- as.vector(PS$fitted.values)
   # Do not divide by zero
-  ps.fit <- pmin(ps.fit, 1 - 1e-16)
+  ps.fit <- pmin(ps.fit, 1 - 1e-6)
   #-----------------------------------------------------------------------------
   #Compute IPW estimator
   # First, the weights

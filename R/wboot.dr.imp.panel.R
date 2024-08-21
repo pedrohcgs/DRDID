@@ -9,7 +9,7 @@ wboot.dr.imp.panel <- function(nn, n, deltaY, D, int.cov, i.weights){
   b.weights <- as.vector(i.weights * v)
   # Propensity score estimation
   ps.b <- pscore.cal(D, int.cov, b.weights, n)$pscore
-  ps.b <- pmin(ps.b, 1 - 1e-16)
+  ps.b <- pmin(ps.b, 1 - 1e-6)
   #Compute the Outcome regression for the control group
   out.reg.b <- wols.br.panel(deltaY, D, int.cov, ps.b, i.weights = b.weights)$out.reg
   # Compute AIPW estimator

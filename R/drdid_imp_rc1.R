@@ -107,7 +107,7 @@ drdid_imp_rc1 <- function(y, post, D, covariates, i.weights = NULL,
   #Compute the Pscore using the pscore.cal
   pscore.ipt <- pscore.cal(D, int.cov, i.weights = i.weights, n = n)
   ps.fit <- as.vector(pscore.ipt$pscore)
-  ps.fit <- pmin(ps.fit, 1 - 1e-16)
+  ps.fit <- pmin(ps.fit, 1 - 1e-6)
   #Compute the Outcome regression for the control group
   out.y.pre <- wols_rc(y, post, D, int.cov, ps.fit, i.weights, pre = TRUE, treat = FALSE)
   out.y.pre <-  as.vector(out.y.pre$out.reg)

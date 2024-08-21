@@ -10,7 +10,7 @@ wboot.dr.tr.panel <- function(nn, n, deltaY, D, int.cov, i.weights){
   # Propensity score estimation
   ps.b <- suppressWarnings(stats::glm(D ~ -1 + int.cov, family = "binomial", weights = b.weights)$fitted.values)
   ps.b <- as.vector(ps.b)
-  ps.b <- pmin(ps.b, 1 - 1e-16)
+  ps.b <- pmin(ps.b, 1 - 1e-6)
   #Compute the Outcome regression for the control group
   reg.coeff.b <- stats::coef(stats::lm(deltaY ~ -1 + int.cov,
                                      subset = D==0,

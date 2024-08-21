@@ -115,7 +115,7 @@ drdid_imp_panel <-function(y1, y0, D, covariates, i.weights = NULL, boot = FALSE
   #Compute the Pscore using the pscore.cal
   pscore.ipt <- pscore.cal(D, int.cov, i.weights = i.weights, n = n)
   ps.fit <- as.vector(pscore.ipt$pscore)
-  ps.fit <- pmin(ps.fit, 1 - 1e-16)
+  ps.fit <- pmin(ps.fit, 1 - 1e-6)
   #Compute the Outcome regression for the control group
   outcome.reg <- wols.br.panel(deltaY, D, int.cov, ps.fit, i.weights)
   out.delta <-  as.vector(outcome.reg$out.reg)

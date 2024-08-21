@@ -10,7 +10,7 @@ wboot_drdid_rc <- function(nn, n, y, post, D, int.cov, i.weights){
   # Propensity score estimation
   ps.b <- suppressWarnings(stats::glm(D ~ -1 + int.cov, family = "binomial", weights = b.weights)$fitted.values)
   ps.b <- as.vector(ps.b)
-  ps.b <- pmin(ps.b, 1 - 1e-16)
+  ps.b <- pmin(ps.b, 1 - 1e-6)
   #Compute the Outcome regression for the control group at the pre-treatment period, using ols.
   reg.coeff.pre.b <- stats::coef(stats::lm(y ~ -1 + int.cov,
                                            subset = ((D==0) & (post==0)),
