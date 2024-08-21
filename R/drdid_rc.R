@@ -100,7 +100,7 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   }
   ps.fit <- as.vector(pscore.tr$fitted.values)
   # Avoid divide by zero
-  ps.fit <- pmin(ps.fit, 1 - 1e-16)
+  ps.fit <- pmin(ps.fit, 1 - 1e-6)
   #Compute the Outcome regression for the control group at the pre-treatment period, using ols.
   # reg.cont.coeff.pre <- stats::coef(stats::lm(y ~ -1 + int.cov,
   #                                             subset = ((D==0) & (post==0)),
