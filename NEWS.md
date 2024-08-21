@@ -1,3 +1,7 @@
+# DRDID 1.0.8.901
+  * Restore solve as default to invert matrix, as it is faster than qr.solve for small matrices.
+  * Improve error handling for non-invertible matrices.
+
 # DRDID 1.0.7
   * Speed up data-processing using Rcpp
   * The weights are now enforced to be normalized and have mean 1 across all observations.

@@ -249,7 +249,13 @@ pre_process_drdid <- function(yname,
                                LAPACK = FALSE)
     rnk_covariates <- qr.covariates$rank
     keep_x <- qr.covariates$pivot[seq_len(rnk_covariates)]
-    covariates <- covariates[,keep_x]
+    # Check if any covariates were dropped due to collinearity
+    dropped_covariates <- setdiff(colnames(covariates), colnames(covariates[, keep_x]))
+    if (length(dropped_covariates) > 0) {
+      warning("The following covariates were dropped due to collinearity: ", paste(dropped_covariates, collapse = ", "))
+    }
+
+    covariates <- covariates[, keep_x]
 
 
 

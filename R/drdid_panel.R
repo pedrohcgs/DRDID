@@ -134,7 +134,12 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   weights.ols <- i.weights * (1 - D)
   wols.x <- weights.ols * int.cov
   wols.eX <- weights.ols * (deltaY - out.delta) * int.cov
-  XpX.inv <- solve(crossprod(wols.x, int.cov)/n)
+  XpX <- base::crossprod(wols.x, int.cov)/n
+  # Check if XpX is invertible
+  if ( base::rcond(XpX) < .Machine$double.eps) {
+    stop("The regression design matrix is singular. Consider removing some covariates.")
+  }
+  XpX.inv <- solve(XpX)
   asy.lin.rep.wols <-  wols.eX %*% XpX.inv
 
   # Asymptotic linear representation of logit's beta's

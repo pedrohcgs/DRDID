@@ -146,14 +146,24 @@ drdid_rc1 <-function(y, post, D, covariates, i.weights = NULL,
   weights.ols.pre <- i.weights * (1 - D) * (1 - post)
   wols.x.pre <- weights.ols.pre * int.cov
   wols.eX.pre <- weights.ols.pre * (y - out.y.pre) * int.cov
-  XpX.inv.pre <- qr.solve(crossprod(wols.x.pre, int.cov)/n)
+  XpX.pre <- crossprod(wols.x.pre, int.cov)/n
+  # Check if XpX is invertible
+  if ( base::rcond(XpX.pre) < .Machine$double.eps) {
+    stop("The regression design matrix for pre-treatment is singular. Consider removing some covariates.")
+  }
+  XpX.inv.pre <- solve(XpX.pre)
   asy.lin.rep.ols.pre <-  wols.eX.pre %*% XpX.inv.pre
 
   # Asymptotic linear representation of OLS parameters in post-period
   weights.ols.post <- i.weights * (1 - D) * post
   wols.x.post <- weights.ols.post * int.cov
   wols.eX.post <- weights.ols.post * (y - out.y.post) * int.cov
-  XpX.inv.post <- qr.solve(crossprod(wols.x.post, int.cov)/n)
+  XpX.post <- crossprod(wols.x.post, int.cov)/n
+  # Check if XpX is invertible
+  if ( base::rcond(XpX.post) < .Machine$double.eps) {
+    stop("The regression design matrix for post-treatment is singular. Consider removing some covariates.")
+  }
+  XpX.inv.post <- solve(XpX.post)
   asy.lin.rep.ols.post <-  wols.eX.post %*% XpX.inv.post
 
   # Asymptotic linear representation of logit's beta's
