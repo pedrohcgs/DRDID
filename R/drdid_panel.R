@@ -106,7 +106,7 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   }
   ps.fit <- as.vector(pscore.tr$fitted.values)
   # Avoid divide by zero
-  ps.fit <- pmin(ps.fit, 1 - 1e-16)
+  ps.fit <- pmin(ps.fit, 1 - 1e-6)
   #Compute the Outcome regression for the control group using wols
   # reg.coeff <- stats::coef(stats::lm(deltaY ~ -1 + int.cov,
   #                                    subset = D==0,
