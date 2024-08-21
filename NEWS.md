@@ -1,9 +1,10 @@
-# DRDID 1.0.8.901
+# DRDID 1.0.8.902
   * Restore solve as default to invert matrix, as it is faster than qr.solve for small matrices.
   * Improve error handling for non-invertible matrices.
+  * Changing estimation methods for fastglm and parglm (in place of lm and glm)
 
 # DRDID 1.0.7
-  * Speed up data-processing using Rcpp
+  * Speed up data processing using Rcpp
   * The weights are now enforced to be normalized and have mean 1 across all observations.
 
 # DRDID 1.0.6
