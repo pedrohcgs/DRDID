@@ -102,8 +102,14 @@ twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
     twfe.att <- reg$coefficients["dd:post"]
     #-----------------------------------------------------------------------------
     #Elemenets for influence functions
-    inf.reg <- (i.weights * reg$x * reg$residuals) %*%
-      base::qr.solve(crossprod(i.weights * reg$x, reg$x) / dim(reg$x)[1])
+    XpX <- crossprod(i.weights * reg$x, reg$x) / dim(reg$x)[1]
+    # Check if XpX is invertible
+    if ( base::rcond(XpX) < .Machine$double.eps) {
+      stop("The regression design matrix is singular. Consider removing some covariates.")
+    }
+    XpX.inv <- solve(XpX)
+
+    inf.reg <- (i.weights * reg$x * reg$residuals) %*% XpX.inv
 
     sel.theta <- matrix(c(rep(0, dim(inf.reg)[2])))
 
