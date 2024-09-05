@@ -79,9 +79,9 @@ test_that("Check if output is printed", {
   dta_wide <- as.data.frame(cbind(id = id, y1 = y1, y0 = y0, d = d,
                                   x1 = z1, x2= z2, x3 = z3, x4 = z4))
   # Make "long" data
-  dta_long <- as.data.frame(cbind(id = id, y = y1, d = d, post = T,
+  dta_long <- as.data.frame(cbind(id = id, y = y1, d = d, post = TRUE,
                                   x1 = z1, x2= z2, x3 = z3, x4 = z4))
-  dta_long <- data.frame(rbind(dta_long,cbind(id = id, y = y0, d = d, post = F,
+  dta_long <- data.frame(rbind(dta_long,cbind(id = id, y = y0, d = d, post = FALSE,
                                               x1 = z1, x2= z2, x3 = z3, x4 = z4)))
   dta_long <- dta_long[order(dta_long$id),]
 
@@ -96,8 +96,8 @@ test_that("Check if output is printed", {
                    dname = "d",
                    xformla= ~ x1 + x2 + x3 + x4,
                    data = dta_long,
-                   panel=T,
-                   boot = F)
+                   panel= TRUE,
+                   boot = FALSE)
   expect_output(summary(drout_p))
   expect_output(print(drout_p))
 
@@ -107,8 +107,8 @@ test_that("Check if output is printed", {
                     dname = "d",
                     xformla= ~ x1 + x2 + x3 + x4,
                     data = dta_long,
-                    panel=F,
-                    boot = F)
+                    panel= FALSE,
+                    boot = FALSE)
   expect_output(summary(drout_rc))
   expect_output(print(drout_rc))
 
@@ -118,8 +118,8 @@ test_that("Check if output is printed", {
                      dname = "d",
                      xformla= ~ x1 + x2 + x3 + x4,
                      data = dta_long,
-                     panel=T,
-                     boot = T)
+                     panel= TRUE,
+                     boot = TRUE)
   expect_output(summary(drout_p_b))
   expect_output(print(drout_p_b))
 
@@ -131,8 +131,8 @@ test_that("Check if output is printed", {
                       xformla= ~ x1 + x2 + x3 + x4,
                       estMethod = "trad",
                       data = dta_long,
-                      panel=T,
-                      boot = T)
+                      panel= TRUE,
+                      boot = TRUE)
   expect_output(summary(drout_p_b2))
   expect_output(print(drout_p_b2))
 
@@ -143,8 +143,8 @@ test_that("Check if output is printed", {
                  dname = "d",
                  xformla= ~ x1 + x2 + x3 + x4,
                  data = dta_long,
-                 panel=T,
-                 boot = F)
+                 panel= TRUE,
+                 boot = FALSE)
   expect_output(summary(orout))
   expect_output(print(orout))
 
@@ -154,8 +154,8 @@ test_that("Check if output is printed", {
                  dname = "d",
                  xformla= ~ x1 + x2 + x3 + x4,
                  data = dta_long,
-                 panel=T,
-                 boot = F)
+                 panel= TRUE,
+                 boot = FALSE)
   expect_output(summary(ipwout))
   expect_output(print(ipwout))
 
@@ -165,23 +165,23 @@ test_that("Check if output is printed", {
                    dname = "d",
                    xformla= ~ x1 + x2 + x3 + x4,
                    data = dta_long,
-                   normalized = F,
-                   panel=T,
-                   boot = F)
+                   normalized = FALSE,
+                   panel= TRUE,
+                   boot = FALSE)
   expect_output(summary(ipwout2))
   expect_output(print(ipwout2))
 
   dr_trad1.did_rc2 <- drdid_rc1(dta_long$y,
                                 dta_long$post,
                                 dta_long$d,
-                                dta_long[,5:8], boot = F)
+                                dta_long[,5:8], boot = FALSE)
   expect_output(summary(dr_trad1.did_rc2))
   expect_output(print(dr_trad1.did_rc2))
 
   dr_imp1.did_rc2 <- drdid_imp_rc1(dta_long$y,
                                    dta_long$post,
                                    dta_long$d,
-                                   dta_long[,5:8], boot = F)
+                                   dta_long[,5:8], boot = FALSE)
 
   expect_output(summary(dr_imp1.did_rc2))
   expect_output(print(dr_imp1.did_rc2))

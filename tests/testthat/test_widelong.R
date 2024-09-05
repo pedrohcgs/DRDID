@@ -79,9 +79,9 @@ test_that("Data structure (wide vs long) does not affect results", {
   dta_wide <- as.data.frame(cbind(id = id, y1 = y1, y0 = y0, d = d,
                                   x1 = z1, x2= z2, x3 = z3, x4 = z4))
   # Make "long" data
-  dta_long <- as.data.frame(cbind(id = id, y = y1, d = d, post = T,
+  dta_long <- as.data.frame(cbind(id = id, y = y1, d = d, post = TRUE,
                                   x1 = z1, x2= z2, x3 = z3, x4 = z4))
-  dta_long <- as.data.frame(rbind(dta_long,cbind(id = id, y = y0, d = d, post = F,
+  dta_long <- as.data.frame(rbind(dta_long,cbind(id = id, y = y0, d = d, post = FALSE,
                                                  x1 = z1, x2= z2, x3 = z3, x4 = z4)))
   dta_long <- dta_long[order(dta_long$id),]
   #-----------------------------------------------------------------------------
@@ -95,8 +95,8 @@ test_that("Data structure (wide vs long) does not affect results", {
                         dname = "d",
                         xformla= ~ x1 + x2 + x3 + x4,
                         data = dta_long,
-                        panel=T,
-                        boot = F)
+                        panel= TRUE,
+                        boot = FALSE)
 
   std_ipw.did_panel <- ipwdid(yname="y",
                               tname = "post",
@@ -104,8 +104,8 @@ test_that("Data structure (wide vs long) does not affect results", {
                               dname = "d",
                               xformla= ~ x1 + x2 + x3 + x4,
                               data = dta_long,
-                              panel=T,
-                              boot = F)
+                              panel= TRUE,
+                              boot = FALSE)
 
   dr_trad.did_panel <- drdid(yname="y",
                              tname = "post",
@@ -114,8 +114,8 @@ test_that("Data structure (wide vs long) does not affect results", {
                              estMethod = "trad",
                              xformla= ~ x1 + x2 + x3 + x4,
                              data = dta_long,
-                             panel=T,
-                             boot = F)
+                             panel= TRUE,
+                             boot = FALSE)
 
   dr_imp.did_panel <- drdid(yname="y",
                             tname = "post",
@@ -124,21 +124,21 @@ test_that("Data structure (wide vs long) does not affect results", {
                             estMethod = "imp",
                             xformla= ~ x1 + x2 + x3 + x4,
                             data = dta_long,
-                            panel=T,
-                            boot = F)
+                            panel= TRUE,
+                            boot = FALSE)
   #-----------------------------------------------------------------------------
   # Now with wide format
   or.did_panel2 <- reg_did_panel(dta_wide$y1, dta_wide$y0, dta_wide$d,
-                                 dta_wide[,5:8], boot = F)
+                                 dta_wide[,5:8], boot = FALSE)
 
   std_ipw.did_panel2 <- std_ipw_did_panel(dta_wide$y1, dta_wide$y0, dta_wide$d,
-                                          dta_wide[,5:8], boot = F)
+                                          dta_wide[,5:8], boot = FALSE)
 
   dr_trad.did_panel2 <- drdid_panel(dta_wide$y1, dta_wide$y0, dta_wide$d,
-                                         dta_wide[,5:8], boot = F)
+                                         dta_wide[,5:8], boot = FALSE)
 
   dr_imp.did_panel2 <- drdid_imp_panel(dta_wide$y1, dta_wide$y0, dta_wide$d,
-                                       dta_wide[,5:8], boot = F)
+                                       dta_wide[,5:8], boot = FALSE)
 
   #-----------------------------------------------------------------------------
   # Check if all point estimates are equal

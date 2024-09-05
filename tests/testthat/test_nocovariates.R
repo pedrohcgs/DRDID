@@ -79,9 +79,9 @@ test_that("All estimation methods agree when there are no covariates", {
   dta_wide <- as.data.frame(cbind(id = id, y1 = y1, y0 = y0, d = d,
                                   x1 = z1, x2= z2, x3 = z3, x4 = z4))
   # Make "long" data
-  dta_long <- as.data.frame(cbind(id = id, y = y1, d = d, post = T,
+  dta_long <- as.data.frame(cbind(id = id, y = y1, d = d, post = TRUE,
                                   x1 = z1, x2= z2, x3 = z3, x4 = z4))
-  dta_long <- as.data.frame(rbind(dta_long,cbind(id = id, y = y0, d = d, post = F,
+  dta_long <- as.data.frame(rbind(dta_long,cbind(id = id, y = y0, d = d, post = FALSE,
                                                  x1 = z1, x2= z2, x3 = z3, x4 = z4)))
   dta_long <- dta_long[order(dta_long$id),]
   #-----------------------------------------------------------------------------
@@ -95,8 +95,8 @@ test_that("All estimation methods agree when there are no covariates", {
                         dname = "d",
                         xformla= NULL,
                         data = dta_long,
-                        panel=T,
-                        boot = F)
+                        panel= TRUE,
+                        boot = FALSE)
 
   std_ipw.did_panel <- ipwdid(yname="y",
                               tname = "post",
@@ -104,8 +104,8 @@ test_that("All estimation methods agree when there are no covariates", {
                               dname = "d",
                               xformla= NULL,
                               data = dta_long,
-                              panel=T,
-                              boot = F)
+                              panel= TRUE,
+                              boot = FALSE)
 
   dr_trad.did_panel <- drdid(yname="y",
                              tname = "post",
@@ -114,8 +114,8 @@ test_that("All estimation methods agree when there are no covariates", {
                              estMethod = "trad",
                              xformla= NULL,
                              data = dta_long,
-                             panel=T,
-                             boot = F)
+                             panel= TRUE,
+                             boot = FALSE)
 
   dr_imp.did_panel <- drdid(yname="y",
                             tname = "post",
@@ -124,8 +124,8 @@ test_that("All estimation methods agree when there are no covariates", {
                             estMethod = "imp",
                             xformla= NULL,
                             data = dta_long,
-                            panel=T,
-                            boot = F)
+                            panel= TRUE,
+                            boot = FALSE)
 
   # Pretending data was repeated cross section
   or.did_rc <- ordid(yname="y",
@@ -134,8 +134,8 @@ test_that("All estimation methods agree when there are no covariates", {
                      dname = "d",
                      xformla= NULL,
                      data = dta_long,
-                     panel=F,
-                     boot = F)
+                     panel= FALSE,
+                     boot = FALSE)
 
   std_ipw.did_rc <- ipwdid(yname="y",
                            tname = "post",
@@ -143,8 +143,8 @@ test_that("All estimation methods agree when there are no covariates", {
                            dname = "d",
                            xformla= NULL,
                            data = dta_long,
-                           panel=F,
-                           boot = F)
+                           panel= FALSE,
+                           boot = FALSE)
 
   dr_trad.did_rc <- drdid(yname="y",
                           tname = "post",
@@ -153,8 +153,8 @@ test_that("All estimation methods agree when there are no covariates", {
                           estMethod = "trad",
                           xformla= NULL,
                           data = dta_long,
-                          panel=F,
-                          boot = F)
+                          panel= FALSE,
+                          boot = FALSE)
 
   dr_imp.did_rc <- drdid(yname="y",
                          tname = "post",
@@ -163,8 +163,8 @@ test_that("All estimation methods agree when there are no covariates", {
                          estMethod = "imp",
                          xformla= NULL,
                          data = dta_long,
-                         panel=F,
-                         boot = F)
+                         panel= FALSE,
+                         boot = FALSE)
   #-----------------------------------------------------------------------------
   # Check if all point estimates are equal (both panel and repeated cross section)
   expect_equal(dr_imp.did_panel$ATT, or.did_panel$ATT)

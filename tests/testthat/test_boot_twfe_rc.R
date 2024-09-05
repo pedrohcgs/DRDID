@@ -95,27 +95,27 @@ test_that("Analytical and bootstrapped std errors are similar: TWFE RC", {
   twfe.did_rc <- twfe_did_rc(dta_long$y,
                               dta_long$post,
                               dta_long$d,
-                              dta_long[,5:8], boot = F,
+                              dta_long[,5:8], boot = FALSE,
                               nboot = nboot)
 
   # No covariates
   twfe.did_rc_n <- twfe_did_rc(dta_long$y,
                              dta_long$post,
                              dta_long$d,
-                             NULL, boot = F,
+                             NULL, boot = FALSE,
                              nboot = nboot)
   #-----------------------------------------------------------------------------
   # Now with bootstrap (weighted)
   twfe.did_rc2 <- twfe_did_rc(dta_long$y,
                            dta_long$post,
                            dta_long$d,
-                           dta_long[,5:8], boot = T, boot.type = "weighted",
+                           dta_long[,5:8], boot = TRUE, boot.type = "weighted",
                            nboot = nboot)
 
   twfe.did_rc_n2 <- twfe_did_rc(dta_long$y,
                               dta_long$post,
                               dta_long$d,
-                              NULL, boot = T, boot.type = "weighted",
+                              NULL, boot = TRUE, boot.type = "weighted",
                               nboot = nboot)
 
 
@@ -124,13 +124,13 @@ test_that("Analytical and bootstrapped std errors are similar: TWFE RC", {
   twfe.did_rc3 <- twfe_did_rc(dta_long$y,
                               dta_long$post,
                               dta_long$d,
-                              dta_long[,5:8], boot = T, boot.type = "multiplier",
+                              dta_long[,5:8], boot = TRUE, boot.type = "multiplier",
                               nboot = nboot)
 
   twfe.did_rc_n3 <- twfe_did_rc(dta_long$y,
                                 dta_long$post,
                                 dta_long$d,
-                                as.matrix(rep(1,n)), boot = T, boot.type = "multiplier",
+                                as.matrix(rep(1,n)), boot = TRUE, boot.type = "multiplier",
                                 nboot = NULL)
   #-----------------------------------------------------------------------------
   # Check if all point estimates are equal

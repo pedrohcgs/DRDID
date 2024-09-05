@@ -79,9 +79,9 @@ test_that("Error and Warning messages are working", {
   dta_wide <- as.data.frame(cbind(id = id, y1 = y1, y0 = y0, d = d,
                                   x1 = z1, x2= z2, x3 = z3, x4 = z4))
   # Make "long" data
-  dta_long <- as.data.frame(cbind(id = id, y = y1, d = d, post = T,
+  dta_long <- as.data.frame(cbind(id = id, y = y1, d = d, post = TRUE,
                                   x1 = z1, x2= z2, x3 = z3, x4 = z4))
-  dta_long <- data.frame(rbind(dta_long,cbind(id = id, y = y0, d = d, post = F,
+  dta_long <- data.frame(rbind(dta_long,cbind(id = id, y = y0, d = d, post = FALSE,
                                               x1 = z1, x2= z2, x3 = z3, x4 = z4)))
   dta_long <- dta_long[order(dta_long$id),]
 
@@ -98,8 +98,8 @@ test_that("Error and Warning messages are working", {
                        estMethod = "other",
                        xformla= ~ x1 + x2 + x3 + x4,
                        data = dta_long,
-                       panel=T,
-                       boot = F))
+                       panel= TRUE,
+                       boot = FALSE))
 
   # Warning for boot.type
   expect_warning(drdid(yname="y",
@@ -108,8 +108,8 @@ test_that("Error and Warning messages are working", {
                        dname = "d",
                        xformla= ~ x1 + x2 + x3 + x4,
                        data = dta_long,
-                       panel=T,
-                       boot = T,
+                       panel= TRUE,
+                       boot = TRUE,
                        nboot = 100,
                        boot.type = "other"))
 
@@ -120,8 +120,8 @@ test_that("Error and Warning messages are working", {
                      dname = "d",
                      xformla= ~ x1 + x2 + x3 + x4,
                      data = dta_long,
-                     panel=T,
-                     boot = F))
+                     panel= TRUE,
+                     boot = FALSE))
   # Warning for tname
   expect_error(drdid(yname="y",
                      tname = "other",
@@ -129,8 +129,8 @@ test_that("Error and Warning messages are working", {
                      dname = "d",
                      xformla= ~ x1 + x2 + x3 + x4,
                      data = dta_long,
-                     panel=T,
-                     boot = F))
+                     panel= TRUE,
+                     boot = FALSE))
   # Warning for dname
   expect_error(drdid(yname="y",
                      tname = "post",
@@ -138,8 +138,8 @@ test_that("Error and Warning messages are working", {
                      dname = "other",
                      xformla= ~ x1 + x2 + x3 + x4,
                      data = dta_long,
-                     panel=T,
-                     boot = F))
+                     panel= TRUE,
+                     boot = FALSE))
 
   # Warning for idname
   expect_error(drdid(yname="y",
@@ -148,8 +148,8 @@ test_that("Error and Warning messages are working", {
                      dname = "d",
                      xformla= ~ x1 + x2 + x3 + x4,
                      data = dta_long,
-                     panel=T,
-                     boot = F))
+                     panel= TRUE,
+                     boot = FALSE))
 
   # Warning for weightsname
   expect_error(drdid(yname="y",
@@ -159,8 +159,8 @@ test_that("Error and Warning messages are working", {
                      weightsname = "other",
                      xformla= ~ x1 + x2 + x3 + x4,
                      data = dta_long,
-                     panel=T,
-                     boot = F))
+                     panel= TRUE,
+                     boot = FALSE))
 
   # Warning for covariates
   expect_error(drdid(yname="y",
@@ -169,8 +169,8 @@ test_that("Error and Warning messages are working", {
                      dname = "d",
                      xformla= ~ x1 + x2 + x3 + x4 + x5,
                      data = dta_long,
-                     panel=T,
-                     boot = F))
+                     panel= TRUE,
+                     boot = FALSE))
 
   # Warning for normalized
   expect_warning(ipwdid(yname="y",
@@ -180,8 +180,8 @@ test_that("Error and Warning messages are working", {
                         normalized = "W",
                         xformla= ~ x1 + x2 + x3 + x4,
                         data = dta_long,
-                        panel=T,
-                        boot = F))
+                        panel= TRUE,
+                        boot = FALSE))
 
   # Warning for more than two groups
   dta_long2 <- dta_long
@@ -192,8 +192,8 @@ test_that("Error and Warning messages are working", {
                      dname = "d",
                      xformla= ~ x1 + x2 + x3 + x4,
                      data = dta_long2,
-                     panel=T,
-                     boot = F))
+                     panel= TRUE,
+                     boot = FALSE))
 
   # Warning for more than two periods
   dta_long2$d <- dta_long$d
@@ -204,8 +204,8 @@ test_that("Error and Warning messages are working", {
                      dname = "d",
                      xformla= ~ x1 + x2 + x3 + x4,
                      data = dta_long2,
-                     panel=T,
-                     boot = F))
+                     panel= TRUE,
+                     boot = FALSE))
 
   # Warning for more than two periods
   dta_long2$post <- ifelse(dta_long$post==0, "pre", "post")
@@ -215,8 +215,8 @@ test_that("Error and Warning messages are working", {
                        dname = "d",
                        xformla= ~ x1 + x2 + x3 + x4,
                        data = dta_long2,
-                       panel=F,
-                       boot = F))
+                       panel= FALSE,
+                       boot = FALSE))
 
   # Error for time-varying covariates
   dta_long2$post <- dta_long$post
@@ -227,8 +227,8 @@ test_that("Error and Warning messages are working", {
                      dname = "d",
                      xformla= ~ x1 + x2 + x3 + x4,
                      data = dta_long2,
-                     panel=T,
-                     boot = F))
+                     panel= TRUE,
+                     boot = FALSE))
 
   # Error for time-varying weights
   dta_long2$x1 <- dta_long$x1
@@ -240,8 +240,8 @@ test_that("Error and Warning messages are working", {
                      weightsname  = "ww",
                      xformla= ~ x1 + x2 + x3 + x4,
                      data = dta_long2,
-                     panel=T,
-                     boot = F))
+                     panel= TRUE,
+                     boot = FALSE))
   # Error for time-varying  groups
   dta_long2$d <- round(runif(n))
   expect_error(drdid(yname="y",
@@ -250,8 +250,8 @@ test_that("Error and Warning messages are working", {
                      dname = "d",
                      xformla= ~ x1 + x2 + x3 + x4,
                      data = dta_long2,
-                     panel=T,
-                     boot = F))
+                     panel= TRUE,
+                     boot = FALSE))
   dta_long2$d <- dta_long$d
 
   # Error for small groups
@@ -264,8 +264,8 @@ test_that("Error and Warning messages are working", {
                      dname = "d",
                      xformla= ~ x1 + x2 + x3 + x4,
                      data = dta_long2,
-                     panel=T,
-                     boot = F))
+                     panel= TRUE,
+                     boot = FALSE))
 
 
 

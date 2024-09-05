@@ -28,7 +28,7 @@ Imports:
     fastglm (>= 0.0.3)
 LinkingTo: 
     Rcpp (>= 1.0.12)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Suggests:
     knitr,
     rmarkdown,

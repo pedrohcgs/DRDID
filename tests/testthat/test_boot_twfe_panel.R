@@ -79,9 +79,9 @@ test_that("Analytical and bootstrapped std errors are similar: TWFE Panel", {
   dta_wide <- as.data.frame(cbind(id = id, y1 = y1, y0 = y0, d = d,
                                   x1 = z1, x2= z2, x3 = z3, x4 = z4))
   # Make "long" data
-  dta_long <- as.data.frame(cbind(id = id, y = y1, d = d, post = T,
+  dta_long <- as.data.frame(cbind(id = id, y = y1, d = d, post = TRUE,
                                   x1 = z1, x2= z2, x3 = z3, x4 = z4))
-  dta_long <- data.frame(rbind(dta_long,cbind(id = id, y = y0, d = d, post = F,
+  dta_long <- data.frame(rbind(dta_long,cbind(id = id, y = y0, d = d, post = FALSE,
                                               x1 = z1, x2= z2, x3 = z3, x4 = z4)))
   dta_long <- dta_long[order(dta_long$id),]
   #-----------------------------------------------------------------------------
@@ -90,25 +90,25 @@ test_that("Analytical and bootstrapped std errors are similar: TWFE Panel", {
   #-----------------------------------------------------------------------------
   # Analytical std errors
   twfe.did_panel <- twfe_did_panel(dta_wide$y1,dta_wide$y0, dta_wide$d,
-                                   covariates = dta_wide[,5:8], boot = F)
+                                   covariates = dta_wide[,5:8], boot = FALSE)
 
   twfe.did_panel_n <- twfe_did_panel(dta_wide$y1, dta_wide$y0, dta_wide$d,
-                                     covariates = NULL, boot = F)
+                                     covariates = NULL, boot = FALSE)
   #-----------------------------------------------------------------------------
   # Now with bootstrap (weighted)
   twfe.did_panel2 <- twfe_did_panel(dta_wide$y1,dta_wide$y0, dta_wide$d,
-                                    covariates = dta_wide[,5:8], boot = T)
+                                    covariates = dta_wide[,5:8], boot = TRUE)
 
   twfe.did_panel_n2 <- twfe_did_panel(dta_wide$y1, dta_wide$y0, dta_wide$d,
-                                      covariates = NULL, boot = T,
+                                      covariates = NULL, boot = TRUE,
                                       boot.type = "weighted")
   # #-----------------------------------------------------------------------------
   # Now with bootstrap (multiplier)
   twfe.did_panel3 <- twfe_did_panel(dta_wide$y1,dta_wide$y0, dta_wide$d,
-                                    dta_wide[,5:8], boot = T, boot.type = "multiplier")
+                                    dta_wide[,5:8], boot = TRUE, boot.type = "multiplier")
 
   twfe.did_panel_n3 <- twfe_did_panel(dta_wide$y1, dta_wide$y0, dta_wide$d,
-                                      covariates = rep(1, n), boot = T,
+                                      covariates = rep(1, n), boot = TRUE,
                                       boot.type = "multiplier")
 
 

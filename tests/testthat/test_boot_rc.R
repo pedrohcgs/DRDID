@@ -98,8 +98,8 @@ test_that("Analytical and bootstrapped std errors are similar: RC", {
                      dname = "d",
                      xformla= ~ x1 + x2 + x3 + x4,
                      data = dta_long,
-                     panel=F,
-                     boot = F)
+                     panel = FALSE,
+                     boot = FALSE)
 
   std_ipw.did_rc <- ipwdid(yname="y",
                            tname = "post",
@@ -107,8 +107,8 @@ test_that("Analytical and bootstrapped std errors are similar: RC", {
                            dname = "d",
                            xformla= ~ x1 + x2 + x3 + x4,
                            data = dta_long,
-                           panel=F,
-                           boot = F)
+                           panel = FALSE,
+                           boot = FALSE)
 
   ipw.did_rc <- ipwdid(yname="y",
                        tname = "post",
@@ -116,9 +116,9 @@ test_that("Analytical and bootstrapped std errors are similar: RC", {
                        dname = "d",
                        xformla= ~ x1 + x2 + x3 + x4,
                        data = dta_long,
-                       normalized = F,
-                       panel=F,
-                       boot = F)
+                       normalized = FALSE,
+                       panel = FALSE,
+                       boot = FALSE)
 
   dr_trad.did_rc <- drdid(yname="y",
                           tname = "post",
@@ -127,8 +127,8 @@ test_that("Analytical and bootstrapped std errors are similar: RC", {
                           estMethod = "trad",
                           xformla= ~ x1 + x2 + x3 + x4,
                           data = dta_long,
-                          panel=F,
-                          boot = F)
+                          panel = FALSE,
+                          boot = FALSE)
 
   dr_imp.did_rc <- drdid(yname="y",
                          tname = "post",
@@ -137,57 +137,75 @@ test_that("Analytical and bootstrapped std errors are similar: RC", {
                          estMethod = "imp",
                          xformla= ~ x1 + x2 + x3 + x4,
                          data = dta_long,
-                         panel=F,
-                         boot = F)
+                         panel = FALSE,
+                         boot = FALSE)
 
   dr_trad1.did_rc <- drdid_rc1(dta_long$y,
                               dta_long$post,
                               dta_long$d,
-                              dta_long[,5:8], boot = F)
+                              dta_long[,5:8], boot = FALSE)
 
   dr_imp1.did_rc <- drdid_imp_rc1(dta_long$y,
                                  dta_long$post,
                                  dta_long$d,
-                                 dta_long[,5:8], boot = F)
+                                 dta_long[,5:8], boot = FALSE)
   #-----------------------------------------------------------------------------
   # Now with bootstrap (weighted)
   or.did_rc2 <- reg_did_rc(dta_long$y,
                            dta_long$post,
                            dta_long$d,
-                           dta_long[,5:8], boot = T, boot.type = "weighted",
+                           dta_long[,5:8],
+                           boot = TRUE,
+                           boot.type = "weighted",
                            nboot = nboot)
 
   std_ipw.did_rc2 <- std_ipw_did_rc(dta_long$y,
                                     dta_long$post,
                                     dta_long$d,
-                                    dta_long[,5:8], boot = T, nboot = nboot)
+                                    dta_long[,5:8],
+                                    boot = TRUE,
+                                    boot.type = "weighted",
+                                    nboot = nboot)
 
   ipw.did_rc2 <- ipw_did_rc(dta_long$y,
                             dta_long$post,
                             dta_long$d,
-                            dta_long[,5:8], boot = T, nboot = nboot)
+                            dta_long[,5:8],
+                            boot = TRUE,
+                            boot.type = "weighted",
+                            nboot = nboot)
 
   dr_trad.did_rc2 <- drdid_rc(dta_long$y,
                               dta_long$post,
                               dta_long$d,
-                              dta_long[,5:8], boot = T, nboot = nboot)
+                              dta_long[,5:8],
+                              boot = TRUE,
+                              boot.type = "weighted",
+                              nboot = nboot)
 
   dr_imp.did_rc2 <- drdid_imp_rc(dta_long$y,
                                  dta_long$post,
                                  dta_long$d,
-                                 dta_long[,5:8], boot = T,
+                                 dta_long[,5:8],
+                                 boot = TRUE,
                                  boot.type = "weighted",
                                  nboot = nboot)
 
   dr_trad1.did_rc2 <- drdid_rc1(dta_long$y,
                                dta_long$post,
                                dta_long$d,
-                               dta_long[,5:8], boot = T, nboot = nboot)
+                               dta_long[,5:8],
+                               boot = TRUE,
+                               boot.type = "weighted",
+                               nboot = nboot)
 
   dr_imp1.did_rc2 <- drdid_imp_rc1(dta_long$y,
                                   dta_long$post,
                                   dta_long$d,
-                                  dta_long[,5:8], boot = T, nboot = nboot)
+                                  dta_long[,5:8],
+                                  boot = TRUE,
+                                  boot.type = "weighted",
+                                  nboot = nboot)
 
   #-----------------------------------------------------------------------------
   #-----------------------------------------------------------------------------
@@ -195,44 +213,44 @@ test_that("Analytical and bootstrapped std errors are similar: RC", {
   or.did_rc3 <- reg_did_rc(dta_long$y,
                            dta_long$post,
                            dta_long$d,
-                           dta_long[,5:8], boot = T,
+                           dta_long[,5:8], boot = TRUE,
                            boot.type ="multiplier",
                            nboot = nboot)
 
   std_ipw.did_rc3 <- std_ipw_did_rc(dta_long$y,
                                     dta_long$post,
                                     dta_long$d,
-                                    dta_long[,5:8], boot = T,
+                                    dta_long[,5:8], boot = TRUE,
                                     boot.type ="multiplier", nboot = nboot)
 
   ipw.did_rc3 <- ipw_did_rc(dta_long$y,
                             dta_long$post,
                             dta_long$d,
-                            dta_long[,5:8], boot = T,
+                            dta_long[,5:8], boot = TRUE,
                             boot.type ="multiplier", nboot = nboot)
 
   dr_trad.did_rc3 <- drdid_rc(dta_long$y,
                               dta_long$post,
                               dta_long$d,
-                              dta_long[,5:8], boot = T,
+                              dta_long[,5:8], boot = TRUE,
                               boot.type ="multiplier", nboot = nboot)
 
   dr_imp.did_rc3 <- drdid_imp_rc(dta_long$y,
                                  dta_long$post,
                                  dta_long$d,
-                                 dta_long[,5:8], boot = T,
+                                 dta_long[,5:8], boot = TRUE,
                                  boot.type ="multiplier", nboot = nboot)
 
   dr_trad1.did_rc3 <- drdid_rc1(dta_long$y,
                                 dta_long$post,
                                 dta_long$d,
-                                dta_long[,5:8], boot = T,
+                                dta_long[,5:8], boot = TRUE,
                                 boot.type ="multiplier", nboot = nboot)
 
   dr_imp1.did_rc3 <- drdid_imp_rc1(dta_long$y,
                                    dta_long$post,
                                    dta_long$d,
-                                   dta_long[,5:8], boot = T,
+                                   dta_long[,5:8], boot = TRUE,
                                    boot.type ="multiplier", nboot = nboot)
 
   #-----------------------------------------------------------------------------
