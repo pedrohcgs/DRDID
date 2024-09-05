@@ -8,13 +8,21 @@ wboot.dr.tr.panel <- function(nn, n, deltaY, D, int.cov, i.weights){
   #weights for the bootstrap
   b.weights <- as.vector(i.weights * v)
   # Propensity score estimation
-  ps.b <- suppressWarnings(stats::glm(D ~ -1 + int.cov, family = "binomial", weights = b.weights)$fitted.values)
+  # ps.b <- suppressWarnings(stats::glm(D ~ -1 + int.cov, family = "binomial", weights = b.weights)$fitted.values)
+  ps.b <- suppressWarnings(parglm::parglm(D ~ -1 + int.cov, family = "binomial", weights = b.weights)$fitted.values)
   ps.b <- as.vector(ps.b)
   ps.b <- pmin(ps.b, 1 - 1e-6)
   #Compute the Outcome regression for the control group
-  reg.coeff.b <- stats::coef(stats::lm(deltaY ~ -1 + int.cov,
-                                     subset = D==0,
-                                     weights = b.weights))
+  # reg.coeff.b <- stats::coef(stats::lm(deltaY ~ -1 + int.cov,
+  #                                    subset = D==0,
+  #                                    weights = b.weights))
+  control_filter <- (D == 0)
+  reg.coeff.b <- stats::coef(fastglm::fastglm(
+                              x = int.cov[control_filter, , drop = FALSE],
+                              y = deltaY[control_filter],
+                              weights = b.weights[control_filter],
+                              family = gaussian(link = "identity")
+  ))
   out.reg.b <- as.vector(tcrossprod(reg.coeff.b, int.cov))
   # Compute AIPW estimator
   att.b <- aipw.did.panel(deltaY, D, ps.b, out.reg.b, b.weights)

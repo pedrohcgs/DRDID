@@ -8,9 +8,16 @@ wboot.reg.panel <- function(nn, n, deltaY, D, int.cov, i.weights){
   #weights for the bootstrap
   b.weights <- as.vector(i.weights * v)
   #Compute the Outcome regression for the control group
-  reg.coeff.b <- stats::coef(stats::lm(deltaY ~ -1 + int.cov,
-                                       subset = D==0,
-                                       weights = b.weights))
+  # reg.coeff.b <- stats::coef(stats::lm(deltaY ~ -1 + int.cov,
+  #                                      subset = D==0,
+  #                                      weights = b.weights))
+  control_filter <- (D == 0)
+  reg.coeff.b <- stats::coef(fastglm::fastglm(
+                              x = int.cov[control_filter, , drop = FALSE],
+                              y = deltaY[control_filter],
+                              weights = b.weights[control_filter],
+                              family = gaussian(link = "identity")
+  ))
   out.reg.b <- as.vector(tcrossprod(reg.coeff.b, int.cov))
   # Compute OR estimator
   att.b <- mean(b.weights * D * (deltaY - out.reg.b))/mean(b.weights * D)
