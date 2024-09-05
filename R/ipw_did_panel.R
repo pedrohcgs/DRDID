@@ -94,7 +94,7 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   #PS <- suppressWarnings(stats::glm(D ~ -1 + int.cov, family = "binomial", weights = i.weights))
   PS <- suppressWarnings(parglm::parglm(D ~ -1 + int.cov, family = "binomial", weights = i.weights))
   if(PS$converged == FALSE){
-    warning("Propernsity score estimation did not converge.")
+    warning("Propensity score estimation did not converge.")
   }
   if(anyNA(PS$coefficients)){
     stop("Propensity score model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
