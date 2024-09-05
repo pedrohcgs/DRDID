@@ -8,7 +8,8 @@ wboot.std.ipw.panel <- function(nn, n, deltaY, D, int.cov, i.weights){
   #weights for the bootstrap
   b.weights <- as.vector(i.weights * v)
   # Propensity score estimation
-  ps.b <- suppressWarnings(stats::glm(D ~ -1 + int.cov, family = "binomial", weights = b.weights)$fitted.values)
+  # ps.b <- suppressWarnings(stats::glm(D ~ -1 + int.cov, family = "binomial", weights = b.weights)$fitted.values)
+  ps.b <- suppressWarnings(parglm::parglm(D ~ -1 + int.cov, family = "binomial", weights = b.weights)$fitted.values)
   ps.b <- pmin(ps.b, 1 - 1e-6)
   # Compute  standardized IPW estimator
   w.treat.b <- b.weights * D
