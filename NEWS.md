@@ -1,11 +1,11 @@
-# DRDID 1.0.8.903
+# DRDID 1.1.0
   * Restore solve as default to invert matrix, as it is faster than qr.solve for small matrices.
   
   * Improve error handling for non-invertible matrices.
   
   * Changing estimation methods for fastglm and parglm (in place of lm and glm).
   
-  * Do not let estimated propensity score be above 1 - 1e-6 (instead of 1 - e-16).
+  * Do not let the estimated propensity score be above 1 - 1e-6 (instead of 1 - e-16).
 
 # DRDID 1.0.7
   * Speed up data processing using Rcpp
