@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DRDID</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.1.901</span>
       </span>
     </div>
 
@@ -99,7 +99,7 @@
 
 
 <dt id="arg-covariates">covariates<a class="anchor" aria-label="anchor" href="#arg-covariates"></a></dt>
-<dd><p>An \(n\) x \(k\) matrix of covariates to be used in the propensity score estimation.
+<dd><p>An \(n\) x \(k\) matrix of covariates to be used in the propensity score estimation. Please add a vector of constants if you want to include an intercept in the models.
 If covariates = NULL, this leads to an unconditional DiD estimator.</p></dd>
 
 
@@ -173,7 +173,7 @@ Review of Economic Studies, vol. 72(1), p. 1-19, <a href="https://doi.org/10.111
 <span class="r-in"><span><span class="va">unit_random</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">eval_lalonde_cps</span><span class="op">)</span>, <span class="fl">5000</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">eval_lalonde_cps</span> <span class="op">&lt;-</span> <span class="va">eval_lalonde_cps</span><span class="op">[</span><span class="va">unit_random</span>,<span class="op">]</span></span></span>
 <span class="r-in"><span><span class="co"># Select some covariates</span></span></span>
-<span class="r-in"><span><span class="va">covX</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">eval_lalonde_cps</span><span class="op">$</span><span class="va">age</span>, <span class="va">eval_lalonde_cps</span><span class="op">$</span><span class="va">educ</span>,</span></span>
+<span class="r-in"><span><span class="va">covX</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">eval_lalonde_cps</span><span class="op">$</span><span class="va">age</span>, <span class="va">eval_lalonde_cps</span><span class="op">$</span><span class="va">educ</span>,</span></span>
 <span class="r-in"><span>                             <span class="va">eval_lalonde_cps</span><span class="op">$</span><span class="va">black</span>, <span class="va">eval_lalonde_cps</span><span class="op">$</span><span class="va">married</span>,</span></span>
 <span class="r-in"><span>                             <span class="va">eval_lalonde_cps</span><span class="op">$</span><span class="va">nodegree</span>, <span class="va">eval_lalonde_cps</span><span class="op">$</span><span class="va">hisp</span>,</span></span>
 <span class="r-in"><span>                             <span class="va">eval_lalonde_cps</span><span class="op">$</span><span class="va">re74</span><span class="op">)</span><span class="op">)</span></span></span>

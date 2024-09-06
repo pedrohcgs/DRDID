@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DRDID</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.1.901</span>
       </span>
     </div>
 
@@ -100,7 +100,7 @@ and post = 0 if observation belongs to pre-treatment period.)</p></dd>
 
 
 <dt id="arg-covariates">covariates<a class="anchor" aria-label="anchor" href="#arg-covariates"></a></dt>
-<dd><p>An \(n\) x \(k\) matrix of covariates to be used in the propensity score and regression estimation.
+<dd><p>An \(n\) x \(k\) matrix of covariates to be used in the propensity score and regression estimation. Please add a vector of constants if you want to include an intercept in the models.
 If covariates = NULL, this leads to an unconditional DiD estimator.</p></dd>
 
 
@@ -176,7 +176,7 @@ likelihood, and the outcome regression coefficients are estimated using ordinary
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># use the simulated data provided in the package</span></span></span>
-<span class="r-in"><span><span class="va">covX</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">sim_rc</span><span class="op">[</span>,<span class="fl">5</span><span class="op">:</span><span class="fl">8</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">covX</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span> <span class="fl">1</span>, <span class="va">sim_rc</span><span class="op">[</span>,<span class="fl">5</span><span class="op">:</span><span class="fl">8</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># Implement the 'traditional' DR DiD estimator (not locally efficient!)</span></span></span>
 <span class="r-in"><span><span class="fu">drdid_rc1</span><span class="op">(</span>y <span class="op">=</span> <span class="va">sim_rc</span><span class="op">$</span><span class="va">y</span>, post <span class="op">=</span> <span class="va">sim_rc</span><span class="op">$</span><span class="va">post</span>, D <span class="op">=</span> <span class="va">sim_rc</span><span class="op">$</span><span class="va">d</span>,</span></span>
 <span class="r-in"><span>          covariates<span class="op">=</span> <span class="va">covX</span><span class="op">)</span></span></span>
