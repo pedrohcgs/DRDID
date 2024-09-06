@@ -129,16 +129,16 @@ test_that("Data structure (wide vs long) does not affect results", {
   #-----------------------------------------------------------------------------
   # Now with wide format
   or.did_panel2 <- reg_did_panel(dta_wide$y1, dta_wide$y0, dta_wide$d,
-                                 dta_wide[,5:8], boot = FALSE)
+                                 cbind(1,dta_wide[,5:8]), boot = FALSE)
 
   std_ipw.did_panel2 <- std_ipw_did_panel(dta_wide$y1, dta_wide$y0, dta_wide$d,
-                                          dta_wide[,5:8], boot = FALSE)
+                                           cbind(1,dta_wide[,5:8]), boot = FALSE)
 
   dr_trad.did_panel2 <- drdid_panel(dta_wide$y1, dta_wide$y0, dta_wide$d,
-                                         dta_wide[,5:8], boot = FALSE)
+                                    cbind(1,dta_wide[,5:8]), boot = FALSE)
 
   dr_imp.did_panel2 <- drdid_imp_panel(dta_wide$y1, dta_wide$y0, dta_wide$d,
-                                       dta_wide[,5:8], boot = FALSE)
+                                        cbind(1,dta_wide[,5:8]), boot = FALSE)
 
   #-----------------------------------------------------------------------------
   # Check if all point estimates are equal

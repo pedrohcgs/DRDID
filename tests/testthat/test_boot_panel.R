@@ -142,40 +142,40 @@ test_that("Analytical and bootstrapped std errors are similar: Panel", {
   #-----------------------------------------------------------------------------
   # Now with bootstrap (weighted)
   or.did_panel2 <- reg_did_panel(dta_wide$y1,dta_wide$y0, dta_wide$d,
-                                 dta_wide[,5:8], boot = TRUE, nboot = nboot)
+                                 cbind(1,dta_wide[,5:8]), boot = TRUE, nboot = nboot)
 
   std_ipw.did_panel2 <- std_ipw_did_panel(dta_wide$y1,dta_wide$y0, dta_wide$d,
-                                          dta_wide[,5:8], boot = TRUE, nboot = nboot)
+                                           cbind(1,dta_wide[,5:8]), boot = TRUE, nboot = nboot)
 
   ipw.did_panel2 <- ipw_did_panel(dta_wide$y1,dta_wide$y0, dta_wide$d,
-                                  dta_wide[,5:8], boot = TRUE, nboot = nboot)
+                                   cbind(1,dta_wide[,5:8]), boot = TRUE, nboot = nboot)
 
   dr_trad.did_panel2 <- drdid_panel(dta_wide$y1,dta_wide$y0, dta_wide$d,
-                                    dta_wide[,5:8], boot = TRUE, nboot = nboot)
+                                    cbind(1,dta_wide[,5:8]), boot = TRUE, nboot = nboot)
 
   dr_imp.did_panel2 <- drdid_imp_panel(dta_wide$y1,dta_wide$y0, dta_wide$d,
-                                       dta_wide[,5:8], boot = TRUE, nboot = nboot)
+                                        cbind(1,dta_wide[,5:8]), boot = TRUE, nboot = nboot)
   #-----------------------------------------------------------------------------
   #-----------------------------------------------------------------------------
   # Now with bootstrap (multiplier)
   or.did_panel3 <- reg_did_panel(dta_wide$y1,dta_wide$y0, dta_wide$d,
-                                 dta_wide[,5:8], boot = TRUE, boot.type ="multiplier",
+                                 cbind(1,dta_wide[,5:8]), boot = TRUE, boot.type ="multiplier",
                                  nboot = nboot)
 
   std_ipw.did_panel3 <- std_ipw_did_panel(dta_wide$y1,dta_wide$y0, dta_wide$d,
-                                          dta_wide[,5:8], boot = TRUE, boot.type ="multiplier",
+                                           cbind(1,dta_wide[,5:8]), boot = TRUE, boot.type ="multiplier",
                                           nboot = nboot)
 
   ipw.did_panel3 <- ipw_did_panel(dta_wide$y1,dta_wide$y0, dta_wide$d,
-                                  dta_wide[,5:8], boot = TRUE, boot.type ="multiplier",
+                                   cbind(1,dta_wide[,5:8]), boot = TRUE, boot.type ="multiplier",
                                   nboot = nboot)
 
   dr_trad.did_panel3 <- drdid_panel(dta_wide$y1,dta_wide$y0, dta_wide$d,
-                                    dta_wide[,5:8], boot = TRUE, boot.type ="multiplier",
+                                    cbind(1,dta_wide[,5:8]), boot = TRUE, boot.type ="multiplier",
                                     nboot = nboot)
 
   dr_imp.did_panel3 <- drdid_imp_panel(dta_wide$y1,dta_wide$y0, dta_wide$d,
-                                       dta_wide[,5:8], boot = TRUE, boot.type ="multiplier",
+                                        cbind(1,dta_wide[,5:8]), boot = TRUE, boot.type ="multiplier",
                                        nboot = nboot)
 
   #-----------------------------------------------------------------------------

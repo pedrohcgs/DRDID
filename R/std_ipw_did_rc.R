@@ -12,7 +12,7 @@ NULL
 #' @param post An \eqn{n} x \eqn{1} vector of Post-Treatment dummies (post = 1 if observation belongs to post-treatment period,
 #'             and post = 0 if observation belongs to pre-treatment period.)
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).
-#' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the propensity score estimation.
+#' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the propensity score estimation. Please add a column of ones if you want to include an intercept.
 #' If covariates = NULL, this leads to an unconditional DID estimator.
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights. The weights are normalized and therefore enforced to have mean 1 across all observations.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
@@ -44,7 +44,7 @@ NULL
 #'
 #' @examples
 #' # use the simulated data provided in the package
-#' covX = as.matrix(sim_rc[,5:8])
+#' covX = as.matrix(cbind(1, sim_rc[,5:8]))
 #' # Implement normalized IPW DID estimator
 #' std_ipw_did_rc(y = sim_rc$y, post = sim_rc$post, D = sim_rc$d,
 #'                covariates= covX)
@@ -63,15 +63,13 @@ std_ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   y <- as.vector(y)
   # post as vector
   post <- as.vector(post)
-  # Add constant to covariate vector
-  int.cov <- as.matrix(rep(1,n))
-  if (!is.null(covariates)){
-    if(all(as.matrix(covariates)[,1]==rep(1,n))){
-      int.cov <- as.matrix(covariates)
-    } else {
-      int.cov <- as.matrix(cbind(1, covariates))
-    }
+  # Covariate vector
+  if(is.null(covariates)){
+    int.cov <- as.matrix(rep(1,n))
+  } else{
+    int.cov <- as.matrix(covariates)
   }
+
 
   # Weights
   if(is.null(i.weights)) {

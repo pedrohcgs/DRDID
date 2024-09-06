@@ -24,7 +24,7 @@ and post = 0 if observation belongs to pre-treatment period.)}
 
 \item{D}{An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).}
 
-\item{covariates}{An \eqn{n} x \eqn{k} matrix of covariates to be used in the regression estimation.
+\item{covariates}{An \eqn{n} x \eqn{k} matrix of covariates to be used in the regression estimation. Please add a column of ones if you want to include an intercept.
 If covariates = NULL, this leads to an unconditional DiD estimator.}
 
 \item{i.weights}{An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights. The weights are normalized and therefore enforced to have mean 1 across all observations.}
@@ -64,7 +64,7 @@ The nuisance parameters (outcome regression coefficients) are estimated via ordi
 }
 \examples{
 # use the simulated data provided in the package
-covX = as.matrix(sim_rc[,5:8])
+covX = as.matrix(cbind(1, sim_rc[,5:8]))
 # Implement OR DiD estimator
 reg_did_rc(y = sim_rc$y, post = sim_rc$post, D = sim_rc$d,
            covariates= covX)

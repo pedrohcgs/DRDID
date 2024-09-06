@@ -12,7 +12,7 @@ NULL
 #' @param y1 An \eqn{n} x \eqn{1} vector of outcomes from the post-treatment period.
 #' @param y0 An \eqn{n} x \eqn{1} vector of outcomes from the pre-treatment period.
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).
-#' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the propensity score and regression estimation.
+#' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the propensity score and regression estimation. Please add a vector of constants if you want to include an intercept in the models.
 #' If covariates = NULL, this leads to an unconditional DiD estimator.
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights. The weights are normalized and therefore enforced to have mean 1 across all observations.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
@@ -72,7 +72,7 @@ NULL
 #' unit_random <- sample(1:nrow(eval_lalonde_cps), 5000)
 #' eval_lalonde_cps <- eval_lalonde_cps[unit_random,]
 #' # Select some covariates
-#' covX = as.matrix(cbind(eval_lalonde_cps$age, eval_lalonde_cps$educ,
+#' covX = as.matrix(cbind(1, eval_lalonde_cps$age, eval_lalonde_cps$educ,
 #'                              eval_lalonde_cps$black, eval_lalonde_cps$married,
 #'                              eval_lalonde_cps$nodegree, eval_lalonde_cps$hisp,
 #'                              eval_lalonde_cps$re74))
@@ -94,14 +94,11 @@ drdid_imp_panel <-function(y1, y0, D, covariates, i.weights = NULL, boot = FALSE
   n <- length(D)
   # generate deltaY
   deltaY <- as.vector(y1 - y0)
-  # Add constant to covariate vector
-  int.cov <- as.matrix(rep(1,n))
-  if (!is.null(covariates)){
-    if(all(as.matrix(covariates)[,1]==rep(1,n))){
-      int.cov <- as.matrix(covariates)
-    } else {
-      int.cov <- as.matrix(cbind(1, covariates))
-    }
+  # Covariate Vector
+  if(is.null(covariates)){
+    int.cov <- as.matrix(rep(1,n))
+  } else{
+    int.cov <- as.matrix(covariates)
   }
 
   # Weights

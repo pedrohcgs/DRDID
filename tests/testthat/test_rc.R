@@ -144,27 +144,27 @@ test_that("RC estimators coincide with drdid function", {
   or.did_rc2 <- reg_did_rc(dta_long$y,
                           dta_long$post,
                           dta_long$d,
-                          dta_long[,5:8], boot = FALSE)
+                           cbind(1,dta_long[,5:8]), boot = FALSE)
 
   std_ipw.did_rc2 <- std_ipw_did_rc(dta_long$y,
                                     dta_long$post,
                                     dta_long$d,
-                                    dta_long[,5:8], boot = FALSE)
+                                     cbind(1,dta_long[,5:8]), boot = FALSE)
 
   ipw.did_rc2 <- ipw_did_rc(dta_long$y,
                             dta_long$post,
                             dta_long$d,
-                            dta_long[,5:8], boot = FALSE)
+                             cbind(1,dta_long[,5:8]), boot = FALSE)
 
   dr_trad.did_rc2 <- drdid_rc(dta_long$y,
                               dta_long$post,
                               dta_long$d,
-                              dta_long[,5:8], boot = FALSE)
+                               cbind(1,dta_long[,5:8]), boot = FALSE)
 
   dr_imp.did_rc2 <- drdid_imp_rc(dta_long$y,
                                  dta_long$post,
                                  dta_long$d,
-                                 dta_long[,5:8], boot = FALSE)
+                                 cbind(1,dta_long[,5:8]), boot = FALSE)
 
   #-----------------------------------------------------------------------------
   # Check if all point estimates are equal

@@ -1,4 +1,4 @@
-#' @import stats
+#' @import stats data.table parglm
 NULL
 ###################################################################################
 #  Locally Efficient Doubly Robust DiD estimator with panel Data
@@ -10,7 +10,7 @@ NULL
 #' @param y1 An \eqn{n} x \eqn{1} vector of outcomes from the post-treatment period.
 #' @param y0 An \eqn{n} x \eqn{1} vector of outcomes from the pre-treatment period.
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).
-#' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the propensity score and regression estimation.
+#' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the propensity score and regression estimation. Please add a vector of constants if you want to include an intercept in the models.
 #' If covariates = NULL, this leads to an unconditional DiD estimator.
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights. The weights are normalized and therefore enforced to have mean 1 across all observations.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
@@ -55,7 +55,7 @@ NULL
 #' unit_random <- sample(1:nrow(eval_lalonde_cps), 5000)
 #' eval_lalonde_cps <- eval_lalonde_cps[unit_random,]
 #' # Select some covariates
-#' covX = as.matrix(cbind(eval_lalonde_cps$age, eval_lalonde_cps$educ,
+#' covX = as.matrix(cbind(1, eval_lalonde_cps$age, eval_lalonde_cps$educ,
 #'                        eval_lalonde_cps$black, eval_lalonde_cps$married,
 #'                        eval_lalonde_cps$nodegree, eval_lalonde_cps$hisp,
 #'                        eval_lalonde_cps$re74))
@@ -77,15 +77,21 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   n <- length(D)
   # generate deltaY
   deltaY <- as.vector(y1 - y0)
-  # Add constant to covariate vector
-  int.cov <- as.matrix(rep(1,n))
-  if (!is.null(covariates)){
-    if(all(as.matrix(covariates)[,1]==rep(1,n))){
-      int.cov <- as.matrix(covariates)
-    } else {
-      int.cov <- as.matrix(cbind(1, covariates))
-    }
+  # Covariate vector
+  if(is.null(covariates)){
+    int.cov <- as.matrix(rep(1,n))
+  } else{
+    int.cov <- as.matrix(covariates)
   }
+
+  # int.cov <- as.matrix(rep(1,n))
+  # if (!is.null(covariates)){
+  #   if(all(as.matrix(covariates)[,1]==rep(1,n))){
+  #     int.cov <- as.matrix(covariates)
+  #   } else {
+  #     int.cov <- as.matrix(cbind(1, covariates))
+  #   }
+  # }
 
   # Weights
   if(is.null(i.weights)) {
@@ -97,14 +103,23 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   #Compute the Pscore by MLE
   #pscore.tr <- stats::glm(D ~ -1 + int.cov, family = "binomial", weights = i.weights)
-  pscore.tr <- suppressWarnings(parglm::parglm(D ~ -1 + int.cov, family = "binomial", weights = i.weights))
+  pscore.tr <- suppressWarnings(parglm::parglm.fit(x = int.cov,
+                                                   y = D,
+                                                   family =  stats::binomial(),
+                                                   weights = i.weights,
+                                                   control = parglm.control(nthreads = getDTthreads()),
+                                                   intercept = FALSE
+                                ))
+
+
+  class(pscore.tr) <- "glm" #this allow us to use vcov
   if(pscore.tr$converged == FALSE){
     warning("Propernsity score estimation did not converge.")
   }
   if(anyNA(pscore.tr$coefficients)){
     stop("Propensity score model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
   }
-  ps.fit <- as.vector(pscore.tr$fitted.values)
+  ps.fit <- fitted(pscore.tr) #as.vector(pscore.tr$fitted.values)
   # Avoid divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-6)
   #Compute the Outcome regression for the control group using wols
@@ -116,7 +131,7 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
                             x = int.cov[control_filter, , drop = FALSE],
                             y = deltaY[control_filter],
                             weights = i.weights[control_filter],
-                            family = gaussian(link = "identity")
+                            family =  stats::gaussian(link = "identity")
   ))
   if(anyNA(reg.coeff)){
     stop("Outcome regression model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")

@@ -10,7 +10,7 @@ NULL
 #' @param y1 An \eqn{n} x \eqn{1} vector of outcomes from the post-treatment period.
 #' @param y0 An \eqn{n} x \eqn{1} vector of outcomes from the pre-treatment period.
 #' @param D An \eqn{n} x \eqn{1} vector of Group indicators (=1 if observation is treated in the post-treatment, =0 otherwise).
-#' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the regression estimation.
+#' @param covariates An \eqn{n} x \eqn{k} matrix of covariates to be used in the regression estimation. We will always include an intercept.
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights. The weights are normalized and therefore enforced to have mean 1 across all observations.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
 #' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
@@ -33,7 +33,7 @@ NULL
 #' unit_random <- sample(1:nrow(eval_lalonde_cps), 5000)
 #' eval_lalonde_cps <- eval_lalonde_cps[unit_random,]
 #' # Select some covariates
-#' covX = as.matrix(cbind(eval_lalonde_cps$age, eval_lalonde_cps$educ,
+#' covX = as.matrix(cbind(1, eval_lalonde_cps$age, eval_lalonde_cps$educ,
 #'                        eval_lalonde_cps$black, eval_lalonde_cps$married,
 #'                        eval_lalonde_cps$nodegree, eval_lalonde_cps$hisp,
 #'                        eval_lalonde_cps$re74))
