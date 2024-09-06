@@ -1,4 +1,4 @@
-# DRDID 1.1.0
+# DRDID 1.1.1
   * Restore solve as default to invert matrix, as it is faster than qr.solve for small matrices.
   
   * Improve error handling for non-invertible matrices.
