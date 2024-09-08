@@ -41,6 +41,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// batch_matrix_operations_rc
+Rcpp::List batch_matrix_operations_rc(const arma::mat& asy_lin_rep_ps, const arma::mat& wols_eX, const arma::mat& XpX_inv, const arma::mat& wols_eX_treat, const arma::mat& XpX_inv_treat, const arma::colvec& M1, const arma::colvec& M2, const arma::colvec& M3, const arma::colvec& mom);
+RcppExport SEXP _DRDID_batch_matrix_operations_rc(SEXP asy_lin_rep_psSEXP, SEXP wols_eXSEXP, SEXP XpX_invSEXP, SEXP wols_eX_treatSEXP, SEXP XpX_inv_treatSEXP, SEXP M1SEXP, SEXP M2SEXP, SEXP M3SEXP, SEXP momSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type asy_lin_rep_ps(asy_lin_rep_psSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type wols_eX(wols_eXSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type XpX_inv(XpX_invSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type wols_eX_treat(wols_eX_treatSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type XpX_inv_treat(XpX_inv_treatSEXP);
+    Rcpp::traits::input_parameter< const arma::colvec& >::type M1(M1SEXP);
+    Rcpp::traits::input_parameter< const arma::colvec& >::type M2(M2SEXP);
+    Rcpp::traits::input_parameter< const arma::colvec& >::type M3(M3SEXP);
+    Rcpp::traits::input_parameter< const arma::colvec& >::type mom(momSEXP);
+    rcpp_result_gen = Rcpp::wrap(batch_matrix_operations_rc(asy_lin_rep_ps, wols_eX, XpX_inv, wols_eX_treat, XpX_inv_treat, M1, M2, M3, mom));
+    return rcpp_result_gen;
+END_RCPP
+}
 // checkTreatmentUniqueness
 void checkTreatmentUniqueness(DataFrame dta, String idname, String treatName);
 RcppExport SEXP _DRDID_checkTreatmentUniqueness(SEXP dtaSEXP, SEXP idnameSEXP, SEXP treatNameSEXP) {
@@ -57,6 +76,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_DRDID_opt_crossprod", (DL_FUNC) &_DRDID_opt_crossprod, 3},
     {"_DRDID_batch_matrix_operations", (DL_FUNC) &_DRDID_batch_matrix_operations, 7},
+    {"_DRDID_batch_matrix_operations_rc", (DL_FUNC) &_DRDID_batch_matrix_operations_rc, 9},
     {"_DRDID_checkTreatmentUniqueness", (DL_FUNC) &_DRDID_checkTreatmentUniqueness, 3},
     {NULL, NULL, 0}
 };

@@ -9,6 +9,10 @@ batch_matrix_operations <- function(wols_eX, XpX_inv, score_ps, Hessian_ps, M1, 
     .Call('_DRDID_batch_matrix_operations', PACKAGE = 'DRDID', wols_eX, XpX_inv, score_ps, Hessian_ps, M1, M2, M3)
 }
 
+batch_matrix_operations_rc <- function(asy_lin_rep_ps, wols_eX, XpX_inv, wols_eX_treat, XpX_inv_treat, M1, M2, M3, mom) {
+    .Call('_DRDID_batch_matrix_operations_rc', PACKAGE = 'DRDID', asy_lin_rep_ps, wols_eX, XpX_inv, wols_eX_treat, XpX_inv_treat, M1, M2, M3, mom)
+}
+
 checkTreatmentUniqueness <- function(dta, idname, treatName) {
     invisible(.Call('_DRDID_checkTreatmentUniqueness', PACKAGE = 'DRDID', dta, idname, treatName))
 }
