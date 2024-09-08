@@ -28,7 +28,8 @@ Imports:
     fastglm (>= 0.0.3),
     data.table(>= 1.15.4)
 LinkingTo: 
-    Rcpp (>= 1.0.12)
+    Rcpp (>= 1.0.12),
+    RcppArmadillo (>= 0.12.8.4.0)
 RoxygenNote: 7.3.2
 Suggests:
     knitr,
