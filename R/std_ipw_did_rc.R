@@ -78,12 +78,19 @@ std_ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   # Normalize weights
   i.weights <- i.weights/mean(i.weights)
   #-----------------------------------------------------------------------------
-  #Pscore estimation (logit) and also its fitted values
-  #PS <- suppressWarnings(stats::glm(D ~ -1 + int.cov, family = "binomial", weights = i.weights))
-  PS <- suppressWarnings(parglm::parglm(D ~ -1 + int.cov, family = "binomial", weights = i.weights))
-  ps.fit <- as.vector(PS$fitted.values)
+  # Pscore estimation (logit) and also its fitted values
+  PS <- suppressWarnings(fastglm::fastglm(
+                                  x = int.cov,
+                                  y = D,
+                                  family = stats::binomial(),
+                                  weights = i.weights,
+                                  intercept = FALSE,
+                                  method = 3
+  ))
+  ps.fit <- fitted(PS)
   # Do not divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-6)
+  W <- ps.fit * (1 - ps.fit) * i.weights
   #-----------------------------------------------------------------------------
   #Compute IPW estimator
   # First, the weights
@@ -111,7 +118,8 @@ std_ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   # Asymptotic linear representation of logit's beta's
   score.ps <- i.weights * (D - ps.fit) * int.cov
-  Hessian.ps <- stats::vcov(PS) * n
+  #Hessian.ps <- stats::vcov(PS) * n
+  Hessian.ps <- chol2inv(chol(t(int.cov) %*% (W * int.cov))) * n
   asy.lin.rep.ps <-  score.ps %*% Hessian.ps
   #-----------------------------------------------------------------------------
   # Now, the influence function of the "treat" component
@@ -142,9 +150,9 @@ std_ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   if (boot == FALSE) {
     # Estimate of standard error
     se.att <- stats::sd(att.inf.func)/sqrt(n)
-    # Estimate of upper boudary of 95% CI
+    # Estimate of upper boundary of 95% CI
     uci <- ipw.att + 1.96 * se.att
-    # Estimate of lower doundary of 95% CI
+    # Estimate of lower boundary of 95% CI
     lci <- ipw.att - 1.96 * se.att
 
     #Create this null vector so we can export the bootstrap draws too.
@@ -157,11 +165,11 @@ std_ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
       ipw.boot <- mboot.did(att.inf.func, nboot)
       # get bootstrap std errors based on IQR
       se.att <- stats::IQR(ipw.boot) / (stats::qnorm(0.75) - stats::qnorm(0.25))
-      # get symmtric critival values
+      # get symmetric critical values
       cv <- stats::quantile(abs(ipw.boot/se.att), probs = 0.95)
-      # Estimate of upper boudary of 95% CI
+      # Estimate of upper boundary of 95% CI
       uci <- ipw.att + cv * se.att
-      # Estimate of lower doundary of 95% CI
+      # Estimate of lower boundary of 95% CI
       lci <- ipw.att - cv * se.att
     } else {
       # do weighted bootstrap
@@ -169,11 +177,11 @@ std_ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
                                 n = n, y = y, post = post, D = D, int.cov = int.cov, i.weights = i.weights))
       # get bootstrap std errors based on IQR
       se.att <- stats::IQR(ipw.boot - ipw.att) / (stats::qnorm(0.75) - stats::qnorm(0.25))
-      # get symmtric critival values
+      # get symmetric critical values
       cv <- stats::quantile(abs((ipw.boot - ipw.att)/se.att), probs = 0.95)
-      # Estimate of upper boudary of 95% CI
+      # Estimate of upper boundary of 95% CI
       uci <- ipw.att + cv * se.att
-      # Estimate of lower doundary of 95% CI
+      # Estimate of lower boundary of 95% CI
       lci <- ipw.att - cv * se.att
 
     }
