@@ -34,6 +34,8 @@ Rcpp::List batch_matrix_operations(const arma::mat& wols_eX, const arma::mat& Xp
                             Rcpp::Named("inf_cont_3") = inf_cont_3_result);
 }
 
+// [[Rcpp::depends(RcppArmadillo)]]
+
 // Batch multiple matrix multiplications for "pre" and "post" operations
 // [[Rcpp::export]]
 Rcpp::List batch_matrix_operations_rc(const arma::mat& asy_lin_rep_ps,
