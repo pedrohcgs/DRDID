@@ -102,16 +102,14 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   i.weights <- i.weights/mean(i.weights)
   #-----------------------------------------------------------------------------
   #Compute the Pscore by MLE
-  #pscore.tr <- stats::glm(D ~ -1 + int.cov, family = "binomial", weights = i.weights)
-  pscore.tr <- suppressWarnings(parglm::parglm.fit(x = int.cov,
-                                                   y = D,
-                                                   family =  stats::binomial(),
-                                                   weights = i.weights,
-                                                   control = parglm.control(nthreads = getDTthreads()),
-                                                   intercept = FALSE
-                                ))
-
-
+  pscore.tr <- suppressWarnings(fastglm::fastglm(
+                                x = int.cov,
+                                y = D,
+                                family = stats::binomial(),
+                                weights = i.weights,
+                                intercept = FALSE,
+                                method = 3
+  ))
   class(pscore.tr) <- "glm" #this allow us to use vcov
   if(pscore.tr$converged == FALSE){
     warning("Propernsity score estimation did not converge.")
@@ -122,16 +120,14 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   ps.fit <- fitted(pscore.tr) #as.vector(pscore.tr$fitted.values)
   # Avoid divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-6)
-  #Compute the Outcome regression for the control group using wols
-  # reg.coeff <- stats::coef(stats::lm(deltaY ~ -1 + int.cov,
-  #                                    subset = D==0,
-  #                                    weights = i.weights))
+  W <- ps.fit * (1 - ps.fit) * i.weights
+  # Compute the Outcome regression for the control group using wols
   control_filter <- (D == 0)
   reg.coeff <- stats::coef(fastglm::fastglm(
-                            x = int.cov[control_filter, , drop = FALSE],
-                            y = deltaY[control_filter],
-                            weights = i.weights[control_filter],
-                            family =  stats::gaussian(link = "identity")
+    x = int.cov[control_filter, , drop = FALSE],
+    y = deltaY[control_filter],
+    weights = i.weights[control_filter],
+    family =  stats::gaussian(link = "identity")
   ))
   if(anyNA(reg.coeff)){
     stop("Outcome regression model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
@@ -157,18 +153,18 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   weights.ols <- i.weights * (1 - D)
   wols.x <- weights.ols * int.cov
   wols.eX <- weights.ols * (deltaY - out.delta) * int.cov
-  XpX <- base::crossprod(wols.x, int.cov)/n
+  XpX <- opt_crossprod(wols.x, int.cov, n)
   # Check if XpX is invertible
   if ( base::rcond(XpX) < .Machine$double.eps) {
     stop("The regression design matrix is singular. Consider removing some covariates.")
   }
   XpX.inv <- solve(XpX)
-  asy.lin.rep.wols <-  wols.eX %*% XpX.inv
 
   # Asymptotic linear representation of logit's beta's
   score.ps <- i.weights * (D - ps.fit) * int.cov
-  Hessian.ps <- stats::vcov(pscore.tr) * n
-  asy.lin.rep.ps <-  score.ps %*% Hessian.ps
+  #Hessian.ps <- solve(t(int.cov) %*% (W * int.cov)) * n
+  Hessian.ps <- chol2inv(chol(t(int.cov) %*% (W * int.cov))) * n
+
 
   # Now, the influence function of the "treat" component
   # Leading term of the influence function: no estimation effect
@@ -176,12 +172,6 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   # Estimation effect from beta hat
   # Derivative matrix (k x 1 vector)
   M1 <- base::colMeans(w.treat * int.cov)
-
-  # Now get the influence function related to the estimation effect related to beta's
-  inf.treat.2 <- asy.lin.rep.wols %*% M1
-
-  # Influence function for the treated component
-  inf.treat <- (inf.treat.1 - inf.treat.2) / mean(w.treat)
   #-----------------------------------------------------------------------------
   # Now, get the influence function of control component
   # Leading term of the influence function: no estimation effect
@@ -189,12 +179,20 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   # Estimation effect from gamma hat (pscore)
   # Derivative matrix (k x 1 vector)
   M2 <- base::colMeans(w.cont *(deltaY - out.delta - eta.cont) * int.cov)
-  # Now the influence function related to estimation effect of pscores
-  inf.cont.2 <- asy.lin.rep.ps %*% M2
   # Estimation Effect from beta hat (weighted OLS)
   M3 <-  base::colMeans(w.cont * int.cov)
+
+  # Batch multiple matrix multiplications for inf functions
+  batch_results <- batch_matrix_operations(wols.eX, XpX.inv, score.ps, Hessian.ps, M1, M2, M3)
+  # Now get the influence function related to the estimation effect related to beta's
+  inf.treat.2 <- batch_results$inf_treat_2
+  # Now the influence function related to estimation effect of pscores
+  inf.cont.2 <- batch_results$inf_cont_2
   # Now the influence function related to estimation effect of regressions
-  inf.cont.3 <- asy.lin.rep.wols %*% M3
+  inf.cont.3 <- batch_results$inf_cont_3
+
+  # Influence function for the treated component
+  inf.treat <- (inf.treat.1 - inf.treat.2) / mean(w.treat)
 
   # Influence function for the control component
   inf.control <- (inf.cont.1 + inf.cont.2 - inf.cont.3) / mean(w.cont)
@@ -220,11 +218,11 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
       dr.boot <- mboot.did(dr.att.inf.func, nboot)
       # get bootstrap std errors based on IQR
       se.dr.att <- stats::IQR(dr.boot) / (stats::qnorm(0.75) - stats::qnorm(0.25))
-      # get symmtric critival values
+      # get symmetric critical values
       cv <- stats::quantile(abs(dr.boot/se.dr.att), probs = 0.95)
-      # Estimate of upper boudary of 95% CI
+      # Estimate of upper boundary of 95% CI
       uci <- dr.att + cv * se.dr.att
-      # Estimate of lower doundary of 95% CI
+      # Estimate of lower boundary of 95% CI
       lci <- dr.att - cv * se.dr.att
     } else {
       # do weighted bootstrap
@@ -232,11 +230,11 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
                                n = n, deltaY = deltaY, D = D, int.cov = int.cov, i.weights = i.weights))
       # get bootstrap std errors based on IQR
       se.dr.att <- stats::IQR((dr.boot - dr.att)) / (stats::qnorm(0.75) - stats::qnorm(0.25))
-      # get symmtric critival values
+      # get symmetric critical values
       cv <- stats::quantile(abs((dr.boot - dr.att)/se.dr.att), probs = 0.95)
-      # Estimate of upper boudary of 95% CI
+      # Estimate of upper boundary of 95% CI
       uci <- dr.att + cv * se.dr.att
-      # Estimate of lower doundary of 95% CI
+      # Estimate of lower boundary of 95% CI
       lci <- dr.att - cv * se.dr.att
 
     }
