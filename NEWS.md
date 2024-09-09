@@ -3,6 +3,8 @@
   
   * Use fastglm instead of parglm for improved speed
   
+  * Use Rcpp code for faster matrix multiplication
+  
 # DRDID 1.1.0
   * Restore solve as default to invert matrix, as it is faster than qr.solve for small matrices.
   
