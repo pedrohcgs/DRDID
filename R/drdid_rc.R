@@ -204,7 +204,8 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   weights.ols.pre <- i.weights * (1 - D) * (1 - post)
   wols.x.pre <- weights.ols.pre * int.cov
   wols.eX.pre <- weights.ols.pre * (y - out.y.cont.pre) * int.cov
-  XpX_pre <- opt_crossprod(wols.x.pre, int.cov, n)
+  #XpX_pre <- opt_crossprod(wols.x.pre, int.cov, n)
+  XpX_pre <- base::crossprod(wols.x.pre, int.cov)/n
   # Check if XpX is invertible
   if ( base::rcond(XpX_pre) < .Machine$double.eps) {
     stop("The regression design matrix for pre-treatment is singular. Consider removing some covariates.")
@@ -216,7 +217,8 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   weights.ols.post <- i.weights * (1 - D) * post
   wols.x.post <- weights.ols.post * int.cov
   wols.eX.post <- weights.ols.post * (y - out.y.cont.post) * int.cov
-  XpX_post <- opt_crossprod(wols.x.post, int.cov, n)
+  #XpX_post <- opt_crossprod(wols.x.post, int.cov, n)
+  XpX_post <- base::crossprod(wols.x.post, int.cov)/n
   # Check if XpX is invertible
   if ( base::rcond(XpX_post) < .Machine$double.eps) {
     stop("The regression design matrix for post-treatment is singular. Consider removing some covariates.")
@@ -228,7 +230,8 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   weights.ols.pre.treat <- i.weights * D * (1 - post)
   wols.x.pre.treat <- weights.ols.pre.treat * int.cov
   wols.eX.pre.treat <- weights.ols.pre.treat * (y - out.y.treat.pre) * int.cov
-  XpX_pre_treat <- opt_crossprod(wols.x.pre.treat, int.cov, n)
+  #XpX_pre_treat <- opt_crossprod(wols.x.pre.treat, int.cov, n)
+  XpX_pre_treat <- base::crossprod(wols.x.pre.treat, int.cov)/n
   # Check if XpX is invertible
   if ( base::rcond(XpX_pre_treat) < .Machine$double.eps) {
     stop("The regression design matrix for pre-treatment is singular. Consider removing some covariates.")
@@ -241,7 +244,8 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   weights.ols.post.treat <- i.weights * D *  post
   wols.x.post.treat <- weights.ols.post.treat * int.cov
   wols.eX.post.treat <- weights.ols.post.treat * (y - out.y.treat.post) * int.cov
-  XpX_post_treat <- opt_crossprod(wols.x.post.treat, int.cov, n)
+  #XpX_post_treat <- opt_crossprod(wols.x.post.treat, int.cov, n)
+  XpX_post_treat <- base::crossprod(wols.x.post.treat, int.cov)/n
   # Check if XpX is invertible
   if ( base::rcond(XpX_post_treat) < .Machine$double.eps) {
     stop("The regression design matrix for post-treatment is singular. Consider removing some covariates.")
@@ -264,6 +268,10 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   M1.post <- - base::colMeans(w.treat.post * post * int.cov)/mean(w.treat.post)
   M1.pre <- - base::colMeans(w.treat.pre * (1 - post) * int.cov)/mean(w.treat.pre)
 
+  # Now get the influence function related to the estimation effect related to beta's
+  inf.treat.or.post <- asy.lin.rep.ols.post %*% M1.post
+  inf.treat.or.pre <- asy.lin.rep.ols.pre %*% M1.pre
+
   #-----------------------------------------------------------------------------
   # Now, get the influence function of control component
   # Leading term of the influence function: no estimation effect from nuisance parameters
@@ -274,12 +282,17 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   # Derivative matrix (k x 1 vector)
   M2.pre <- base::colMeans(w.cont.pre *(y - out.y.cont - att.cont.pre) * int.cov)/mean(w.cont.pre)
   M2.post <- base::colMeans(w.cont.post *(y - out.y.cont - att.cont.post) * int.cov)/mean(w.cont.post)
+  # Now the influence function related to estimation effect of pscores
+  inf.cont.ps <- asy.lin.rep.ps %*% (M2.post - M2.pre)
 
   # Estimation effect from beta hat from post and pre-periods
   # Derivative matrix (k x 1 vector)
   M3.post <- - base::colMeans(w.cont.post * post * int.cov) / mean(w.cont.post)
   M3.pre <- - base::colMeans(w.cont.pre * (1 - post) * int.cov) / mean(w.cont.pre)
 
+  # Now get the influence function related to the estimation effect related to beta's
+  inf.cont.or.post <- asy.lin.rep.ols.post %*% M3.post
+  inf.cont.or.pre <- asy.lin.rep.ols.pre %*% M3.pre
   #-----------------------------------------------------------------------------
   # Now, we only need to get the influence function of the adjustment terms
   # First, the terms as if all OR parameters were known
@@ -292,32 +305,32 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   # Now the estimation effect of the OR coefficients
   mom.post<- base::colMeans((w.d/mean(w.d) -  w.dt1/mean(w.dt1)) * int.cov)
   mom.pre <- base::colMeans((w.d/mean(w.d) -  w.dt0/mean(w.dt0)) * int.cov)
+  inf.or.post <- (asy.lin.rep.ols.post.treat - asy.lin.rep.ols.post) %*% mom.post
+  inf.or.pre <-  (asy.lin.rep.ols.pre.treat - asy.lin.rep.ols.pre) %*% mom.pre
 
-  # Pre case
-  batch_results_pre <- batch_matrix_operations_rc(asy.lin.rep.ps, wols.eX.pre, XpX.inv.pre,
-                                             wols.eX.pre.treat, XpX.inv.pre.treat,
-                                             M1.pre, M2.pre, M3.pre, mom.pre)
+  # # Pre case
+  # batch_results_pre <- batch_matrix_operations_rc(asy.lin.rep.ps, wols.eX.pre, XpX.inv.pre,
+  #                                            wols.eX.pre.treat, XpX.inv.pre.treat,
+  #                                            M1.pre, M2.pre, M3.pre, mom.pre)
+  #
+  # # Post case
+  # batch_results_post <- batch_matrix_operations_rc(asy.lin.rep.ps, wols.eX.post, XpX.inv.post,
+  #                                             wols.eX.post.treat, XpX.inv.post.treat,
+  #                                             M1.post, M2.post, M3.post, mom.post)
 
-  # Post case
-  batch_results_post <- batch_matrix_operations_rc(asy.lin.rep.ps, wols.eX.post, XpX.inv.post,
-                                              wols.eX.post.treat, XpX.inv.post.treat,
-                                              M1.post, M2.post, M3.post, mom.post)
-
-  # Access the results: pre
-  inf.cont.ps.pre <- batch_results_pre$inf_cont_ps
-  inf.treat.or.pre <- batch_results_pre$inf_treat_or
-  inf.cont.or.pre <- batch_results_pre$inf_cont_or
-  inf.or.pre <- batch_results_pre$inf_or
-  # Access the results: post
-  inf.cont.ps.post <- batch_results_post$inf_cont_ps
-  inf.treat.or.post <- batch_results_post$inf_treat_or
-  inf.cont.or.post <- batch_results_post$inf_cont_or
-  inf.or.post <- batch_results_post$inf_or
+  # # Access the results: pre
+  # inf.cont.ps.pre <- batch_results_pre$inf_cont_ps
+  # inf.treat.or.pre <- batch_results_pre$inf_treat_or
+  # inf.cont.or.pre <- batch_results_pre$inf_cont_or
+  # inf.or.pre <- batch_results_pre$inf_or
+  # # Access the results: post
+  # inf.cont.ps.post <- batch_results_post$inf_cont_ps
+  # inf.treat.or.post <- batch_results_post$inf_treat_or
+  # inf.cont.or.post <- batch_results_post$inf_cont_or
+  # inf.or.post <- batch_results_post$inf_or
 
   # get the influence function related to the estimation effect related to beta's
   inf.treat.or <- inf.treat.or.post + inf.treat.or.pre
-  # Now the influence function related to estimation effect of pscores
-  inf.cont.ps <- inf.cont.ps.post - inf.cont.ps.pre
   inf.cont.or <- inf.cont.or.post + inf.cont.or.pre
   # Now the estimation effect of the OR coefficients
   inf.or <- inf.or.post - inf.or.pre

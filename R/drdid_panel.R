@@ -153,17 +153,20 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   weights.ols <- i.weights * (1 - D)
   wols.x <- weights.ols * int.cov
   wols.eX <- weights.ols * (deltaY - out.delta) * int.cov
-  XpX <- opt_crossprod(wols.x, int.cov, n)
+  #XpX <- opt_crossprod(wols.x, int.cov, n)
+  XpX <- base::crossprod(wols.x, int.cov)/n
   # Check if XpX is invertible
   if ( base::rcond(XpX) < .Machine$double.eps) {
     stop("The regression design matrix is singular. Consider removing some covariates.")
   }
   XpX.inv <- solve(XpX)
+  asy.lin.rep.wols <-  wols.eX %*% XpX.inv
 
   # Asymptotic linear representation of logit's beta's
   score.ps <- i.weights * (D - ps.fit) * int.cov
   #Hessian.ps <- solve(t(int.cov) %*% (W * int.cov)) * n
   Hessian.ps <- chol2inv(chol(t(int.cov) %*% (W * int.cov))) * n
+  asy.lin.rep.ps <-  score.ps %*% Hessian.ps
 
 
   # Now, the influence function of the "treat" component
@@ -172,6 +175,12 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   # Estimation effect from beta hat
   # Derivative matrix (k x 1 vector)
   M1 <- base::colMeans(w.treat * int.cov)
+
+  # Now get the influence function related to the estimation effect related to beta's
+  inf.treat.2 <- asy.lin.rep.wols %*% M1
+
+  # Influence function for the treated component
+  inf.treat <- (inf.treat.1 - inf.treat.2) / mean(w.treat)
   #-----------------------------------------------------------------------------
   # Now, get the influence function of control component
   # Leading term of the influence function: no estimation effect
@@ -179,17 +188,20 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   # Estimation effect from gamma hat (pscore)
   # Derivative matrix (k x 1 vector)
   M2 <- base::colMeans(w.cont *(deltaY - out.delta - eta.cont) * int.cov)
+  # Now the influence function related to estimation effect of pscores
+  inf.cont.2 <- asy.lin.rep.ps %*% M2
   # Estimation Effect from beta hat (weighted OLS)
   M3 <-  base::colMeans(w.cont * int.cov)
+  inf.cont.3 <- asy.lin.rep.wols %*% M3
 
-  # Batch multiple matrix multiplications for inf functions
-  batch_results <- batch_matrix_operations(wols.eX, XpX.inv, score.ps, Hessian.ps, M1, M2, M3)
-  # Now get the influence function related to the estimation effect related to beta's
-  inf.treat.2 <- batch_results$inf_treat_2
-  # Now the influence function related to estimation effect of pscores
-  inf.cont.2 <- batch_results$inf_cont_2
-  # Now the influence function related to estimation effect of regressions
-  inf.cont.3 <- batch_results$inf_cont_3
+  # # Batch multiple matrix multiplications for inf functions
+  # batch_results <- batch_matrix_operations(wols.eX, XpX.inv, score.ps, Hessian.ps, M1, M2, M3)
+  # # Now get the influence function related to the estimation effect related to beta's
+  # inf.treat.2 <- batch_results$inf_treat_2
+  # # Now the influence function related to estimation effect of pscores
+  # inf.cont.2 <- batch_results$inf_cont_2
+  # # Now the influence function related to estimation effect of regressions
+  # inf.cont.3 <- batch_results$inf_cont_3
 
   # Influence function for the treated component
   inf.treat <- (inf.treat.1 - inf.treat.2) / mean(w.treat)
