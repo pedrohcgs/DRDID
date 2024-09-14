@@ -143,7 +143,8 @@ reg_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   weights.ols.pre <- i.weights * (1 - D) * (1 - post)
   wols.x.pre <- weights.ols.pre * int.cov
   wols.eX.pre <- weights.ols.pre * (y - out.y.pre) * int.cov
-  XpX_pre <- opt_crossprod(wols.x.pre, int.cov, n)
+  #XpX_pre <- opt_crossprod(wols.x.pre, int.cov, n)
+  XpX_pre <- crossprod(wols.x.pre, int.cov)/n
   # Check if XpX is invertible
   if ( base::rcond(XpX_pre) < .Machine$double.eps) {
     stop("The regression design matrix for pre-treatment is singular. Consider removing some covariates.")
@@ -155,7 +156,8 @@ reg_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   weights.ols.post <- i.weights * (1 - D) * post
   wols.x.post <- weights.ols.post * int.cov
   wols.eX.post <- weights.ols.post * (y - out.y.post) * int.cov
-  XpX_post <- opt_crossprod(wols.x.post, int.cov, n)
+  #XpX_post <- opt_crossprod(wols.x.post, int.cov, n)
+  XpX_post <- crossprod(wols.x.post, int.cov)/n
   # Check if XpX is invertible
   if ( base::rcond(XpX_post) < .Machine$double.eps) {
     stop("The regression design matrix for post-treatment is singular. Consider removing some covariates.")
