@@ -1,4 +1,4 @@
-#' @import stats data.table parglm
+#' @import stats
 NULL
 ###################################################################################
 #  Locally Efficient Doubly Robust DiD estimator with panel Data

@@ -82,7 +82,7 @@ ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
                                                    y = D,
                                                    family =  stats::binomial(),
                                                    weights = i.weights,
-                                                   control = parglm.control(nthreads = getDTthreads()),
+                                                   control = parglm::parglm.control(nthreads = data.table::getDTthreads()),
                                                    intercept = FALSE
   ))
   class(PS) <- "glm" #this allow us to use vcov
