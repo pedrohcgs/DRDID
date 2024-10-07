@@ -85,12 +85,13 @@ drdid_rc1 <-function(y, post, D, covariates, i.weights = NULL,
   i.weights <- i.weights/mean(i.weights)
   #-----------------------------------------------------------------------------
   #Compute the Pscore by MLE
-  pscore.tr <- suppressWarnings(parglm::parglm.fit(x = int.cov,
-                                                   y = D,
-                                                   family =  stats::binomial(),
-                                                   weights = i.weights,
-                                                   control = parglm::parglm.control(nthreads = data.table::getDTthreads()),
-                                                   intercept = FALSE
+  pscore.tr <- suppressWarnings(fastglm::fastglm(
+                                x = int.cov,
+                                y = D,
+                                family = stats::binomial(),
+                                weights = i.weights,
+                                intercept = FALSE,
+                                method = 3
   ))
   class(pscore.tr) <- "glm" #this allow us to use vcov
   if(pscore.tr$converged == FALSE){
@@ -102,6 +103,7 @@ drdid_rc1 <-function(y, post, D, covariates, i.weights = NULL,
   ps.fit <- as.vector(pscore.tr$fitted.values)
   # Avoid divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-6)
+  W <- ps.fit * (1 - ps.fit) * i.weights
   #Compute the Outcome regression for the control group at the pre-treatment period, using ols.
   reg.coeff.pre <- stats::coef(stats::lm(y ~ -1 + int.cov,
                                          subset = ((D==0) & (post==0)),
@@ -172,7 +174,8 @@ drdid_rc1 <-function(y, post, D, covariates, i.weights = NULL,
 
   # Asymptotic linear representation of logit's beta's
   score.ps <- i.weights * (D - ps.fit) * int.cov
-  Hessian.ps <- stats::vcov(pscore.tr) * n
+  #Hessian.ps <- stats::vcov(pscore.tr) * n
+  Hessian.ps <- chol2inv(chol(t(int.cov) %*% (W * int.cov))) * n
   asy.lin.rep.ps <-  score.ps %*% Hessian.ps
   #-----------------------------------------------------------------------------
   # Now, the influence function of the "treat" component

@@ -89,12 +89,12 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   #Pscore estimation (logit) and also its fitted values
   #PS <- suppressWarnings(stats::glm(D ~ -1 + int.cov, family = "binomial", weights = i.weights))
-  PS <- suppressWarnings(parglm::parglm.fit(x = int.cov,
-                                                   y = D,
-                                                   family =  stats::binomial(),
-                                                   weights = i.weights,
-                                                   control = parglm::parglm.control(nthreads = data.table::getDTthreads()),
-                                                   intercept = FALSE
+  PS <- suppressWarnings(fastglm::fastglm(x = int.cov,
+                                          y = D,
+                                          family = stats::binomial(),
+                                          weights = i.weights,
+                                          intercept = FALSE,
+                                          method = 3
   ))
   class(PS) <- "glm" #this allow us to use vcov
   if(PS$converged == FALSE){
@@ -106,6 +106,7 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   ps.fit <- as.vector(PS$fitted.values)
   # Do not divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-6)
+  W <- ps.fit * (1 - ps.fit) * i.weights
   #-----------------------------------------------------------------------------
   #Compute IPW estimator
   # First, the weights
@@ -124,7 +125,8 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   # Asymptotic linear representation of logit's beta's
   score.ps <- i.weights * (D - ps.fit) * int.cov
-  Hessian.ps <- stats::vcov(PS) * n
+  #Hessian.ps <- stats::vcov(PS) * n
+  Hessian.ps <- chol2inv(chol(t(int.cov) %*% (W * int.cov))) * n
   asy.lin.rep.ps <-  score.ps %*% Hessian.ps
   #-----------------------------------------------------------------------------
   # Now, get the influence function of control component

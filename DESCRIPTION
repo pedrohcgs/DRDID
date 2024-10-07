@@ -1,7 +1,7 @@
 Package: DRDID
 Type: Package
 Title: Doubly Robust Difference-in-Differences Estimators
-Version: 1.1.1.903
+Version: 1.2.0
 Authors@R: c(person("Pedro H. C.", "Sant'Anna", email = "pedrosantanna@causal-solutions.com",
               role = c("aut", "cre", "cph")),
               person("Jun", "Zhao", email = "beanzhaojun11@gmail.com",role = c("aut"))
@@ -24,9 +24,7 @@ Imports:
     trust,
     BMisc (>= 1.4.1),
     Rcpp (>= 1.0.12),
-    parglm (>= 0.1.7),
-    fastglm (>= 0.0.3),
-    data.table(>= 1.15.4)
+    fastglm (>= 0.0.3)
 LinkingTo: 
     Rcpp (>= 1.0.12)
 RoxygenNote: 7.3.2
@@ -35,6 +33,6 @@ Suggests:
     rmarkdown,
     spelling,
     testthat
-Date: 2025-09-6
+Date: 2025-10-7
 Language: en-US
 BugReports: https://github.com/pedrohcgs/DRDID/issues
