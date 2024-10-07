@@ -10,8 +10,12 @@ pscore.cal <- function(D, int.cov, i.weights, n){
   #-----------------------------------------------------------------------------
   #-----------------------------------------------------------------------------
   # Initial conditions for pscore
-  # pslogit <- suppressWarnings(stats::glm(D ~ -1 + int.cov, family = "binomial", weights = i.weights))
-  pslogit <- suppressWarnings(parglm::parglm(D ~ -1 + int.cov, family = "binomial", weights = i.weights))
+  pslogit <- suppressWarnings(fastglm::fastglm(x = int.cov,
+                                               y = D,
+                                               family = stats::binomial(),
+                                               weights = i.weights,
+                                               intercept = FALSE,
+                                               method = 3))
 
   init.gamma <- suppressWarnings(stats::coef(pslogit))
 
