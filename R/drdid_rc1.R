@@ -85,12 +85,13 @@ drdid_rc1 <-function(y, post, D, covariates, i.weights = NULL,
   i.weights <- i.weights/mean(i.weights)
   #-----------------------------------------------------------------------------
   #Compute the Pscore by MLE
-  pscore.tr <- suppressWarnings(parglm::parglm.fit(x = int.cov,
-                                                   y = D,
-                                                   family =  stats::binomial(),
-                                                   weights = i.weights,
-                                                   control = parglm::parglm.control(nthreads = data.table::getDTthreads()),
-                                                   intercept = FALSE
+  pscore.tr <- suppressWarnings(fastglm::fastglm(
+                                x = int.cov,
+                                y = D,
+                                family = stats::binomial(),
+                                weights = i.weights,
+                                intercept = FALSE,
+                                method = 3
   ))
   class(pscore.tr) <- "glm" #this allow us to use vcov
   if(pscore.tr$converged == FALSE){
