@@ -24,9 +24,7 @@ Imports:
     trust,
     BMisc (>= 1.4.1),
     Rcpp (>= 1.0.12),
-    parglm (>= 0.1.7),
-    fastglm (>= 0.0.3),
-    data.table(>= 1.15.4)
+    fastglm (>= 0.0.3)
 LinkingTo: 
     Rcpp (>= 1.0.12)
 RoxygenNote: 7.3.2
