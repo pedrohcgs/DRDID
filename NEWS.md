@@ -1,3 +1,6 @@
+# DRDID 1.2.1
+  * Fix typo on returning influence functions for TWFE regressions.
+
 # DRDID 1.2.0
   * Improve code to avoid redundant data checks
   
