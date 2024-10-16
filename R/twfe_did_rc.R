@@ -97,11 +97,11 @@ twfe_did_rc <- function(y, post, D, covariates = NULL, i.weights = NULL,
   sel.theta[index.theta, ] <- 1
   #-----------------------------------------------------------------------------
   #get the influence function of the TWFE regression
-  twfe.inf.func <- as.vector(inf.reg %*% sel.theta)
+  att.inf.func <- as.vector(inf.reg %*% sel.theta)
   #-----------------------------------------------------------------------------
   if (boot == FALSE) {
     # Estimate of standard error
-    se.twfe.att <- stats::sd(twfe.inf.func)/sqrt(length(twfe.inf.func))
+    se.twfe.att <- stats::sd(att.inf.func)/sqrt(length(att.inf.func))
     # Estimate of upper boudary of 95% CI
     uci <- twfe.att + 1.96 * se.twfe.att
     # Estimate of lower doundary of 95% CI
@@ -114,14 +114,14 @@ twfe_did_rc <- function(y, post, D, covariates = NULL, i.weights = NULL,
     if (is.null(nboot) == TRUE) nboot = 999
     if(boot.type == "multiplier"){
       # do multiplier bootstrap
-      twfe.boot <- mboot.did(twfe.inf.func, nboot)
+      twfe.boot <- mboot.did(att.inf.func, nboot)
       # get bootstrap std errors based on IQR
       se.twfe.att <- stats::IQR(twfe.boot) / (stats::qnorm(0.75) - stats::qnorm(0.25))
-      # get symmtric critival values
+      # get symmetric critical values
       cv <- stats::quantile(abs(twfe.boot/se.twfe.att), probs = 0.95)
-      # Estimate of upper boudary of 95% CI
+      # Estimate of upper boundary of 95% CI
       uci <- twfe.att + cv * se.twfe.att
-      # Estimate of lower doundary of 95% CI
+      # Estimate of lower boundary of 95% CI
       lci <- twfe.att - cv * se.twfe.att
     } else {
       # do weighted bootstrap
@@ -129,11 +129,11 @@ twfe_did_rc <- function(y, post, D, covariates = NULL, i.weights = NULL,
                                  n = n, y = y, dd = dd, post = post, x = x, i.weights = i.weights))
       # get bootstrap std errors based on IQR
       se.twfe.att <- stats::IQR((twfe.boot - twfe.att)) / (stats::qnorm(0.75) - stats::qnorm(0.25))
-      # get symmtric critival values
+      # get symmetric critical values
       cv <- stats::quantile(abs((twfe.boot - twfe.att)/se.twfe.att), probs = 0.95)
-      # Estimate of upper boudary of 95% CI
+      # Estimate of upper boundary of 95% CI
       uci <- twfe.att + cv * se.twfe.att
-      # Estimate of lower doundary of 95% CI
+      # Estimate of lower boundary of 95% CI
       lci <- twfe.att - cv * se.twfe.att
 
     }
