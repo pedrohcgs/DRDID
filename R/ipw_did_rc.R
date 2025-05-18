@@ -21,6 +21,7 @@ NULL
 #' If \code{boot = TRUE}, default is "weighted".
 #' @param nboot Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
+#' @param trim.level The level of trimming for the propensity score. Default is 0.995.
 #'
 #' @return A list containing the following components:
 #' \item{ATT}{The IPW DiD point estimate.}
@@ -52,7 +53,8 @@ NULL
 
 ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
                       boot = FALSE, boot.type = "weighted", nboot = NULL,
-                      inffunc = FALSE){
+                      inffunc = FALSE,
+                      trim.level = 0.995){
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
@@ -97,17 +99,21 @@ ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   # Do not divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-6)
   W <- ps.fit * (1 - ps.fit) * i.weights
+  # Trim the pscores
+  trim.ps <- (ps.fit < 1.01)
+  trim.ps[D==0] <- (ps.fit[D==0] < trim.level)
+
   #-----------------------------------------------------------------------------
   #Compute IPW estimator
   # First, the weights
-  w.treat.pre <- i.weights * D * (1 - post)
-  w.treat.post <- i.weights * D * post
-  w.cont.pre <- i.weights * ps.fit * (1 - D) * (1 - post) / (1 - ps.fit)
-  w.cont.post <- i.weights * ps.fit * (1 - D) * post/ (1 - ps.fit)
+  w.treat.pre <- trim.ps * i.weights * D * (1 - post)
+  w.treat.post <- trim.ps * i.weights * D * post
+  w.cont.pre <- trim.ps * i.weights * ps.fit * (1 - D) * (1 - post) / (1 - ps.fit)
+  w.cont.post <- trim.ps * i.weights * ps.fit * (1 - D) * post/ (1 - ps.fit)
 
-  Pi.hat <- mean(i.weights * D)
-  lambda.hat <- mean(i.weights * post)
-  one.minus.lambda.hat <- mean(i.weights * (1 - post))
+  Pi.hat <- mean(trim.ps * i.weights * D)
+  lambda.hat <- mean(trim.ps * i.weights * post)
+  one.minus.lambda.hat <- mean(trim.ps * i.weights * (1 - post))
 
   # Elements of the influence function (summands)
   eta.treat.pre <- w.treat.pre * y / (Pi.hat * one.minus.lambda.hat)
@@ -198,7 +204,8 @@ ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
     } else {
       # do weighted bootstrap
       ipw.boot <- unlist(lapply(1:nboot, wboot_ipw_rc,
-                                n = n, y = y, post = post, D = D, int.cov = int.cov, i.weights = i.weights))
+                                n = n, y = y, post = post, D = D, int.cov = int.cov, i.weights = i.weights,
+                                trim.level = trim.level))
       # get bootstrap std errors based on IQR
       se.att <- stats::IQR((ipw.boot - ipw.att)) / (stats::qnorm(0.75) - stats::qnorm(0.25))
       # get symmtric critival values
@@ -225,7 +232,8 @@ ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
     boot = boot,
     boot.type = boot.type,
     nboot = nboot,
-    type = "ipw"
+    type = "ipw",
+    trim.level = trim.level
   )
   ret <- (list(ATT = ipw.att,
                se = se.att,

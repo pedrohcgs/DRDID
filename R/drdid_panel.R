@@ -18,6 +18,7 @@ NULL
 #' If \code{boot = TRUE}, default is "weighted".
 #' @param nboot Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
+#' @param trim.level The level of trimming for the propensity score. Default is 0.995.
 #'
 #' @return A list containing the following components:
 #' \item{ATT}{The DR DiD point estimate.}
@@ -69,7 +70,7 @@ NULL
 
 drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
                        boot = FALSE, boot.type =  "weighted", nboot = NULL,
-                       inffunc = FALSE){
+                       inffunc = FALSE, trim.level = 0.995){
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
@@ -120,6 +121,8 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   ps.fit <- fitted(pscore.tr) #as.vector(pscore.tr$fitted.values)
   # Avoid divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-6)
+  trim.ps <- (ps.fit < 1.01)
+  trim.ps[D==0] <- (ps.fit[D==0] < trim.level)
   W <- ps.fit * (1 - ps.fit) * i.weights
   # Compute the Outcome regression for the control group using wols
   control_filter <- (D == 0)
@@ -136,8 +139,8 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   #Compute Traditional Doubly Robust DiD estimators
   # First, the weights
-  w.treat <- i.weights * D
-  w.cont <- i.weights * ps.fit * (1 - D)/(1 - ps.fit)
+  w.treat <- trim.ps * i.weights * D
+  w.cont <- trim.ps * i.weights * ps.fit * (1 - D)/(1 - ps.fit)
   dr.att.treat <- w.treat * (deltaY - out.delta)
   dr.att.cont <- w.cont * (deltaY - out.delta)
 
@@ -166,7 +169,7 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   score.ps <- i.weights * (D - ps.fit) * int.cov
   #Hessian.ps <- solve(t(int.cov) %*% (W * int.cov)) * n
   Hessian.ps <- chol2inv(chol(t(int.cov) %*% (W * int.cov))) * n
-  asy.lin.rep.ps <-  score.ps %*% Hessian.ps
+  asy.lin.rep.ps <- score.ps %*% Hessian.ps
 
 
   # Now, the influence function of the "treat" component
@@ -238,8 +241,14 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
       lci <- dr.att - cv * se.dr.att
     } else {
       # do weighted bootstrap
-      dr.boot <- unlist(lapply(1:nboot, wboot.dr.tr.panel,
-                               n = n, deltaY = deltaY, D = D, int.cov = int.cov, i.weights = i.weights))
+      dr.boot <- unlist(lapply(1:nboot,
+                               wboot.dr.tr.panel,
+                               n = n,
+                               deltaY = deltaY,
+                               D = D,
+                               int.cov = int.cov,
+                               i.weights = i.weights,
+                               trim.level = trim.level))
       # get bootstrap std errors based on IQR
       se.dr.att <- stats::IQR((dr.boot - dr.att)) / (stats::qnorm(0.75) - stats::qnorm(0.25))
       # get symmetric critical values
@@ -267,7 +276,8 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
     boot = boot,
     boot.type = boot.type,
     nboot = nboot,
-    type = "dr"
+    type = "dr",
+    trim.level = trim.level
   )
 
   ret <- (list(ATT = dr.att,

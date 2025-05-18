@@ -1,3 +1,6 @@
+# DRDID 1.2.2
+  * Add trimming argument to avoid severe overlap problems. Default is to trim propensity score in the comparison group that are above 0.995.
+  
 # DRDID 1.2.1
   * Fix typo on returning influence functions for TWFE regressions.
 

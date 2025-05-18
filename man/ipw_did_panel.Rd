@@ -13,7 +13,8 @@ ipw_did_panel(
   boot = FALSE,
   boot.type = "weighted",
   nboot = NULL,
-  inffunc = FALSE
+  inffunc = FALSE,
+  trim.level = 0.995
 )
 }
 \arguments{
@@ -36,6 +37,8 @@ If \code{boot = TRUE}, default is "weighted".}
 \item{nboot}{Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.}
 
 \item{inffunc}{Logical argument to whether influence function should be returned. Default is FALSE.}
+
+\item{trim.level}{The level of trimming for the propensity score. Default is 0.995.}
 }
 \value{
 A list containing the following components:

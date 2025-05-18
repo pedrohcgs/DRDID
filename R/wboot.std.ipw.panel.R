@@ -1,7 +1,8 @@
 # Bootrstapped standardized IPW Difference-in-Differences with Panel Data
 # 2 periods and 2 groups
 
-wboot.std.ipw.panel <- function(nn, n, deltaY, D, int.cov, i.weights){
+wboot.std.ipw.panel <- function(nn, n, deltaY, D, int.cov, i.weights,
+                                trim.level = 0.995){
   #-----------------------------------------------------------------------------
   v <- stats::rexp(n)
   #v <- v / mean(v)
@@ -16,9 +17,11 @@ wboot.std.ipw.panel <- function(nn, n, deltaY, D, int.cov, i.weights){
                                             intercept = FALSE,
                                             method = 3)$fitted.values)
   ps.b <- pmin(ps.b, 1 - 1e-6)
+  trim.ps <- (ps.b < 1.01)
+  trim.ps[D==0] <- (ps.b[D==0] < trim.level)
   # Compute  standardized IPW estimator
-  w.treat.b <- b.weights * D
-  w.cont.b <- b.weights * (1 - D) * ps.b / (1 - ps.b)
+  w.treat.b <- trim.ps * b.weights * D
+  w.cont.b <- trim.ps * b.weights * (1 - D) * ps.b / (1 - ps.b)
 
   aipw.1 <- mean(w.treat.b * deltaY) / mean(w.treat.b)
   aipw.0 <- mean(w.cont.b * deltaY) / mean(w.cont.b)

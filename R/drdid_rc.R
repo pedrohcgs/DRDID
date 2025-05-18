@@ -18,6 +18,7 @@ NULL
 #' If \code{boot = TRUE}, default is "weighted".
 #' @param nboot Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
+#' @param trim.level The level of trimming for the propensity score. Default is 0.995.
 #'
 #' @return A list containing the following components:
 #' \item{ATT}{The DR DiD point estimate}
@@ -61,7 +62,7 @@ NULL
 
 drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
                     boot = FALSE, boot.type =  "weighted", nboot = NULL,
-                    inffunc = FALSE){
+                    inffunc = FALSE, trim.level = 0.995){
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
@@ -107,6 +108,8 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   # Avoid divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-6)
   W <- ps.fit * (1 - ps.fit) * i.weights
+  trim.ps <- (ps.fit < 1.01)
+  trim.ps[D==0] <- (ps.fit[D==0] < trim.level)
   # Compute the Outcome regression for the control group at the pre-treatment period, using ols.
   pre_filter <- (D == 0) & (post == 0)
   reg.cont.coeff.pre <- stats::coef(fastglm::fastglm(
@@ -157,14 +160,14 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
 
   #-----------------------------------------------------------------------------
   # First, the weights
-  w.treat.pre <- i.weights * D * (1 - post)
-  w.treat.post <- i.weights * D * post
-  w.cont.pre <- i.weights * ps.fit * (1 - D) * (1 - post)/(1 - ps.fit)
-  w.cont.post <- i.weights * ps.fit * (1 - D) * post/(1 - ps.fit)
+  w.treat.pre <- trim.ps * i.weights * D * (1 - post)
+  w.treat.post <- trim.ps * i.weights * D * post
+  w.cont.pre <- trim.ps * i.weights * ps.fit * (1 - D) * (1 - post)/(1 - ps.fit)
+  w.cont.post <- trim.ps * i.weights * ps.fit * (1 - D) * post/(1 - ps.fit)
 
-  w.d <- i.weights * D
-  w.dt1 <- i.weights * D * post
-  w.dt0 <- i.weights * D * (1 - post)
+  w.d <- trim.ps * i.weights * D
+  w.dt1 <- trim.ps * i.weights * D * post
+  w.dt0 <- trim.ps * i.weights * D * (1 - post)
 
   # Elements of the influence function (summands)
   eta.treat.pre <- w.treat.pre * (y - out.y.cont) / mean(w.treat.pre)
@@ -375,7 +378,8 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
       # do weighted bootstrap
       dr.boot <- unlist(lapply(1:nboot, wboot_drdid_rc,
                                n = n, y = y, post = post,
-                               D = D, int.cov = int.cov, i.weights = i.weights))
+                               D = D, int.cov = int.cov, i.weights = i.weights,
+                               trim.level = trim.level))
       # get bootstrap std errors based on IQR
       se.dr.att <- stats::IQR((dr.boot - dr.att)) / (stats::qnorm(0.75) - stats::qnorm(0.25))
       # get symmetric critical values
@@ -402,7 +406,8 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
     boot = boot,
     boot.type = boot.type,
     nboot = nboot,
-    type = "dr"
+    type = "dr",
+    trim.level = trim.level
   )
 
   ret <- (list(ATT = dr.att,

@@ -1,7 +1,8 @@
 # Bootrstapped Improved and locally efficient Doubly Robust Difference-in-Differences with Repeated Cross Section data
 # 2 periods and 2 groups
 
-wboot_drdid_imp_rc <- function(nn, n, y, post, D, int.cov, i.weights){
+wboot_drdid_imp_rc <- function(nn, n, y, post, D, int.cov, i.weights,
+                               trim.level = 0.995){
   #-----------------------------------------------------------------------------
   v <- stats::rexp(n)
   #v <- v / mean(v)
@@ -11,6 +12,9 @@ wboot_drdid_imp_rc <- function(nn, n, y, post, D, int.cov, i.weights){
   ps.b <- pscore.cal(D, int.cov, i.weights = b.weights, n = n)
   ps.b <- as.vector(ps.b$pscore)
   ps.b <- pmin(ps.b, 1 - 1e-6)
+  trim.ps <- (ps.b < 1.01)
+  trim.ps[D==0] <- (ps.b[D==0] < trim.level)
+
   #Compute the Outcome regression for the control group
   out.y.cont.pre.b <- wols_rc(y, post, D, int.cov, ps.b, b.weights, pre = TRUE, treat = FALSE)
   out.y.cont.pre.b <-  as.vector(out.y.cont.pre.b$out.reg)
@@ -48,7 +52,8 @@ wboot_drdid_imp_rc <- function(nn, n, y, post, D, int.cov, i.weights){
   att.b <- aipw_did_rc(y, post, D, ps.b,
                        out.y.treat.post.b, out.y.treat.pre.b,
                        out.y.cont.post.b, out.y.cont.pre.b,
-                       b.weights)
+                       b.weights,
+                       trim.ps)
   #-----------------------------------------------------------------------------
   return(att.b)
 }

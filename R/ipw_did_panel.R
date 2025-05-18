@@ -21,6 +21,7 @@ NULL
 #' If \code{boot = TRUE}, default is "weighted".
 #' @param nboot Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
+#' @param trim.level The level of trimming for the propensity score. Default is 0.995.
 #'
 #'
 #' @return A list containing the following components:
@@ -65,7 +66,8 @@ NULL
 
 ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
                          boot = FALSE, boot.type = "weighted", nboot = NULL,
-                         inffunc = FALSE){
+                         inffunc = FALSE,
+                         trim.level= 0.995){
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
@@ -107,17 +109,21 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   # Do not divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-6)
   W <- ps.fit * (1 - ps.fit) * i.weights
+  # Trim the pscores
+  trim.ps <- (ps.fit < 1.01)
+  trim.ps[D==0] <- (ps.fit[D==0] < trim.level)
+
   #-----------------------------------------------------------------------------
   #Compute IPW estimator
   # First, the weights
-  w.treat <- i.weights * D
-  w.cont <- i.weights * ps.fit * (1 - D)/(1 - ps.fit)
+  w.treat <- trim.ps* i.weights * D
+  w.cont <- trim.ps* i.weights * ps.fit * (1 - D)/(1 - ps.fit)
 
   att.treat <- w.treat * deltaY
   att.cont <- w.cont * deltaY
 
-  eta.treat <- mean(att.treat) / mean(i.weights * D)
-  eta.cont <- mean(att.cont) / mean(i.weights * D)
+  eta.treat <- mean(att.treat) / mean(trim.level* i.weights * D)
+  eta.cont <- mean(att.cont) / mean(trim.level* i.weights * D)
 
   ipw.att <- eta.treat - eta.cont
   #-----------------------------------------------------------------------------
@@ -167,7 +173,9 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
     } else {
       # do weighted bootstrap
       ipw.boot <- unlist(lapply(1:nboot, wboot.ipw.panel,
-                                n = n, deltaY = deltaY, D = D, int.cov = int.cov, i.weights = i.weights))
+                                n = n, deltaY = deltaY, D = D, int.cov = int.cov,
+                                i.weights = i.weights,
+                                trim.level = trim.level))
       # get bootstrap std errors based on IQR
       se.att <- stats::IQR((ipw.boot - ipw.att)) / (stats::qnorm(0.75) - stats::qnorm(0.25))
       # get symmtric critival values
@@ -194,7 +202,8 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
     boot = boot,
     boot.type = boot.type,
     nboot = nboot,
-    type = "ipw"
+    type = "ipw",
+    trim.level = trim.level
   )
   ret <- (list(ATT = ipw.att,
                se = se.att,

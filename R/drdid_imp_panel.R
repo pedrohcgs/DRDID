@@ -33,6 +33,7 @@ NULL
 #'  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 #'  \item{call.param}{The matched call.}
 #'  \item{argu}{Some arguments used (explicitly or not) in the call (panel = TRUE, estMethod = "imp", boot, boot.type, nboot, type="dr")}
+#' @param trim.level The level of trimming for the propensity score. Default is 0.995.
 #'
 #' @references
 #' \cite{Graham, Bryan, Pinto, Cristine, and Egel, Daniel (2012),
@@ -86,7 +87,7 @@ NULL
 #' @export
 
 drdid_imp_panel <-function(y1, y0, D, covariates, i.weights = NULL, boot = FALSE, boot.type = "weighted",
-                           nboot = NULL, inffunc = FALSE){
+                           nboot = NULL, inffunc = FALSE, trim.level = 0.995){
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
@@ -113,16 +114,18 @@ drdid_imp_panel <-function(y1, y0, D, covariates, i.weights = NULL, boot = FALSE
   pscore.ipt <- pscore.cal(D, int.cov, i.weights = i.weights, n = n)
   ps.fit <- as.vector(pscore.ipt$pscore)
   ps.fit <- pmin(ps.fit, 1 - 1e-6)
+  trim.ps <- (ps.fit < 1.01)
+  trim.ps[D==0] <- (ps.fit[D==0] < trim.level)
   #Compute the Outcome regression for the control group
   outcome.reg <- wols.br.panel(deltaY, D, int.cov, ps.fit, i.weights)
   out.delta <-  as.vector(outcome.reg$out.reg)
 
   #Compute Bias-Reduced Doubly Robust DiD estimators
-  dr.att.summand.num <- as.vector((1 - (1 - D)/(1 - ps.fit)) * (deltaY - out.delta))
+  dr.att.summand.num <- as.vector(trim.ps *(1 - (1 - D)/(1 - ps.fit)) * (deltaY - out.delta))
   dr.att <- mean(i.weights * dr.att.summand.num)/mean(D * i.weights)
 
   #get the influence function to compute standard error
-  dr.att.inf.func <- as.vector(i.weights * (dr.att.summand.num - D * dr.att) / mean(D * i.weights))
+  dr.att.inf.func <- as.vector(i.weights * trim.ps * (dr.att.summand.num - D * dr.att) / mean(D * i.weights))
 
   if (boot == FALSE) {
     # Estimate of standard error
@@ -150,8 +153,14 @@ drdid_imp_panel <-function(y1, y0, D, covariates, i.weights = NULL, boot = FALSE
       lci <- dr.att - cv * se.dr.att
     } else {
       # do weighted bootstrap
-      dr.boot <- unlist(lapply(1:nboot, wboot.dr.imp.panel,
-                               n = n, deltaY = deltaY, D = D, int.cov = int.cov, i.weights = i.weights))
+      dr.boot <- unlist(lapply(1:nboot,
+                               wboot.dr.imp.panel,
+                               n = n,
+                               deltaY = deltaY,
+                               D = D,
+                               int.cov = int.cov,
+                               i.weights = i.weights,
+                               trim.level = trim.level))
       # get bootstrap std errors based on IQR
       se.dr.att <- stats::IQR((dr.boot - dr.att)) / (stats::qnorm(0.75) - stats::qnorm(0.25))
       # get symmtric critival values
@@ -179,7 +188,8 @@ drdid_imp_panel <-function(y1, y0, D, covariates, i.weights = NULL, boot = FALSE
     boot = boot,
     boot.type = boot.type,
     nboot = nboot,
-    type = "dr"
+    type = "dr",
+    trim.level = trim.level
   )
 
   ret <- (list(ATT = dr.att,

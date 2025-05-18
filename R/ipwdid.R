@@ -26,6 +26,7 @@ NULL
 #' If \code{boot = TRUE}, default is "weighted".
 #' @param nboot Number of bootstrap repetitions (not relevant if boot = \code{FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is \code{FALSE}.
+#' @param trim.level The level of trimming for the propensity score. Default is 0.995.
 #'
 #' @return A list containing the following components:
 #' \item{ATT}{The IPW DiD point estimate}
@@ -93,7 +94,8 @@ ipwdid <- function(yname, tname, idname, dname, xformla = NULL,
                    weightsname = NULL, boot = FALSE,
                    boot.type =  c("weighted", "multiplier"),
                    nboot = 999,
-                   inffunc = FALSE) {
+                   inffunc = FALSE,
+                   trim.level = 0.995) {
   #-----------------------------------------------------------------------------
   # Pre-process data
   dp <- pre_process_drdid(
@@ -125,7 +127,8 @@ ipwdid <- function(yname, tname, idname, dname, xformla = NULL,
         boot = dp$boot,
         boot.type = dp$boot.type,
         nboot = dp$nboot,
-        inffunc = dp$inffunc
+        inffunc = dp$inffunc,
+        trim.level = trim.level
       )
 
     } else {
@@ -138,7 +141,8 @@ ipwdid <- function(yname, tname, idname, dname, xformla = NULL,
         boot = dp$boot,
         boot.type = dp$boot.type,
         nboot = dp$nboot,
-        inffunc = dp$inffunc
+        inffunc = dp$inffunc,
+        trim.level = trim.level
       )
 
     }
@@ -156,7 +160,8 @@ ipwdid <- function(yname, tname, idname, dname, xformla = NULL,
         boot = dp$boot,
         boot.type = dp$boot.type,
         nboot = dp$nboot,
-        inffunc = dp$inffunc
+        inffunc = dp$inffunc,
+        trim.level = trim.level
       )
 
     } else {
@@ -169,7 +174,8 @@ ipwdid <- function(yname, tname, idname, dname, xformla = NULL,
         boot = dp$boot,
         boot.type = dp$boot.type,
         nboot = dp$nboot,
-        inffunc = dp$inffunc
+        inffunc = dp$inffunc,
+        trim.level = trim.level
       )
 
     }
@@ -186,7 +192,8 @@ ipwdid <- function(yname, tname, idname, dname, xformla = NULL,
     boot = argu$boot,
     boot.type = argu$boot.type,
     nboot = argu$nboot,
-    type = "ipw"
+    type = "ipw",
+    trim.level = trim.level
   )
 
   # Return these variables

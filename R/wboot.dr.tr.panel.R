@@ -1,7 +1,8 @@
 # Bootrstapped "Traditional" Doubly Robust Difference-in-Differences with panel data
 # 2 periods and 2 groups
 
-wboot.dr.tr.panel <- function(nn, n, deltaY, D, int.cov, i.weights){
+wboot.dr.tr.panel <- function(nn, n, deltaY, D, int.cov, i.weights,
+                              trim.level = 0.995){
   #-----------------------------------------------------------------------------
   v <- stats::rexp(n)
   #v <- v / mean(v)
@@ -17,6 +18,9 @@ wboot.dr.tr.panel <- function(nn, n, deltaY, D, int.cov, i.weights){
                                             method = 3)$fitted.values)
   ps.b <- as.vector(ps.b)
   ps.b <- pmin(ps.b, 1 - 1e-6)
+  trim.ps <- (ps.b < 1.01)
+  trim.ps[D==0] <- (ps.b[D==0] < trim.level)
+
   #Compute the Outcome regression for the control group
   # reg.coeff.b <- stats::coef(stats::lm(deltaY ~ -1 + int.cov,
   #                                    subset = D==0,
@@ -30,7 +34,7 @@ wboot.dr.tr.panel <- function(nn, n, deltaY, D, int.cov, i.weights){
   ))
   out.reg.b <- as.vector(tcrossprod(reg.coeff.b, int.cov))
   # Compute AIPW estimator
-  att.b <- aipw.did.panel(deltaY, D, ps.b, out.reg.b, b.weights)
+  att.b <- aipw.did.panel(deltaY, D, ps.b, out.reg.b, b.weights, trim.ps)
   #-----------------------------------------------------------------------------
   return(att.b)
 }

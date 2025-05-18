@@ -1,7 +1,8 @@
 # Bootrstapped standardized IPW Difference-in-Differences with Repeated Cross Section data
 # 2 periods and 2 groups
 
-wboot_std_ipw_rc <- function(nn, n, y, post, D, int.cov, i.weights){
+wboot_std_ipw_rc <- function(nn, n, y, post, D, int.cov, i.weights,
+                             trim.level = 0.995){
   #-----------------------------------------------------------------------------
   v <- stats::rexp(n)
   #v <- v / mean(v)
@@ -16,11 +17,14 @@ wboot_std_ipw_rc <- function(nn, n, y, post, D, int.cov, i.weights){
                                             intercept = FALSE,
                                             method = 3)$fitted.values)
   ps.b <- pmin(ps.b, 1 - 1e-6)
+  trim.ps <- (ps.b < 1.01)
+  trim.ps[D==0] <- (ps.b[D==0] < trim.level)
+
   # Compute  standardized IPW estimator
-  w.treat.pre.b <- b.weights * D * (1 - post)
-  w.treat.post.b <- b.weights * D * post
-  w.cont.pre.b <- b.weights * ps.b * (1 - D) * (1 - post)/ (1 - ps.b)
-  w.cont.post.b <- b.weights * ps.b * (1 - D) * post/ (1 - ps.b)
+  w.treat.pre.b <- trim.ps * b.weights * D * (1 - post)
+  w.treat.post.b <- trim.ps * b.weights * D * post
+  w.cont.pre.b <- trim.ps * b.weights * ps.b * (1 - D) * (1 - post)/ (1 - ps.b)
+  w.cont.post.b <- trim.ps * b.weights * ps.b * (1 - D) * post/ (1 - ps.b)
 
   ipw.1 <- mean(w.treat.post.b * y) / mean(w.treat.post.b) -
     mean(w.treat.pre.b * y) / mean(w.treat.pre.b)

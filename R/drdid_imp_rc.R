@@ -20,6 +20,7 @@ NULL
 #' If \code{boot = TRUE}, default is "weighted".
 #' @param nboot Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
+#' @param trim.level The level of trimming for the propensity score. Default is 0.995.
 #'
 #' @return A list containing the following components:
 #' \item{ATT}{The DR DiD point estimate}
@@ -73,7 +74,8 @@ NULL
 #' @export
 
 drdid_imp_rc <- function(y, post, D, covariates, i.weights = NULL, boot = FALSE,
-                         boot.type =  "weighted",  nboot = NULL, inffunc = FALSE){
+                         boot.type =  "weighted",  nboot = NULL, inffunc = FALSE,
+                         trim.level = 0.995){
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
@@ -101,6 +103,8 @@ drdid_imp_rc <- function(y, post, D, covariates, i.weights = NULL, boot = FALSE,
   pscore.ipt <- pscore.cal(D, int.cov, i.weights = i.weights, n = n)
   ps.fit <- as.vector(pscore.ipt$pscore)
   ps.fit <- pmin(ps.fit, 1 - 1e-6)
+  trim.ps <- (ps.fit < 1.01)
+  trim.ps[D==0] <- (ps.fit[D==0] < trim.level)
   #Compute the Outcome regression for the control group
   out.y.cont.pre <- wols_rc(y, post, D, int.cov, ps.fit, i.weights, pre = TRUE, treat = FALSE)
   out.y.cont.pre <-  as.vector(out.y.cont.pre$out.reg)
@@ -135,14 +139,14 @@ drdid_imp_rc <- function(y, post, D, covariates, i.weights = NULL, boot = FALSE,
   out.y.treat.post <-   as.vector(tcrossprod(reg.treat.coeff.post, int.cov))
   #-----------------------------------------------------------------------------
   # First, the weights
-  w.treat.pre <- i.weights * D * (1 - post)
-  w.treat.post <- i.weights * D * post
-  w.cont.pre <- i.weights * ps.fit * (1 - D) * (1 - post)/(1 - ps.fit)
-  w.cont.post <- i.weights * ps.fit * (1 - D) * post/(1 - ps.fit)
+  w.treat.pre <- trim.ps * i.weights * D * (1 - post)
+  w.treat.post <- trim.ps * i.weights * D * post
+  w.cont.pre <- trim.ps * i.weights * ps.fit * (1 - D) * (1 - post)/(1 - ps.fit)
+  w.cont.post <- trim.ps * i.weights * ps.fit * (1 - D) * post/(1 - ps.fit)
 
-  w.d <- i.weights * D
-  w.dt1 <- i.weights * D * post
-  w.dt0 <- i.weights * D * (1 - post)
+  w.d <- trim.ps * i.weights * D
+  w.dt1 <- trim.ps * i.weights * D * post
+  w.dt0 <- trim.ps * i.weights * D * (1 - post)
 
   # Elements of the influence function (summands)
   eta.treat.pre <- w.treat.pre * (y - out.y.cont) / mean(w.treat.pre)
@@ -221,17 +225,18 @@ drdid_imp_rc <- function(y, post, D, covariates, i.weights = NULL, boot = FALSE,
       dr.boot <- mboot.did(dr.att.inf.func, nboot)
       # get bootstrap std errors based on IQR
       se.dr.att <- stats::IQR(dr.boot) / (stats::qnorm(0.75) - stats::qnorm(0.25))
-      # get symmtric critival values
+      # get symmetric critical values
       cv <- stats::quantile(abs(dr.boot/se.dr.att), probs = 0.95)
-      # Estimate of upper boudary of 95% CI
+      # Estimate of upper bound of 95% CI
       uci <- dr.att + cv * se.dr.att
-      # Estimate of lower doundary of 95% CI
+      # Estimate of lower bound of 95% CI
       lci <- dr.att - cv * se.dr.att
     } else {
       # do weighted bootstrap
       dr.boot <- unlist(lapply(1:nboot, wboot_drdid_imp_rc,
                                n = n, y = y, post = post,
-                               D = D, int.cov = int.cov, i.weights = i.weights))
+                               D = D, int.cov = int.cov, i.weights = i.weights,
+                               trim.level = trim.level))
       # get bootstrap std errors based on IQR
       se.dr.att <- stats::IQR((dr.boot - dr.att)) / (stats::qnorm(0.75) - stats::qnorm(0.25))
       # get symmtric critival values
@@ -259,7 +264,8 @@ drdid_imp_rc <- function(y, post, D, covariates, i.weights = NULL, boot = FALSE,
     boot = boot,
     boot.type = boot.type,
     nboot = nboot,
-    type = "dr"
+    type = "dr",
+    trim.level = trim.level
   )
   ret <- (list(ATT = dr.att,
               se = se.dr.att,

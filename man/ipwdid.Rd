@@ -17,7 +17,8 @@ ipwdid(
   boot = FALSE,
   boot.type = c("weighted", "multiplier"),
   nboot = 999,
-  inffunc = FALSE
+  inffunc = FALSE,
+  trim.level = 0.995
 )
 }
 \arguments{
@@ -52,6 +53,8 @@ If \code{boot = TRUE}, default is "weighted".}
 \item{nboot}{Number of bootstrap repetitions (not relevant if boot = \code{FALSE}). Default is 999.}
 
 \item{inffunc}{Logical argument to whether influence function should be returned. Default is \code{FALSE}.}
+
+\item{trim.level}{The level of trimming for the propensity score. Default is 0.995.}
 }
 \value{
 A list containing the following components:

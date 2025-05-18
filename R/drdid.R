@@ -30,6 +30,7 @@ NULL
 #' If \code{boot = TRUE}, default is "weighted".
 #' @param nboot Number of bootstrap repetitions (not relevant if boot = \code{FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is \code{FALSE}.
+#' @param trim.level The level of trimming for the propensity score. Default is 0.995.
 #'
 #' @return A list containing the following components:
 #' \item{ATT}{The DR DiD point estimate}
@@ -130,7 +131,8 @@ NULL
 drdid <- function(yname, tname, idname, dname, xformla = NULL, data,
                   panel = TRUE, estMethod = c("imp", "trad"), weightsname = NULL,
                   boot = FALSE, boot.type =  c("weighted", "multiplier"),
-                  nboot = 999, inffunc = FALSE) {
+                  nboot = 999, inffunc = FALSE,
+                  trim.level = 0.995) {
   #-----------------------------------------------------------------------------
   # Pre-process data
   dp <- pre_process_drdid(
@@ -162,7 +164,8 @@ drdid <- function(yname, tname, idname, dname, xformla = NULL, data,
         boot = dp$boot,
         boot.type = dp$boot.type,
         nboot = dp$nboot,
-        inffunc = dp$inffunc
+        inffunc = dp$inffunc,
+        trim.level = trim.level
       )
       ps.flag <- att_est$ps.flag
 
@@ -176,7 +179,8 @@ drdid <- function(yname, tname, idname, dname, xformla = NULL, data,
         boot = dp$boot,
         boot.type = dp$boot.type,
         nboot = dp$nboot,
-        inffunc = dp$inffunc
+        inffunc = dp$inffunc,
+        trim.level = trim.level
       )
       ps.flag <- NULL
 
@@ -195,7 +199,8 @@ drdid <- function(yname, tname, idname, dname, xformla = NULL, data,
         boot = dp$boot,
         boot.type = dp$boot.type,
         nboot = dp$nboot,
-        inffunc = dp$inffunc
+        inffunc = dp$inffunc,
+        trim.level = trim.level
       )
       ps.flag <- att_est$ps.flag
 
@@ -209,7 +214,8 @@ drdid <- function(yname, tname, idname, dname, xformla = NULL, data,
         boot = dp$boot,
         boot.type = dp$boot.type,
         nboot = dp$nboot,
-        inffunc = dp$inffunc
+        inffunc = dp$inffunc,
+        trim.level = trim.level
       )
       ps.flag <- NULL
 
@@ -227,7 +233,8 @@ drdid <- function(yname, tname, idname, dname, xformla = NULL, data,
     boot = argu$boot,
     boot.type = argu$boot.type,
     nboot = argu$nboot,
-    type = "dr"
+    type = "dr",
+    trim.level = trim.level
   )
 
   # Return these variables
