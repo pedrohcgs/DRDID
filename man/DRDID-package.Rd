@@ -20,7 +20,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Pedro H. C. Sant'Anna \email{pedrosantanna@causal-solutions.com} [copyright holder]
+\strong{Maintainer}: Pedro H. C. Sant'Anna \email{pedrohcgs@gmail.com} [copyright holder]
 
 Authors:
 \itemize{

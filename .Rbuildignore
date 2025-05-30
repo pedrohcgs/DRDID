@@ -12,3 +12,4 @@
 ^docs$
 ^pkgdown$
 ^CRAN-SUBMISSION$
+^cran-comments\.md$
