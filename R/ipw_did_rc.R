@@ -112,8 +112,8 @@ ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   w.cont.post <- trim.ps * i.weights * ps.fit * (1 - D) * post/ (1 - ps.fit)
 
   Pi.hat <- mean(i.weights * D)
-  lambda.hat <- mean(i.weights * post)
-  one.minus.lambda.hat <- mean(i.weights * (1 - post))
+  lambda.hat <- mean(trim.ps * i.weights * post)
+  one.minus.lambda.hat <- mean(trim.ps * i.weights * (1 - post))
 
   # Elements of the influence function (summands)
   eta.treat.pre <- w.treat.pre * y / (Pi.hat * one.minus.lambda.hat)
