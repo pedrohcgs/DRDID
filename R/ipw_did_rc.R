@@ -106,14 +106,14 @@ ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   #Compute IPW estimator
   # First, the weights
-  w.treat.pre <- trim.ps * i.weights * D * (1 - post)
-  w.treat.post <- trim.ps * i.weights * D * post
+  w.treat.pre <- i.weights * D * (1 - post)
+  w.treat.post <- i.weights * D * post
   w.cont.pre <- trim.ps * i.weights * ps.fit * (1 - D) * (1 - post) / (1 - ps.fit)
   w.cont.post <- trim.ps * i.weights * ps.fit * (1 - D) * post/ (1 - ps.fit)
 
-  Pi.hat <- mean(trim.ps * i.weights * D)
-  lambda.hat <- mean(trim.ps * i.weights * post)
-  one.minus.lambda.hat <- mean(trim.ps * i.weights * (1 - post))
+  Pi.hat <- mean(i.weights * D)
+  lambda.hat <- mean(i.weights * post)
+  one.minus.lambda.hat <- mean(i.weights * (1 - post))
 
   # Elements of the influence function (summands)
   eta.treat.pre <- w.treat.pre * y / (Pi.hat * one.minus.lambda.hat)
