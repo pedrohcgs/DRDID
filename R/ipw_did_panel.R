@@ -122,8 +122,8 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   att.treat <- w.treat * deltaY
   att.cont <- w.cont * deltaY
 
-  eta.treat <- mean(att.treat) / mean(trim.level* i.weights * D)
-  eta.cont <- mean(att.cont) / mean(trim.level* i.weights * D)
+  eta.treat <- mean(att.treat) / mean(i.weights * D)
+  eta.cont <- mean(att.cont) / mean(i.weights * D)
 
   ipw.att <- eta.treat - eta.cont
   #-----------------------------------------------------------------------------
