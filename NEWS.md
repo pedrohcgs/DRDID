@@ -1,7 +1,8 @@
 # DRDID 1.2.3
   * Fix typo on non-stabilized IPW with trimming
+  * Unify degree of freedom adjustments in analytical std errors
 # DRDID 1.2.2
-  * Add trimming argument to avoid severe overlap problems. Default is to trim propensity score in the comparison group that are above 0.995.
+  * Add trimming argument to avoid severe overlap problems. The default is to trim the propensity score in the comparison group that is above 0.995.
   
 # DRDID 1.2.1
   * Fix typo on returning influence functions for TWFE regressions.
