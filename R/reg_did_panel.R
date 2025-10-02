@@ -168,7 +168,7 @@ reg_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   if (boot == FALSE) {
     # Estimate of standard error
-    se.reg.att <- stats::sd(reg.att.inf.func)/sqrt(n)
+    se.reg.att <- stats::sd(reg.att.inf.func)*sqrt(n-1)/(n)
     # Estimate of upper boudary of 95% CI
     uci <- reg.att + 1.96 * se.reg.att
     # Estimate of lower doundary of 95% CI
