@@ -148,7 +148,7 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   if (boot == FALSE) {
     # Estimate of standard error
-    se.att <- stats::sd(att.inf.func)/sqrt(n)
+    se.att <- stats::sd(att.inf.func)*sqrt(n-1)/(n)
     # Estimate of upper boudary of 95% CI
     uci <- ipw.att + 1.96 * se.att
     # Estimate of lower doundary of 95% CI
