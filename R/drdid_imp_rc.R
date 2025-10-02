@@ -139,14 +139,14 @@ drdid_imp_rc <- function(y, post, D, covariates, i.weights = NULL, boot = FALSE,
   out.y.treat.post <-   as.vector(tcrossprod(reg.treat.coeff.post, int.cov))
   #-----------------------------------------------------------------------------
   # First, the weights
-  w.treat.pre <- trim.ps * i.weights * D * (1 - post)
-  w.treat.post <- trim.ps * i.weights * D * post
+  w.treat.pre <- i.weights * D * (1 - post)
+  w.treat.post <-  i.weights * D * post
   w.cont.pre <- trim.ps * i.weights * ps.fit * (1 - D) * (1 - post)/(1 - ps.fit)
   w.cont.post <- trim.ps * i.weights * ps.fit * (1 - D) * post/(1 - ps.fit)
 
-  w.d <- trim.ps * i.weights * D
-  w.dt1 <- trim.ps * i.weights * D * post
-  w.dt0 <- trim.ps * i.weights * D * (1 - post)
+  w.d <-  i.weights * D
+  w.dt1 <-  i.weights * D * post
+  w.dt0 <-  i.weights * D * (1 - post)
 
   # Elements of the influence function (summands)
   eta.treat.pre <- w.treat.pre * (y - out.y.cont) / mean(w.treat.pre)
