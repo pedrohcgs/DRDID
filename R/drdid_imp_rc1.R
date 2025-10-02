@@ -162,7 +162,7 @@ drdid_imp_rc1 <- function(y, post, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   if (boot == FALSE) {
     # Estimate of standard error
-    se.dr.att <- stats::sd(dr.att.inf.func)/sqrt(n)
+    se.dr.att <- stats::sd(dr.att.inf.func)*sqrt(n-1)/(n)
     # Estimate of upper boudary of 95% CI
     uci <- dr.att + 1.96 * se.dr.att
     # Estimate of lower doundary of 95% CI
