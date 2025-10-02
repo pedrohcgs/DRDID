@@ -154,7 +154,7 @@ std_ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   if (boot == FALSE) {
     # Estimate of standard error
-    se.att <- stats::sd(att.inf.func)/sqrt(n)
+    se.att <- stats::sd(att.inf.func)*sqrt(n-1)/(n)
     # Estimate of upper boundary of 95% CI
     uci <- ipw.att + 1.96 * se.att
     # Estimate of lower boundary of 95% CI
