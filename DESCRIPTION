@@ -33,6 +33,6 @@ Suggests:
     rmarkdown,
     spelling,
     testthat
-Date: 2025-10-1
+Date: 2025-12-1
 Language: en-US
 BugReports: https://github.com/pedrohcgs/DRDID/issues
