@@ -2,7 +2,7 @@ pandoc: 3.1.11
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles: {}
-last_built: 2025-12-03T22:16Z
+last_built: 2025-12-03T22:23Z
 urls:
   reference: https://psantanna.com/DRDID/reference
   article: https://psantanna.com/DRDID/articles
