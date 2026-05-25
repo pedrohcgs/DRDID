@@ -155,7 +155,7 @@ pre_process_drdid <- function(yname,
 
   # If panel, make it a balanced data set
   if (panel) {
-    dta <- BMisc::makeBalancedPanel(dta, idname, tname)
+    dta <- BMisc::make_balanced_panel(dta, idname, tname)
   }
 
 
@@ -203,7 +203,7 @@ pre_process_drdid <- function(yname,
 
   # how many in each group before give warning
   # 5 is just a buffer, could pick something else, but seems to work fine
-  reqsize <- length(BMisc::rhs.vars(xformla)) + 5
+  reqsize <- length(BMisc::rhs_vars(xformla)) + 5
 
   # which groups to warn about
   gsize <- subset(gsize,
@@ -217,7 +217,7 @@ pre_process_drdid <- function(yname,
   # setup data in panel case
   if (panel) {
     # make it a balanced data set
-    dta <- BMisc::makeBalancedPanel(dta, idname, tname)
+    dta <- BMisc::make_balanced_panel(dta, idname, tname)
 
     # Only use this smaller dataset
     dta <- as.data.frame(cbind(y = dta$y,
