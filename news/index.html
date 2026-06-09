@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DRDID</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.0</span>
       </span>
     </div>
 
@@ -59,6 +59,26 @@
       <small>Source: <a href="https://github.com/pedrohcgs/DRDID/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.3.0" id="drdid-130">DRDID 1.3.0<a class="anchor" aria-label="anchor" href="#drdid-130"></a></h2>
+<p>This release substantially speeds up the 2x2 estimators and tightens the handling of ill-conditioned designs. Point estimates, standard errors, and influence functions are unchanged up to floating-point precision (~1e-14).</p>
+<div class="section level3">
+<h3 id="performance-1-3-0">Performance<a class="anchor" aria-label="anchor" href="#performance-1-3-0"></a></h3>
+<ul><li><p>The propensity-score and outcome regressions now use <code>fastglm</code>’s low-level entry point (<code>fastglmPure</code>) in place of the <code>fastglm()</code> wrapper, skipping the per-call input-coercion and family/deviance bookkeeping that was paid on every fit. This is applied throughout: the point estimators, every weighted-bootstrap helper (which refits on each of <code>nboot</code> iterations), and the IPT/calibration propensity initializer.</p></li>
+<li><p>The influence-function computations use <code><a href="https://rdrr.io/r/base/crossprod.html" class="external-link">crossprod()</a></code> and BLAS dot products in place of <code>colMeans(. * int.cov)</code> and <code>t(int.cov) %*% (W * int.cov)</code>.</p></li>
+<li><p>Together these make the 2x2 estimators roughly 1.5x faster, with the weighted bootstrap benefiting proportionally.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="robustness-1-3-0">Robustness<a class="anchor" aria-label="anchor" href="#robustness-1-3-0"></a></h3>
+<ul><li><p>The propensity-score Hessian is now checked for singularity with <code><a href="https://rdrr.io/r/base/kappa.html" class="external-link">rcond()</a></code> before inversion, matching the long-standing check on the outcome-regression design. A near-singular propensity-score design previously yielded a silently incorrect standard error; it now stops with an informative message.</p></li>
+<li><p><code>std_ipw_did_rc</code> now warns when the propensity-score estimation does not converge and stops when the estimated coefficients are <code>NA</code>, matching the other propensity-score estimators (these guards were previously missing, so a rank-deficient design returned a corrupted standard error silently).</p></li>
+<li><p>The repeated cross-section pre-processing now warns when collinear covariates are dropped, matching the panel pre-processing (previously the repeated cross-section path dropped them without notice).</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="internal-1-3-0">Internal<a class="anchor" aria-label="anchor" href="#internal-1-3-0"></a></h3>
+<ul><li>Added a numeric regression-lock test suite that pins the ATT and standard error of every exported estimator, asserts the influence-function invariants, and checks that singular designs and negative weights are rejected.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.2.3" id="drdid-123">DRDID 1.2.3<small>2025-12-04</small><a class="anchor" aria-label="anchor" href="#drdid-123"></a></h2>
 <ul><li>Fix typo on non-stabilized IPW with trimming</li>
