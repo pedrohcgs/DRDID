@@ -10,14 +10,9 @@ pscore.cal <- function(D, int.cov, i.weights, n){
   #-----------------------------------------------------------------------------
   #-----------------------------------------------------------------------------
   # Initial conditions for pscore
-  pslogit <- suppressWarnings(fastglm::fastglm(x = int.cov,
-                                               y = D,
-                                               family = stats::binomial(),
-                                               weights = i.weights,
-                                               intercept = FALSE,
-                                               method = 3))
+  pslogit <- suppressWarnings(fastglm_fit(int.cov, D, stats::binomial(), i.weights, method = 3))
 
-  init.gamma <- suppressWarnings(stats::coef(pslogit))
+  init.gamma <- pslogit$coefficients
 
   #Compute IPT pscore
   pscore.cal <- suppressWarnings(trust::trust(loss.ps.cal, parinit = init.gamma, rinit=1,

@@ -87,15 +87,7 @@ drdid_rc1 <-function(y, post, D, covariates, i.weights = NULL,
   i.weights <- i.weights/mean(i.weights)
   #-----------------------------------------------------------------------------
   #Compute the Pscore by MLE
-  pscore.tr <- suppressWarnings(fastglm::fastglm(
-                                x = int.cov,
-                                y = D,
-                                family = stats::binomial(),
-                                weights = i.weights,
-                                intercept = FALSE,
-                                method = 3
-  ))
-  class(pscore.tr) <- "glm" #this allow us to use vcov
+  pscore.tr <- suppressWarnings(fastglm_fit(int.cov, D, stats::binomial(), i.weights, method = 3))
   if(pscore.tr$converged == FALSE){
     warning(" glm algorithm did not converge")
   }

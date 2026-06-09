@@ -118,24 +118,20 @@ drdid_imp_rc <- function(y, post, D, covariates, i.weights = NULL, boot = FALSE,
   #                                              subset = ((D==1) & (post==0)),
   #                                              weights = i.weights))
   treat_pre_filter <- (D == 1) & (post == 0)
-  reg.treat.coeff.pre <- stats::coef(fastglm::fastglm(
-                                      x = int.cov[treat_pre_filter, , drop = FALSE],
-                                      y = y[treat_pre_filter],
-                                      weights = i.weights[treat_pre_filter],
-                                      family = gaussian(link = "identity")
-  ))
+  reg.treat.coeff.pre <- fastglm_fit(int.cov[treat_pre_filter, , drop = FALSE],
+                                     y[treat_pre_filter],
+                                     gaussian(link = "identity"),
+                                     i.weights[treat_pre_filter])$coefficients
   out.y.treat.pre <-   as.vector(tcrossprod(reg.treat.coeff.pre, int.cov))
   #Compute the Outcome regression for the treated group at the post-treatment period, using ols.
   # reg.treat.coeff.post <- stats::coef(stats::lm(y ~ -1 + int.cov,
   #                                               subset = ((D==1) & (post==1)),
   #                                               weights = i.weights))
   treat_post_filter <- (D == 1) & (post == 1)
-  reg.treat.coeff.post <- stats::coef(fastglm::fastglm(
-                                      x = int.cov[treat_post_filter, , drop = FALSE],
-                                      y = y[treat_post_filter],
-                                      weights = i.weights[treat_post_filter],
-                                      family = gaussian(link = "identity")
-  ))
+  reg.treat.coeff.post <- fastglm_fit(int.cov[treat_post_filter, , drop = FALSE],
+                                      y[treat_post_filter],
+                                      gaussian(link = "identity"),
+                                      i.weights[treat_post_filter])$coefficients
   out.y.treat.post <-   as.vector(tcrossprod(reg.treat.coeff.post, int.cov))
   #-----------------------------------------------------------------------------
   # First, the weights

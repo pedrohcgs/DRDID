@@ -12,12 +12,10 @@ wboot.reg.panel <- function(nn, n, deltaY, D, int.cov, i.weights){
   #                                      subset = D==0,
   #                                      weights = b.weights))
   control_filter <- (D == 0)
-  reg.coeff.b <- stats::coef(fastglm::fastglm(
-                              x = int.cov[control_filter, , drop = FALSE],
-                              y = deltaY[control_filter],
-                              weights = b.weights[control_filter],
-                              family = gaussian(link = "identity")
-  ))
+  reg.coeff.b <- fastglm_fit(int.cov[control_filter, , drop = FALSE],
+                             deltaY[control_filter],
+                             gaussian(link = "identity"),
+                             b.weights[control_filter])$coefficients
   out.reg.b <- as.vector(tcrossprod(reg.coeff.b, int.cov))
   # Compute OR estimator
   att.b <- mean(b.weights * D * (deltaY - out.reg.b))/mean(b.weights * D)

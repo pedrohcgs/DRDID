@@ -91,14 +91,7 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   #Pscore estimation (logit) and also its fitted values
   #PS <- suppressWarnings(stats::glm(D ~ -1 + int.cov, family = "binomial", weights = i.weights))
-  PS <- suppressWarnings(fastglm::fastglm(x = int.cov,
-                                          y = D,
-                                          family = stats::binomial(),
-                                          weights = i.weights,
-                                          intercept = FALSE,
-                                          method = 3
-  ))
-  class(PS) <- "glm" #this allow us to use vcov
+  PS <- suppressWarnings(fastglm_fit(int.cov, D, stats::binomial(), i.weights, method = 3))
   if(PS$converged == FALSE){
     warning("Propensity score estimation did not converge.")
   }
