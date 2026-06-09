@@ -12,12 +12,10 @@ wols.br.panel <- function(deltaY, D, int.cov, pscore, i.weights){
   #                           subset = D==0,
   #                           weights = i.weights))
   control_filter <- (D == 0)
-  beta.cal <- stats::coef(fastglm::fastglm(
-                            x = int.cov[control_filter, , drop = FALSE],
-                            y = deltaY[control_filter],
-                            weights = i.weights[control_filter],
-                            family = gaussian(link = "identity")
-  ))
+  beta.cal <- fastglm_fit(int.cov[control_filter, , drop = FALSE],
+                          deltaY[control_filter],
+                          gaussian(link = "identity"),
+                          i.weights[control_filter])$coefficients
 
   if(anyNA(beta.cal)){
     stop("Outcome regression model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason")

@@ -10,12 +10,7 @@ wboot.dr.tr.panel <- function(nn, n, deltaY, D, int.cov, i.weights,
   b.weights <- as.vector(i.weights * v)
   # Propensity score estimation
   # ps.b <- suppressWarnings(stats::glm(D ~ -1 + int.cov, family = "binomial", weights = b.weights)$fitted.values)
-  ps.b <- suppressWarnings(fastglm::fastglm(x = int.cov,
-                                            y = D,
-                                            family = stats::binomial(),
-                                            weights =  b.weights,
-                                            intercept = FALSE,
-                                            method = 3)$fitted.values)
+  ps.b <- suppressWarnings(fastglm_fit(int.cov, D, stats::binomial(), b.weights, method = 3)$fitted.values)
   ps.b <- as.vector(ps.b)
   ps.b <- pmin(ps.b, 1 - 1e-6)
   trim.ps <- (ps.b < 1.01)
@@ -26,12 +21,10 @@ wboot.dr.tr.panel <- function(nn, n, deltaY, D, int.cov, i.weights,
   #                                    subset = D==0,
   #                                    weights = b.weights))
   control_filter <- (D == 0)
-  reg.coeff.b <- stats::coef(fastglm::fastglm(
-                              x = int.cov[control_filter, , drop = FALSE],
-                              y = deltaY[control_filter],
-                              weights = b.weights[control_filter],
-                              family = gaussian(link = "identity")
-  ))
+  reg.coeff.b <- fastglm_fit(int.cov[control_filter, , drop = FALSE],
+                             deltaY[control_filter],
+                             gaussian(link = "identity"),
+                             b.weights[control_filter])$coefficients
   out.reg.b <- as.vector(tcrossprod(reg.coeff.b, int.cov))
   # Compute AIPW estimator
   att.b <- aipw.did.panel(deltaY, D, ps.b, out.reg.b, b.weights, trim.ps)

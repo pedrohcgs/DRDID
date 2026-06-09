@@ -88,23 +88,14 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   i.weights <- i.weights/mean(i.weights)
   #-----------------------------------------------------------------------------
   # Compute the Pscore by MLE
-  pscore.tr <- suppressWarnings(fastglm::fastglm(
-                                          x = int.cov,
-                                          y = D,
-                                          family = stats::binomial(),
-                                          weights = i.weights,
-                                          intercept = FALSE,
-                                          method = 3
-  ))
-
-  class(pscore.tr) <- "glm" #this allow us to use vcov
+  pscore.tr <- suppressWarnings(fastglm_fit(int.cov, D, stats::binomial(), i.weights, method = 3))
   if(pscore.tr$converged == FALSE){
     warning(" glm algorithm did not converge")
   }
   if(anyNA(pscore.tr$coefficients)){
     stop("Propensity score model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
   }
-  ps.fit <- fitted(pscore.tr)
+  ps.fit <- pscore.tr$fitted.values
   # Avoid divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-6)
   W <- ps.fit * (1 - ps.fit) * i.weights
@@ -112,12 +103,10 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   trim.ps[D==0] <- (ps.fit[D==0] < trim.level)
   # Compute the Outcome regression for the control group at the pre-treatment period, using ols.
   pre_filter <- (D == 0) & (post == 0)
-  reg.cont.coeff.pre <- stats::coef(fastglm::fastglm(
-                                    x = int.cov[pre_filter, , drop = FALSE],
-                                    y = y[pre_filter],
-                                    weights = i.weights[pre_filter],
-                                    family = gaussian(link = "identity")
-  ))
+  reg.cont.coeff.pre <- fastglm_fit(int.cov[pre_filter, , drop = FALSE],
+                                    y[pre_filter],
+                                    gaussian(link = "identity"),
+                                    i.weights[pre_filter])$coefficients
   if(anyNA(reg.cont.coeff.pre)){
     stop("Outcome regression model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
   }
@@ -125,12 +114,10 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   # Compute the Outcome regression for the control group at the post-treatment period, using ols.
 
   post_filter <- (D == 0) & (post == 1)
-  reg.cont.coeff.post <- stats::coef(fastglm::fastglm(
-                                      x = int.cov[post_filter, , drop = FALSE],
-                                      y = y[post_filter],
-                                      weights = i.weights[post_filter],
-                                      family = gaussian(link = "identity")
-  ))
+  reg.cont.coeff.post <- fastglm_fit(int.cov[post_filter, , drop = FALSE],
+                                     y[post_filter],
+                                     gaussian(link = "identity"),
+                                     i.weights[post_filter])$coefficients
   if(anyNA(reg.cont.coeff.post)){
     stop("Outcome regression model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
   }
@@ -141,21 +128,17 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
 
   # Compute the Outcome regression for the treated group at the pre-treatment period, using ols.
   pre_treat_filter <- (D == 1) & (post == 0)
-  reg.treat.coeff.pre <- stats::coef(fastglm::fastglm(
-                              x = int.cov[pre_treat_filter, , drop = FALSE],
-                              y = y[pre_treat_filter],
-                              weights = i.weights[pre_treat_filter],
-                              family = gaussian(link = "identity")
-  ))
+  reg.treat.coeff.pre <- fastglm_fit(int.cov[pre_treat_filter, , drop = FALSE],
+                                     y[pre_treat_filter],
+                                     gaussian(link = "identity"),
+                                     i.weights[pre_treat_filter])$coefficients
   out.y.treat.pre <-   as.vector(tcrossprod(reg.treat.coeff.pre, int.cov))
   # Compute the Outcome regression for the treated group at the post-treatment period, using ols.
   post_treat_filter <- (D == 1) & (post == 1)
-  reg.treat.coeff.post <- stats::coef(fastglm::fastglm(
-                                      x = int.cov[post_treat_filter, , drop = FALSE],
-                                      y = y[post_treat_filter],
-                                      weights = i.weights[post_treat_filter],
-                                      family = gaussian(link = "identity")
-  ))
+  reg.treat.coeff.post <- fastglm_fit(int.cov[post_treat_filter, , drop = FALSE],
+                                      y[post_treat_filter],
+                                      gaussian(link = "identity"),
+                                      i.weights[post_treat_filter])$coefficients
   out.y.treat.post <-   as.vector(tcrossprod(reg.treat.coeff.post, int.cov))
 
   #-----------------------------------------------------------------------------
@@ -169,17 +152,25 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   w.dt1 <- trim.ps * i.weights * D * post
   w.dt0 <- trim.ps * i.weights * D * (1 - post)
 
+  mw.treat.pre <- mean(w.treat.pre)
+  mw.treat.post <- mean(w.treat.post)
+  mw.cont.pre <- mean(w.cont.pre)
+  mw.cont.post <- mean(w.cont.post)
+  mw.d <- mean(w.d)
+  mw.dt1 <- mean(w.dt1)
+  mw.dt0 <- mean(w.dt0)
+
   # Elements of the influence function (summands)
-  eta.treat.pre <- w.treat.pre * (y - out.y.cont) / mean(w.treat.pre)
-  eta.treat.post <- w.treat.post * (y - out.y.cont)/ mean(w.treat.post)
-  eta.cont.pre <- w.cont.pre * (y - out.y.cont) / mean(w.cont.pre)
-  eta.cont.post <- w.cont.post * (y - out.y.cont) / mean(w.cont.post)
+  eta.treat.pre <- w.treat.pre * (y - out.y.cont) / mw.treat.pre
+  eta.treat.post <- w.treat.post * (y - out.y.cont)/ mw.treat.post
+  eta.cont.pre <- w.cont.pre * (y - out.y.cont) / mw.cont.pre
+  eta.cont.post <- w.cont.post * (y - out.y.cont) / mw.cont.post
 
   # extra elements for the locally efficient DRDID
-  eta.d.post <- w.d * (out.y.treat.post - out.y.cont.post)/mean(w.d)
-  eta.dt1.post <- w.dt1 * (out.y.treat.post - out.y.cont.post)/mean(w.dt1)
-  eta.d.pre <- w.d * (out.y.treat.pre - out.y.cont.pre)/mean(w.d)
-  eta.dt0.pre <- w.dt0 * (out.y.treat.pre - out.y.cont.pre)/mean(w.dt0)
+  eta.d.post <- w.d * (out.y.treat.post - out.y.cont.post)/mw.d
+  eta.dt1.post <- w.dt1 * (out.y.treat.post - out.y.cont.post)/mw.dt1
+  eta.d.pre <- w.d * (out.y.treat.pre - out.y.cont.pre)/mw.d
+  eta.dt0.pre <- w.dt0 * (out.y.treat.pre - out.y.cont.pre)/mw.dt0
 
 
   # Estimator of each component
@@ -258,18 +249,22 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
 
   # Asymptotic linear representation of logit's beta's
   score.ps <- i.weights * (D - ps.fit) * int.cov
-  Hessian.ps <- chol2inv(chol(t(int.cov) %*% (W * int.cov))) * n
+  XtWX.ps <- base::crossprod(int.cov, W * int.cov)
+  if (base::rcond(XtWX.ps) < .Machine$double.eps) {
+    stop("The propensity score design matrix is singular. Consider removing some covariates.")
+  }
+  Hessian.ps <- chol2inv(chol(XtWX.ps)) * n
   asy.lin.rep.ps <-  score.ps %*% Hessian.ps
   #-----------------------------------------------------------------------------
   # Now, the influence function of the "treat" component
   # Leading term of the influence function: no estimation effect
-  inf.treat.pre <- eta.treat.pre - w.treat.pre * att.treat.pre/mean(w.treat.pre)
-  inf.treat.post <- eta.treat.post - w.treat.post * att.treat.post/mean(w.treat.post)
+  inf.treat.pre <- eta.treat.pre - w.treat.pre * att.treat.pre/mw.treat.pre
+  inf.treat.post <- eta.treat.post - w.treat.post * att.treat.post/mw.treat.post
 
   # Estimation effect from beta hat from post and pre-periods
   # Derivative matrix (k x 1 vector)
-  M1.post <- - base::colMeans(w.treat.post * post * int.cov)/mean(w.treat.post)
-  M1.pre <- - base::colMeans(w.treat.pre * (1 - post) * int.cov)/mean(w.treat.pre)
+  M1.post <- - as.vector(base::crossprod(w.treat.post, int.cov))/n/mw.treat.post
+  M1.pre <- - as.vector(base::crossprod(w.treat.pre, int.cov))/n/mw.treat.pre
 
   # Now get the influence function related to the estimation effect related to beta's
   inf.treat.or.post <- asy.lin.rep.ols.post %*% M1.post
@@ -278,20 +273,20 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   # Now, get the influence function of control component
   # Leading term of the influence function: no estimation effect from nuisance parameters
-  inf.cont.pre <- eta.cont.pre - w.cont.pre * att.cont.pre/mean(w.cont.pre)
-  inf.cont.post <- eta.cont.post - w.cont.post * att.cont.post/mean(w.cont.post)
+  inf.cont.pre <- eta.cont.pre - w.cont.pre * att.cont.pre/mw.cont.pre
+  inf.cont.post <- eta.cont.post - w.cont.post * att.cont.post/mw.cont.post
 
   # Estimation effect from gamma hat (pscore)
   # Derivative matrix (k x 1 vector)
-  M2.pre <- base::colMeans(w.cont.pre *(y - out.y.cont - att.cont.pre) * int.cov)/mean(w.cont.pre)
-  M2.post <- base::colMeans(w.cont.post *(y - out.y.cont - att.cont.post) * int.cov)/mean(w.cont.post)
+  M2.pre <- as.vector(base::crossprod(w.cont.pre * (y - out.y.cont - att.cont.pre), int.cov))/n/mw.cont.pre
+  M2.post <- as.vector(base::crossprod(w.cont.post * (y - out.y.cont - att.cont.post), int.cov))/n/mw.cont.post
   # Now the influence function related to estimation effect of pscores
   inf.cont.ps <- asy.lin.rep.ps %*% (M2.post - M2.pre)
 
   # Estimation effect from beta hat from post and pre-periods
   # Derivative matrix (k x 1 vector)
-  M3.post <- - base::colMeans(w.cont.post * post * int.cov) / mean(w.cont.post)
-  M3.pre <- - base::colMeans(w.cont.pre * (1 - post) * int.cov) / mean(w.cont.pre)
+  M3.post <- - as.vector(base::crossprod(w.cont.post, int.cov))/n / mw.cont.post
+  M3.pre <- - as.vector(base::crossprod(w.cont.pre, int.cov))/n / mw.cont.pre
 
   # Now get the influence function related to the estimation effect related to beta's
   inf.cont.or.post <- asy.lin.rep.ols.post %*% M3.post
@@ -299,15 +294,15 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   # Now, we only need to get the influence function of the adjustment terms
   # First, the terms as if all OR parameters were known
-  inf.eff1 <- eta.d.post - w.d * att.d.post/mean(w.d)
-  inf.eff2 <- eta.dt1.post - w.dt1 * att.dt1.post/mean(w.dt1)
-  inf.eff3 <- eta.d.pre - w.d * att.d.pre/mean(w.d)
-  inf.eff4 <- eta.dt0.pre - w.dt0 * att.dt0.pre/mean(w.dt0)
+  inf.eff1 <- eta.d.post - w.d * att.d.post/mw.d
+  inf.eff2 <- eta.dt1.post - w.dt1 * att.dt1.post/mw.dt1
+  inf.eff3 <- eta.d.pre - w.d * att.d.pre/mw.d
+  inf.eff4 <- eta.dt0.pre - w.dt0 * att.dt0.pre/mw.dt0
   inf.eff <- (inf.eff1 - inf.eff2) - (inf.eff3 - inf.eff4)
 
   # Now the estimation effect of the OR coefficients
-  mom.post<- base::colMeans((w.d/mean(w.d) -  w.dt1/mean(w.dt1)) * int.cov)
-  mom.pre <- base::colMeans((w.d/mean(w.d) -  w.dt0/mean(w.dt0)) * int.cov)
+  mom.post<- as.vector(base::crossprod((w.d/mw.d -  w.dt1/mw.dt1), int.cov))/n
+  mom.pre <- as.vector(base::crossprod((w.d/mw.d -  w.dt0/mw.dt0), int.cov))/n
   inf.or.post <- (asy.lin.rep.ols.post.treat - asy.lin.rep.ols.post) %*% mom.post
   inf.or.pre <-  (asy.lin.rep.ols.pre.treat - asy.lin.rep.ols.pre) %*% mom.pre
 

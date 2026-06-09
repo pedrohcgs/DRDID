@@ -81,15 +81,14 @@ std_ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   i.weights <- i.weights/mean(i.weights)
   #-----------------------------------------------------------------------------
   # Pscore estimation (logit) and also its fitted values
-  PS <- suppressWarnings(fastglm::fastglm(
-                                  x = int.cov,
-                                  y = D,
-                                  family = stats::binomial(),
-                                  weights = i.weights,
-                                  intercept = FALSE,
-                                  method = 3
-  ))
-  ps.fit <- fitted(PS)
+  PS <- suppressWarnings(fastglm_fit(int.cov, D, stats::binomial(), i.weights, method = 3))
+  if(PS$converged == FALSE){
+    warning("Propensity score estimation did not converge.")
+  }
+  if(anyNA(PS$coefficients)){
+    stop("Propensity score model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
+  }
+  ps.fit <- PS$fitted.values
   # Do not divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-6)
   W <- ps.fit * (1 - ps.fit) * i.weights
@@ -103,12 +102,16 @@ std_ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   w.treat.post <-  trim.ps * i.weights * D * post
   w.cont.pre <- trim.ps *  i.weights * ps.fit * (1 - D) * (1 - post)/(1 - ps.fit)
   w.cont.post <- trim.ps *  i.weights * ps.fit * (1 - D) * post/(1 - ps.fit)
+  mw.treat.pre <- mean(w.treat.pre)
+  mw.treat.post <- mean(w.treat.post)
+  mw.cont.pre <- mean(w.cont.pre)
+  mw.cont.post <- mean(w.cont.post)
 
   # Elements of the influence function (summands)
-  eta.treat.pre <- w.treat.pre * y / mean(w.treat.pre)
-  eta.treat.post <- w.treat.post * y / mean(w.treat.post)
-  eta.cont.pre <- w.cont.pre * y / mean(w.cont.pre)
-  eta.cont.post <- w.cont.post * y / mean(w.cont.post)
+  eta.treat.pre <- w.treat.pre * y / mw.treat.pre
+  eta.treat.post <- w.treat.post * y / mw.treat.post
+  eta.cont.pre <- w.cont.pre * y / mw.cont.pre
+  eta.cont.post <- w.cont.post * y / mw.cont.post
 
   # Estimator of each component
   att.treat.pre <- mean(eta.treat.pre)
@@ -124,24 +127,28 @@ std_ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   # Asymptotic linear representation of logit's beta's
   score.ps <- i.weights * (D - ps.fit) * int.cov
   #Hessian.ps <- stats::vcov(PS) * n
-  Hessian.ps <- chol2inv(chol(t(int.cov) %*% (W * int.cov))) * n
+  XtWX.ps <- base::crossprod(int.cov, W * int.cov)
+  if (base::rcond(XtWX.ps) < .Machine$double.eps) {
+    stop("The propensity score design matrix is singular. Consider removing some covariates.")
+  }
+  Hessian.ps <- chol2inv(chol(XtWX.ps)) * n
   asy.lin.rep.ps <-  score.ps %*% Hessian.ps
   #-----------------------------------------------------------------------------
   # Now, the influence function of the "treat" component
   # Leading term of the influence function: no estimation effect
-  inf.treat.pre <- eta.treat.pre - w.treat.pre * att.treat.pre/mean(w.treat.pre)
-  inf.treat.post <- eta.treat.post - w.treat.post * att.treat.post/mean(w.treat.post)
+  inf.treat.pre <- eta.treat.pre - w.treat.pre * att.treat.pre/mw.treat.pre
+  inf.treat.post <- eta.treat.post - w.treat.post * att.treat.post/mw.treat.post
   inf.treat <- inf.treat.post - inf.treat.pre
   # Now, get the influence function of control component
   # Leading term of the influence function: no estimation effect
-  inf.cont.pre <- eta.cont.pre - w.cont.pre * att.cont.pre/mean(w.cont.pre)
-  inf.cont.post <- eta.cont.post - w.cont.post * att.cont.post/mean(w.cont.post)
+  inf.cont.pre <- eta.cont.pre - w.cont.pre * att.cont.pre/mw.cont.pre
+  inf.cont.post <- eta.cont.post - w.cont.post * att.cont.post/mw.cont.post
   inf.cont <- inf.cont.post - inf.cont.pre
 
   # Estimation effect from gamma hat (pscore)
   # Derivative matrix (k x 1 vector)
-  M2.pre <- base::colMeans(w.cont.pre *(y - att.cont.pre) * int.cov)/mean(w.cont.pre)
-  M2.post <- base::colMeans(w.cont.post *(y - att.cont.post) * int.cov)/mean(w.cont.post)
+  M2.pre <- as.vector(base::crossprod(w.cont.pre * (y - att.cont.pre), int.cov))/n/mw.cont.pre
+  M2.post <- as.vector(base::crossprod(w.cont.post * (y - att.cont.post), int.cov))/n/mw.cont.post
 
   # Now the influence function related to estimation effect of pscores
   inf.cont.ps <- asy.lin.rep.ps %*% (M2.post - M2.pre)

@@ -12,22 +12,18 @@ wboot_reg_rc <- function(nn, n, y, post, D, int.cov, i.weights){
   #                                          subset = ((D==0) & (post==0)),
   #                                          weights = b.weights))
   control_pre <- (D == 0) & (post == 0)
-  reg.coeff.pre.b <- stats::coef(fastglm::fastglm(
-                                  x = int.cov[control_pre, , drop = FALSE],
-                                  y = y[control_pre],
-                                  weights = b.weights[control_pre],
-                                  family = gaussian(link = "identity")
-  ))
+  reg.coeff.pre.b <- fastglm_fit(int.cov[control_pre, , drop = FALSE],
+                                 y[control_pre],
+                                 gaussian(link = "identity"),
+                                 b.weights[control_pre])$coefficients
   # reg.coeff.post.b <- stats::coef(stats::lm(y ~ -1 + int.cov,
   #                                           subset = ((D==0) & (post==1)),
   #                                           weights = b.weights))
   control_post <- (D == 0) & (post == 1)
-  reg.coeff.post.b <- stats::coef(fastglm::fastglm(
-                                   x = int.cov[control_post, , drop = FALSE],
-                                   y = y[control_post],
-                                   weights = b.weights[control_post],
-                                   family = gaussian(link = "identity")
-  ))
+  reg.coeff.post.b <- fastglm_fit(int.cov[control_post, , drop = FALSE],
+                                  y[control_post],
+                                  gaussian(link = "identity"),
+                                  b.weights[control_post])$coefficients
 
 
   out.reg.pre.b <- as.vector(tcrossprod(reg.coeff.pre.b, int.cov))

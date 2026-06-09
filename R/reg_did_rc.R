@@ -92,12 +92,10 @@ reg_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   #                                        weights = i.weights))
 
   pre_filter <- (D == 0) & (post == 0)
-  reg.coeff.pre <- stats::coef(fastglm::fastglm(
-                        x = int.cov[pre_filter, , drop = FALSE],
-                        y = y[pre_filter],
-                        weights = i.weights[pre_filter],
-                        family = gaussian(link = "identity")
-  ))
+  reg.coeff.pre <- fastglm_fit(int.cov[pre_filter, , drop = FALSE],
+                               y[pre_filter],
+                               gaussian(link = "identity"),
+                               i.weights[pre_filter])$coefficients
   if(anyNA(reg.coeff.pre)){
     stop("Outcome regression model coefficients have NA components. \n Multicollinearity of covariates is probably the reason for it.")
   }
@@ -108,12 +106,10 @@ reg_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   #                                         subset = ((D==0) & (post==1)),
   #                                         weights = i.weights))
   post_filter <- (D == 0) & (post == 1)
-  reg.coeff.post <- stats::coef(fastglm::fastglm(
-                          x = int.cov[post_filter, , drop = FALSE],
-                          y = y[post_filter],
-                          weights = i.weights[post_filter],
-                          family = gaussian(link = "identity")
-  ))
+  reg.coeff.post <- fastglm_fit(int.cov[post_filter, , drop = FALSE],
+                                y[post_filter],
+                                gaussian(link = "identity"),
+                                i.weights[post_filter])$coefficients
   if(anyNA(reg.coeff.post)){
     stop("Outcome regression model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is probably the reason for it.")
   }
@@ -176,7 +172,7 @@ reg_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   inf.cont.1 <- (reg.att.cont - w.cont * eta.cont)
   # Estimation effect from beta hat (OLS using only controls)
   # Derivative matrix (k x 1 vector)
-  M1 <- base::colMeans(w.cont * int.cov)
+  M1 <- as.vector(base::crossprod(w.cont, int.cov))/n
   # Now get the influence function related to the estimation effect related to beta's in post-treatment
   inf.cont.2.post <- asy.lin.rep.ols.post %*% M1
   # Now get the influence function related to the estimation effect related to beta's in pre-treatment

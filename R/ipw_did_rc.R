@@ -80,15 +80,7 @@ ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   #Pscore estimation (logit) and also its fitted values
   #PS <- suppressWarnings(stats::glm(D ~ -1 + int.cov, family = "binomial", weights = i.weights))
-  PS <- suppressWarnings(fastglm::fastglm(
-                                x = int.cov,
-                                y = D,
-                                family = stats::binomial(),
-                                weights = i.weights,
-                                intercept = FALSE,
-                                method = 3
-  ))
-  class(PS) <- "glm" #this allow us to use vcov
+  PS <- suppressWarnings(fastglm_fit(int.cov, D, stats::binomial(), i.weights, method = 3))
   if(PS$converged == FALSE){
     warning(" glm algorithm did not converge")
   }
@@ -135,7 +127,11 @@ ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   # Asymptotic linear representation of logit's beta's
   score.ps <- i.weights * (D - ps.fit) * int.cov
   #Hessian.ps <- stats::vcov(PS) * n
-  Hessian.ps <- chol2inv(chol(t(int.cov) %*% (W * int.cov))) * n
+  XtWX.ps <- base::crossprod(int.cov, W * int.cov)
+  if (base::rcond(XtWX.ps) < .Machine$double.eps) {
+    stop("The propensity score design matrix is singular. Consider removing some covariates.")
+  }
+  Hessian.ps <- chol2inv(chol(XtWX.ps)) * n
   asy.lin.rep.ps <-  score.ps %*% Hessian.ps
   #-----------------------------------------------------------------------------
   # Influence function of the treated components
@@ -165,11 +161,9 @@ ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
 
   # Estimation effect from the propensity score parametes
   # Derivative matrix (k x 1 vector)
-  mom.logit.pre <- -eta.cont.pre * int.cov
-  mom.logit.pre <- base::colMeans(mom.logit.pre)
+  mom.logit.pre <- as.vector(base::crossprod(-eta.cont.pre, int.cov))/n
 
-  mom.logit.post <- -eta.cont.post * int.cov
-  mom.logit.post <- base::colMeans(mom.logit.post)
+  mom.logit.post <- as.vector(base::crossprod(-eta.cont.post, int.cov))/n
 
   # Now the influence function related to estimation effect of pscores
   inf.logit <- asy.lin.rep.ps %*% (mom.logit.post - mom.logit.pre)

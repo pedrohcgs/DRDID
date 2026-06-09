@@ -88,18 +88,11 @@ std_ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   i.weights <- i.weights/mean(i.weights)
   #-----------------------------------------------------------------------------
   # Pscore estimation (logit) and also its fitted values
-  PS <- suppressWarnings(fastglm::fastglm(
-                          x = int.cov,
-                          y = D,
-                          family = stats::binomial(),
-                          weights = i.weights,
-                          intercept = FALSE,
-                          method = 3
-  ))
+  PS <- suppressWarnings(fastglm_fit(int.cov, D, stats::binomial(), i.weights, method = 3))
   if(PS$converged == FALSE){
     warning("Propernsity score estimation did not converge.")
   }
-  ps.fit <- fitted(PS)
+  ps.fit <- PS$fitted.values
   # Do not divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-6)
   W <- ps.fit * (1 - ps.fit) * i.weights
@@ -112,12 +105,14 @@ std_ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   # First, the weights
   w.treat <- trim.ps * i.weights * D
   w.cont <- trim.ps * i.weights * ps.fit * (1 - D)/(1 - ps.fit)
+  mw.treat <- mean(w.treat)
+  mw.cont <- mean(w.cont)
 
   att.treat <- w.treat * deltaY
   att.cont <- w.cont * deltaY
 
-  eta.treat <- mean(att.treat) / mean(w.treat)
-  eta.cont <- mean(att.cont) / mean(w.cont)
+  eta.treat <- mean(att.treat) / mw.treat
+  eta.cont <- mean(att.cont) / mw.cont
 
   ipw.att <- eta.treat - eta.cont
   #-----------------------------------------------------------------------------
@@ -126,18 +121,22 @@ std_ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   # Asymptotic linear representation of logit's beta's
   score.ps <- i.weights * (D - ps.fit) * int.cov
   #Hessian.ps <- stats::vcov(PS) * n
-  Hessian.ps <- chol2inv(chol(t(int.cov) %*% (W * int.cov))) * n
+  XtWX.ps <- base::crossprod(int.cov, W * int.cov)
+  if (base::rcond(XtWX.ps) < .Machine$double.eps) {
+    stop("The propensity score design matrix is singular. Consider removing some covariates.")
+  }
+  Hessian.ps <- chol2inv(chol(XtWX.ps)) * n
   asy.lin.rep.ps <-  score.ps %*% Hessian.ps
   #-----------------------------------------------------------------------------
   # Now, the influence function of the "treat" component
   # Leading term of the influence function: no estimation effect
-  inf.treat <- (att.treat - w.treat * eta.treat)/mean(w.treat)
+  inf.treat <- (att.treat - w.treat * eta.treat)/mw.treat
   # Now, get the influence function of control component
   # Leading term of the influence function: no estimation effect
   inf.cont.1 <- (att.cont - w.cont * eta.cont)
   # Estimation effect from gamma hat (pscore)
   # Derivative matrix (k x 1 vector)
-  M2 <- base::colMeans(w.cont *(deltaY - eta.cont) * int.cov)
+  M2 <- as.vector(base::crossprod(w.cont * (deltaY - eta.cont), int.cov))/n
   # Now the influence function related to estimation effect of pscores
   # Batch multiple matrix multiplications for inf functions
   #batch_results <- batch_matrix_operations(NULL, NULL, score.ps, Hessian.ps, NULL, M2, NULL)
@@ -145,7 +144,7 @@ std_ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   #inf.cont.2 <- batch_results$inf_cont_2
 
   # Influence function for the control component
-  inf.control <- (inf.cont.1 + inf.cont.2) / mean(w.cont)
+  inf.control <- (inf.cont.1 + inf.cont.2) / mw.cont
 
   #get the influence function of the DR estimator (put all pieces together)
   att.inf.func <- inf.treat - inf.control

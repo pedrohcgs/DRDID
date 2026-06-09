@@ -27,12 +27,10 @@ wols_rc <- function(y, post, D, int.cov, pscore, i.weights, pre = NULL, treat = 
   #                                   subset = subs==1,
   #                                   weights = or.weights))
   subs_filter <- (subs == 1)
-  beta.wls <- stats::coef(fastglm::fastglm(
-                          x = int.cov[subs_filter, , drop = FALSE],
-                          y = y[subs_filter],
-                          weights = or.weights[subs_filter],
-                          family = gaussian(link = "identity")
-  ))
+  beta.wls <- fastglm_fit(int.cov[subs_filter, , drop = FALSE],
+                          y[subs_filter],
+                          gaussian(link = "identity"),
+                          or.weights[subs_filter])$coefficients
 
   if(anyNA(beta.wls)){
     stop("Outcome regression model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason")
