@@ -119,7 +119,11 @@ std_ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   # Asymptotic linear representation of logit's beta's
   score.ps <- i.weights * (D - ps.fit) * int.cov
   #Hessian.ps <- stats::vcov(PS) * n
-  Hessian.ps <- chol2inv(chol(t(int.cov) %*% (W * int.cov))) * n
+  XtWX.ps <- t(int.cov) %*% (W * int.cov)
+  if (base::rcond(XtWX.ps) < .Machine$double.eps) {
+    stop("The propensity score design matrix is singular. Consider removing some covariates.")
+  }
+  Hessian.ps <- chol2inv(chol(XtWX.ps)) * n
   asy.lin.rep.ps <-  score.ps %*% Hessian.ps
   #-----------------------------------------------------------------------------
   # Now, the influence function of the "treat" component

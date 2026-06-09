@@ -82,6 +82,12 @@ std_ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   # Pscore estimation (logit) and also its fitted values
   PS <- suppressWarnings(fastglm_fit(int.cov, D, stats::binomial(), i.weights, method = 3))
+  if(PS$converged == FALSE){
+    warning("Propensity score estimation did not converge.")
+  }
+  if(anyNA(PS$coefficients)){
+    stop("Propensity score model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
+  }
   ps.fit <- PS$fitted.values
   # Do not divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-6)
@@ -117,7 +123,11 @@ std_ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   # Asymptotic linear representation of logit's beta's
   score.ps <- i.weights * (D - ps.fit) * int.cov
   #Hessian.ps <- stats::vcov(PS) * n
-  Hessian.ps <- chol2inv(chol(t(int.cov) %*% (W * int.cov))) * n
+  XtWX.ps <- t(int.cov) %*% (W * int.cov)
+  if (base::rcond(XtWX.ps) < .Machine$double.eps) {
+    stop("The propensity score design matrix is singular. Consider removing some covariates.")
+  }
+  Hessian.ps <- chol2inv(chol(XtWX.ps)) * n
   asy.lin.rep.ps <-  score.ps %*% Hessian.ps
   #-----------------------------------------------------------------------------
   # Now, the influence function of the "treat" component

@@ -158,7 +158,11 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   # Asymptotic linear representation of logit's beta's
   score.ps <- i.weights * (D - ps.fit) * int.cov
   #Hessian.ps <- solve(t(int.cov) %*% (W * int.cov)) * n
-  Hessian.ps <- chol2inv(chol(t(int.cov) %*% (W * int.cov))) * n
+  XtWX.ps <- t(int.cov) %*% (W * int.cov)
+  if (base::rcond(XtWX.ps) < .Machine$double.eps) {
+    stop("The propensity score design matrix is singular. Consider removing some covariates.")
+  }
+  Hessian.ps <- chol2inv(chol(XtWX.ps)) * n
   asy.lin.rep.ps <- score.ps %*% Hessian.ps
 
 
@@ -172,8 +176,6 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   # Now get the influence function related to the estimation effect related to beta's
   inf.treat.2 <- asy.lin.rep.wols %*% M1
 
-  # Influence function for the treated component
-  inf.treat <- (inf.treat.1 - inf.treat.2) / mean(w.treat)
   #-----------------------------------------------------------------------------
   # Now, get the influence function of control component
   # Leading term of the influence function: no estimation effect
@@ -186,15 +188,6 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   # Estimation Effect from beta hat (weighted OLS)
   M3 <-  base::colMeans(w.cont * int.cov)
   inf.cont.3 <- asy.lin.rep.wols %*% M3
-
-  # # Batch multiple matrix multiplications for inf functions
-  # batch_results <- batch_matrix_operations(wols.eX, XpX.inv, score.ps, Hessian.ps, M1, M2, M3)
-  # # Now get the influence function related to the estimation effect related to beta's
-  # inf.treat.2 <- batch_results$inf_treat_2
-  # # Now the influence function related to estimation effect of pscores
-  # inf.cont.2 <- batch_results$inf_cont_2
-  # # Now the influence function related to estimation effect of regressions
-  # inf.cont.3 <- batch_results$inf_cont_3
 
   # Influence function for the treated component
   inf.treat <- (inf.treat.1 - inf.treat.2) / mean(w.treat)
