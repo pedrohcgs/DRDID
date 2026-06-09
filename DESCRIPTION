@@ -1,7 +1,7 @@
 Package: DRDID
 Type: Package
 Title: Doubly Robust Difference-in-Differences Estimators
-Version: 1.2.4
+Version: 1.3.0
 Authors@R: c(person("Pedro H. C.", "Sant'Anna", email = "pedrohcgs@gmail.com",
               role = c("aut", "cre", "cph")),
               person("Jun", "Zhao", email = "beanzhaojun11@gmail.com",role = c("aut"))
