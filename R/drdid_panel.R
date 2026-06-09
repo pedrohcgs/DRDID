@@ -103,22 +103,14 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   i.weights <- i.weights/mean(i.weights)
   #-----------------------------------------------------------------------------
   #Compute the Pscore by MLE
-  pscore.tr <- suppressWarnings(fastglm::fastglm(
-                                x = int.cov,
-                                y = D,
-                                family = stats::binomial(),
-                                weights = i.weights,
-                                intercept = FALSE,
-                                method = 3
-  ))
-  class(pscore.tr) <- "glm" #this allow us to use vcov
+  pscore.tr <- suppressWarnings(fastglm_fit(int.cov, D, stats::binomial(), i.weights, method = 3))
   if(pscore.tr$converged == FALSE){
     warning("Propernsity score estimation did not converge.")
   }
   if(anyNA(pscore.tr$coefficients)){
     stop("Propensity score model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
   }
-  ps.fit <- fitted(pscore.tr) #as.vector(pscore.tr$fitted.values)
+  ps.fit <- pscore.tr$fitted.values
   # Avoid divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-6)
   trim.ps <- (ps.fit < 1.01)
@@ -126,12 +118,10 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   W <- ps.fit * (1 - ps.fit) * i.weights
   # Compute the Outcome regression for the control group using wols
   control_filter <- (D == 0)
-  reg.coeff <- stats::coef(fastglm::fastglm(
-    x = int.cov[control_filter, , drop = FALSE],
-    y = deltaY[control_filter],
-    weights = i.weights[control_filter],
-    family =  stats::gaussian(link = "identity")
-  ))
+  reg.coeff <- fastglm_fit(int.cov[control_filter, , drop = FALSE],
+                           deltaY[control_filter],
+                           stats::gaussian(link = "identity"),
+                           i.weights[control_filter])$coefficients
   if(anyNA(reg.coeff)){
     stop("Outcome regression model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
   }

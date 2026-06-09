@@ -88,18 +88,11 @@ std_ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   i.weights <- i.weights/mean(i.weights)
   #-----------------------------------------------------------------------------
   # Pscore estimation (logit) and also its fitted values
-  PS <- suppressWarnings(fastglm::fastglm(
-                          x = int.cov,
-                          y = D,
-                          family = stats::binomial(),
-                          weights = i.weights,
-                          intercept = FALSE,
-                          method = 3
-  ))
+  PS <- suppressWarnings(fastglm_fit(int.cov, D, stats::binomial(), i.weights, method = 3))
   if(PS$converged == FALSE){
     warning("Propernsity score estimation did not converge.")
   }
-  ps.fit <- fitted(PS)
+  ps.fit <- PS$fitted.values
   # Do not divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-6)
   W <- ps.fit * (1 - ps.fit) * i.weights

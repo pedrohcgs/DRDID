@@ -88,23 +88,14 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   i.weights <- i.weights/mean(i.weights)
   #-----------------------------------------------------------------------------
   # Compute the Pscore by MLE
-  pscore.tr <- suppressWarnings(fastglm::fastglm(
-                                          x = int.cov,
-                                          y = D,
-                                          family = stats::binomial(),
-                                          weights = i.weights,
-                                          intercept = FALSE,
-                                          method = 3
-  ))
-
-  class(pscore.tr) <- "glm" #this allow us to use vcov
+  pscore.tr <- suppressWarnings(fastglm_fit(int.cov, D, stats::binomial(), i.weights, method = 3))
   if(pscore.tr$converged == FALSE){
     warning(" glm algorithm did not converge")
   }
   if(anyNA(pscore.tr$coefficients)){
     stop("Propensity score model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
   }
-  ps.fit <- fitted(pscore.tr)
+  ps.fit <- pscore.tr$fitted.values
   # Avoid divide by zero
   ps.fit <- pmin(ps.fit, 1 - 1e-6)
   W <- ps.fit * (1 - ps.fit) * i.weights
@@ -112,12 +103,10 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   trim.ps[D==0] <- (ps.fit[D==0] < trim.level)
   # Compute the Outcome regression for the control group at the pre-treatment period, using ols.
   pre_filter <- (D == 0) & (post == 0)
-  reg.cont.coeff.pre <- stats::coef(fastglm::fastglm(
-                                    x = int.cov[pre_filter, , drop = FALSE],
-                                    y = y[pre_filter],
-                                    weights = i.weights[pre_filter],
-                                    family = gaussian(link = "identity")
-  ))
+  reg.cont.coeff.pre <- fastglm_fit(int.cov[pre_filter, , drop = FALSE],
+                                    y[pre_filter],
+                                    gaussian(link = "identity"),
+                                    i.weights[pre_filter])$coefficients
   if(anyNA(reg.cont.coeff.pre)){
     stop("Outcome regression model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
   }
@@ -125,12 +114,10 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   # Compute the Outcome regression for the control group at the post-treatment period, using ols.
 
   post_filter <- (D == 0) & (post == 1)
-  reg.cont.coeff.post <- stats::coef(fastglm::fastglm(
-                                      x = int.cov[post_filter, , drop = FALSE],
-                                      y = y[post_filter],
-                                      weights = i.weights[post_filter],
-                                      family = gaussian(link = "identity")
-  ))
+  reg.cont.coeff.post <- fastglm_fit(int.cov[post_filter, , drop = FALSE],
+                                     y[post_filter],
+                                     gaussian(link = "identity"),
+                                     i.weights[post_filter])$coefficients
   if(anyNA(reg.cont.coeff.post)){
     stop("Outcome regression model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is a likely reason.")
   }
@@ -141,21 +128,17 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
 
   # Compute the Outcome regression for the treated group at the pre-treatment period, using ols.
   pre_treat_filter <- (D == 1) & (post == 0)
-  reg.treat.coeff.pre <- stats::coef(fastglm::fastglm(
-                              x = int.cov[pre_treat_filter, , drop = FALSE],
-                              y = y[pre_treat_filter],
-                              weights = i.weights[pre_treat_filter],
-                              family = gaussian(link = "identity")
-  ))
+  reg.treat.coeff.pre <- fastglm_fit(int.cov[pre_treat_filter, , drop = FALSE],
+                                     y[pre_treat_filter],
+                                     gaussian(link = "identity"),
+                                     i.weights[pre_treat_filter])$coefficients
   out.y.treat.pre <-   as.vector(tcrossprod(reg.treat.coeff.pre, int.cov))
   # Compute the Outcome regression for the treated group at the post-treatment period, using ols.
   post_treat_filter <- (D == 1) & (post == 1)
-  reg.treat.coeff.post <- stats::coef(fastglm::fastglm(
-                                      x = int.cov[post_treat_filter, , drop = FALSE],
-                                      y = y[post_treat_filter],
-                                      weights = i.weights[post_treat_filter],
-                                      family = gaussian(link = "identity")
-  ))
+  reg.treat.coeff.post <- fastglm_fit(int.cov[post_treat_filter, , drop = FALSE],
+                                      y[post_treat_filter],
+                                      gaussian(link = "identity"),
+                                      i.weights[post_treat_filter])$coefficients
   out.y.treat.post <-   as.vector(tcrossprod(reg.treat.coeff.post, int.cov))
 
   #-----------------------------------------------------------------------------

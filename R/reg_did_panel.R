@@ -108,12 +108,10 @@ reg_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   #                                    subset = D==0,
   #                                    weights = i.weights))
   control_filter <- (D == 0)
-  reg.coeff <- stats::coef(fastglm::fastglm(
-                            x = int.cov[control_filter, , drop = FALSE],
-                            y = deltaY[control_filter],
-                            weights = i.weights[control_filter],
-                            family = gaussian(link = "identity")
-  ))
+  reg.coeff <- fastglm_fit(int.cov[control_filter, , drop = FALSE],
+                           deltaY[control_filter],
+                           gaussian(link = "identity"),
+                           i.weights[control_filter])$coefficients
   if(anyNA(reg.coeff)){
     stop("Outcome regression model coefficients have NA components. \n Multicollinearity (or lack of variation) of covariates is probably the reason for it.")
   }
