@@ -19,17 +19,15 @@ See NEWS.md for the full list of changes.
 ## Test environments
 
 * Local: macOS 26.5 (aarch64-apple-darwin23), R 4.6.0
-* win-builder: R-devel and R-release   <!-- to run: devtools::check_win_devel(); check_win_release() -->
-* R-hub v2 (GitHub Actions), incl. the compiled-code sanitizer/valgrind runs
-  <!-- to run: rhub::rhub_check() -->
-* macOS builder   <!-- to run: devtools::check_mac_release() -->
+* win-builder: R-devel and R-release
+* macOS builder (mac.R-project.org): R-release
+* R-hub v2: linux, macos, macos-arm64, windows (R-devel), and the AddressSanitizer
+  builds clang-asan and gcc-asan (the package contains compiled C++)
 
 ## R CMD check results
 
-`R CMD check --as-cran` on the local environment above: 0 errors | 0 warnings | 0
-notes. (The local run reports one NOTE, "Skipping checking HTML validation: 'tidy'
-doesn't look like recent enough HTML Tidy", which is a property of the local
-machine, not the package.)
+0 errors | 0 warnings | 0 notes, on every environment above (including both
+AddressSanitizer builds).
 
 ## Reverse dependencies
 
