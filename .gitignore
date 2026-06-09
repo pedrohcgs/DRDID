@@ -8,3 +8,6 @@ src/RcppExports.o
 src/matrix_mult.o
 src/sanity_checks.o
 src/DRDID.so
+.revdeplite
+revdep
+DRDID_*.tar.gz

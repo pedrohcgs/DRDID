@@ -13,3 +13,5 @@
 ^pkgdown$
 ^CRAN-SUBMISSION$
 ^cran-comments\.md$
+^\.revdeplite$
+^revdep$
