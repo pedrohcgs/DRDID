@@ -32,8 +32,8 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      # `containers` is filtered to drop rchk -- see the "Drop rchk" step below.
-      containers: ${{ steps.drop-rchk.outputs.containers }}
+      # `containers` is filtered to drop rchk and valgrind -- see the step below.
+      containers: ${{ steps.drop-noisy.outputs.containers }}
       platforms: ${{ steps.rhub-setup.outputs.platforms }}
 
     steps:
@@ -42,20 +42,25 @@ jobs:
       with:
         config: ${{ github.event.inputs.config }}
       id: rhub-setup
-    # --- local customization: never run rchk ---------------------------------
-    # rchk cannot analyze Rcpp's Shield/Armor protection templates, so it reports
-    # "unsupported form of unprotect" for EVERY Rcpp package and the run-check step
-    # fails on it. Those findings are in Rcpp's headers, not in this package, so we
-    # drop rchk from the container matrix here -- it will never run even if it is
-    # passed in the dispatch `config`. To restore the upstream default, delete this
-    # step and point `outputs.containers` back to `steps.rhub-setup.outputs.containers`
-    # (or re-run `rhub::rhub_setup(overwrite = TRUE)`).
-    - name: Drop rchk from the container matrix
-      id: drop-rchk
+    # --- local customization: never run rchk or valgrind ---------------------
+    # Both produce perpetual false positives on this package that are NOT in our own
+    # code, so the run-check step always fails on them with no real signal:
+    #   * rchk     -- cannot analyze Rcpp's Shield/Armor protection templates
+    #                 ("unsupported form of unprotect"); findings are in Rcpp's headers.
+    #   * valgrind -- reports OpenMP thread-local storage (libgomp / GOMP_parallel,
+    #                 via data.table's parallel sort) as "possibly lost"; "definitely
+    #                 lost" is 0, and clang-asan / gcc-asan already cover real memory
+    #                 errors in our compiled code.
+    # We drop both from the container matrix here so they never run, even if passed in
+    # the dispatch `config`. To restore the upstream default, delete this step and
+    # point `outputs.containers` back to `steps.rhub-setup.outputs.containers` (or
+    # re-run `rhub::rhub_setup(overwrite = TRUE)`).
+    - name: Drop rchk and valgrind from the container matrix
+      id: drop-noisy
       env:
         CONTAINERS: ${{ steps.rhub-setup.outputs.containers }}
       run: |
-        filtered=$(printf '%s' "$CONTAINERS" | jq -c '[.[] | select(((((.label // "") + " " + (.container // "")) | ascii_downcase) | contains("rchk")) | not)]')
+        filtered=$(printf '%s' "$CONTAINERS" | jq -c '[.[] | (((.label // "") + " " + (.container // "")) | ascii_downcase) as $s | select((($s | contains("rchk")) or ($s | contains("valgrind"))) | not)]')
         echo "containers=$filtered" >> "$GITHUB_OUTPUT"
 
   linux-containers:
