@@ -127,7 +127,7 @@ ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   # Asymptotic linear representation of logit's beta's
   score.ps <- i.weights * (D - ps.fit) * int.cov
   #Hessian.ps <- stats::vcov(PS) * n
-  XtWX.ps <- t(int.cov) %*% (W * int.cov)
+  XtWX.ps <- base::crossprod(int.cov, W * int.cov)
   if (base::rcond(XtWX.ps) < .Machine$double.eps) {
     stop("The propensity score design matrix is singular. Consider removing some covariates.")
   }
@@ -161,11 +161,9 @@ ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
 
   # Estimation effect from the propensity score parametes
   # Derivative matrix (k x 1 vector)
-  mom.logit.pre <- -eta.cont.pre * int.cov
-  mom.logit.pre <- base::colMeans(mom.logit.pre)
+  mom.logit.pre <- as.vector(base::crossprod(-eta.cont.pre, int.cov))/n
 
-  mom.logit.post <- -eta.cont.post * int.cov
-  mom.logit.post <- base::colMeans(mom.logit.post)
+  mom.logit.post <- as.vector(base::crossprod(-eta.cont.post, int.cov))/n
 
   # Now the influence function related to estimation effect of pscores
   inf.logit <- asy.lin.rep.ps %*% (mom.logit.post - mom.logit.pre)

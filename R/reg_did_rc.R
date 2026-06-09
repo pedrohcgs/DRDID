@@ -172,7 +172,7 @@ reg_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   inf.cont.1 <- (reg.att.cont - w.cont * eta.cont)
   # Estimation effect from beta hat (OLS using only controls)
   # Derivative matrix (k x 1 vector)
-  M1 <- base::colMeans(w.cont * int.cov)
+  M1 <- as.vector(base::crossprod(w.cont, int.cov))/n
   # Now get the influence function related to the estimation effect related to beta's in post-treatment
   inf.cont.2.post <- asy.lin.rep.ols.post %*% M1
   # Now get the influence function related to the estimation effect related to beta's in pre-treatment

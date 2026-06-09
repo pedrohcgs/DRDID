@@ -125,7 +125,7 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   # Asymptotic linear representation of logit's beta's
   score.ps <- i.weights * (D - ps.fit) * int.cov
   #Hessian.ps <- stats::vcov(PS) * n
-  XtWX.ps <- t(int.cov) %*% (W * int.cov)
+  XtWX.ps <- base::crossprod(int.cov, W * int.cov)
   if (base::rcond(XtWX.ps) < .Machine$double.eps) {
     stop("The propensity score design matrix is singular. Consider removing some covariates.")
   }
@@ -136,8 +136,7 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   # Leading term of the influence function: no estimation effect
   att.lin1 <- att.treat - att.cont
   # Derivative matrix (k x 1 vector)
-  mom.logit <- att.cont * int.cov
-  mom.logit <- colMeans(mom.logit)
+  mom.logit <- as.vector(base::crossprod(att.cont, int.cov))/n
   # Now the influence function related to estimation effect of pscores
   att.lin2 <- asy.lin.rep.ps %*% mom.logit
   #get the influence function of the DR estimator (put all pieces together)

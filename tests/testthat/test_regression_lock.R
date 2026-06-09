@@ -39,6 +39,36 @@ test_that("core estimators reproduce locked ATT / se values (numeric regression 
   expect_equal(reg_did_rc(d$y, d$post, d$D, d$X, d$w)$se,        0.1682145937, tolerance = tol)
 })
 
+test_that("variant estimators reproduce locked ATT / se values (imp / locally-efficient / ipw)", {
+  # These exercise the calibration/IPT propensity path (drdid_imp_*) and the
+  # locally-efficient _rc1 variants, which the drdid() wrapper never dispatches to.
+  d <- make_lock_data()
+  tol <- 1e-6
+  expect_equal(drdid_imp_panel(d$y1, d$y0, d$D, d$X, d$w)$ATT, 0.6554104226, tolerance = tol)
+  expect_equal(drdid_imp_panel(d$y1, d$y0, d$D, d$X, d$w)$se,  0.0687576995, tolerance = tol)
+  expect_equal(drdid_imp_rc(d$y, d$post, d$D, d$X, d$w)$ATT,   0.8113031994, tolerance = tol)
+  expect_equal(drdid_imp_rc(d$y, d$post, d$D, d$X, d$w)$se,    0.1332967465, tolerance = tol)
+  expect_equal(drdid_rc1(d$y, d$post, d$D, d$X, d$w)$ATT,      0.8193261416, tolerance = tol)
+  expect_equal(drdid_rc1(d$y, d$post, d$D, d$X, d$w)$se,       0.1333364550, tolerance = tol)
+  expect_equal(drdid_imp_rc1(d$y, d$post, d$D, d$X, d$w)$ATT,  0.8137181969, tolerance = tol)
+  expect_equal(drdid_imp_rc1(d$y, d$post, d$D, d$X, d$w)$se,   0.1335479709, tolerance = tol)
+  expect_equal(ipw_did_panel(d$y1, d$y0, d$D, d$X, d$w)$ATT,   0.6553888841, tolerance = tol)
+  expect_equal(ipw_did_panel(d$y1, d$y0, d$D, d$X, d$w)$se,    0.0690703692, tolerance = tol)
+  expect_equal(ipw_did_rc(d$y, d$post, d$D, d$X, d$w)$ATT,     0.5248333685, tolerance = tol)
+  expect_equal(ipw_did_rc(d$y, d$post, d$D, d$X, d$w)$se,      0.3206457553, tolerance = tol)
+})
+
+test_that("trim.level changes the estimate when the propensity score is extreme", {
+  set.seed(7)
+  n <- 1500; x <- rnorm(n); D <- rbinom(n, 1, plogis(2.5 * x))  # strong selection -> high pscores
+  w <- rep(1, n); y0 <- x + rnorm(n); y1 <- y0 + D + rnorm(n)
+  r995 <- drdid_panel(y1, y0, D, cbind(1, x), w, trim.level = 0.995)
+  r90  <- drdid_panel(y1, y0, D, cbind(1, x), w, trim.level = 0.90)
+  expect_false(isTRUE(all.equal(r995$ATT, r90$ATT)))  # trimming actually bites
+  expect_equal(r995$ATT, 0.76261670, tolerance = 1e-5)
+  expect_equal(r90$ATT,  0.95775010, tolerance = 1e-5)
+})
+
 test_that("influence-function analytic invariants hold (mean(IF)=0, se = sd(IF) scaling)", {
   d <- make_lock_data()
   r <- drdid_panel(d$y1, d$y0, d$D, d$X, d$w, inffunc = TRUE)

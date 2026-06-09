@@ -155,7 +155,7 @@ reg_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   inf.cont.1 <- (reg.att.cont - w.cont * eta.cont)
   # Estimation effect from beta hat (OLS using only controls)
   # Derivative matrix (k x 1 vector)
-  M1 <- base::colMeans(w.cont * int.cov)
+  M1 <- as.vector(base::crossprod(w.cont, int.cov))/n
   # Now get the influence function related to the estimation effect related to beta's
   inf.cont.2 <- asy.lin.rep.ols %*% M1
   # Influence function for the control component

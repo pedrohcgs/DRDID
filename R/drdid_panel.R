@@ -131,11 +131,13 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   # First, the weights
   w.treat <- trim.ps * i.weights * D
   w.cont <- trim.ps * i.weights * ps.fit * (1 - D)/(1 - ps.fit)
+  mw.treat <- mean(w.treat)
+  mw.cont <- mean(w.cont)
   dr.att.treat <- w.treat * (deltaY - out.delta)
   dr.att.cont <- w.cont * (deltaY - out.delta)
 
-  eta.treat <- mean(dr.att.treat) / mean(w.treat)
-  eta.cont <- mean(dr.att.cont) / mean(w.cont)
+  eta.treat <- mean(dr.att.treat) / mw.treat
+  eta.cont <- mean(dr.att.cont) / mw.cont
 
   dr.att <-   eta.treat - eta.cont
   #-----------------------------------------------------------------------------
@@ -158,7 +160,7 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   # Asymptotic linear representation of logit's beta's
   score.ps <- i.weights * (D - ps.fit) * int.cov
   #Hessian.ps <- solve(t(int.cov) %*% (W * int.cov)) * n
-  XtWX.ps <- t(int.cov) %*% (W * int.cov)
+  XtWX.ps <- base::crossprod(int.cov, W * int.cov)
   if (base::rcond(XtWX.ps) < .Machine$double.eps) {
     stop("The propensity score design matrix is singular. Consider removing some covariates.")
   }
@@ -171,7 +173,7 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   inf.treat.1 <- (dr.att.treat - w.treat * eta.treat)
   # Estimation effect from beta hat
   # Derivative matrix (k x 1 vector)
-  M1 <- base::colMeans(w.treat * int.cov)
+  M1 <- as.vector(base::crossprod(w.treat, int.cov))/n
 
   # Now get the influence function related to the estimation effect related to beta's
   inf.treat.2 <- asy.lin.rep.wols %*% M1
@@ -182,18 +184,18 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   inf.cont.1 <- (dr.att.cont - w.cont * eta.cont)
   # Estimation effect from gamma hat (pscore)
   # Derivative matrix (k x 1 vector)
-  M2 <- base::colMeans(w.cont *(deltaY - out.delta - eta.cont) * int.cov)
+  M2 <- as.vector(base::crossprod(w.cont * (deltaY - out.delta - eta.cont), int.cov))/n
   # Now the influence function related to estimation effect of pscores
   inf.cont.2 <- asy.lin.rep.ps %*% M2
   # Estimation Effect from beta hat (weighted OLS)
-  M3 <-  base::colMeans(w.cont * int.cov)
+  M3 <-  as.vector(base::crossprod(w.cont, int.cov))/n
   inf.cont.3 <- asy.lin.rep.wols %*% M3
 
   # Influence function for the treated component
-  inf.treat <- (inf.treat.1 - inf.treat.2) / mean(w.treat)
+  inf.treat <- (inf.treat.1 - inf.treat.2) / mw.treat
 
   # Influence function for the control component
-  inf.control <- (inf.cont.1 + inf.cont.2 - inf.cont.3) / mean(w.cont)
+  inf.control <- (inf.cont.1 + inf.cont.2 - inf.cont.3) / mw.cont
 
   #get the influence function of the DR estimator (put all pieces together)
   dr.att.inf.func <- inf.treat - inf.control

@@ -172,7 +172,7 @@ drdid_rc1 <-function(y, post, D, covariates, i.weights = NULL,
   # Asymptotic linear representation of logit's beta's
   score.ps <- i.weights * (D - ps.fit) * int.cov
   #Hessian.ps <- stats::vcov(pscore.tr) * n
-  XtWX.ps <- t(int.cov) %*% (W * int.cov)
+  XtWX.ps <- base::crossprod(int.cov, W * int.cov)
   if (base::rcond(XtWX.ps) < .Machine$double.eps) {
     stop("The propensity score design matrix is singular. Consider removing some covariates.")
   }
@@ -186,8 +186,8 @@ drdid_rc1 <-function(y, post, D, covariates, i.weights = NULL,
 
   # Estimation effect from beta hat from post and pre-periods
   # Derivative matrix (k x 1 vector)
-  M1.post <- - base::colMeans(w.treat.post * post * int.cov)/mean(w.treat.post)
-  M1.pre <- - base::colMeans(w.treat.pre * (1 - post) * int.cov)/mean(w.treat.pre)
+  M1.post <- - as.vector(base::crossprod(w.treat.post, int.cov))/n/mean(w.treat.post)
+  M1.pre <- - as.vector(base::crossprod(w.treat.pre, int.cov))/n/mean(w.treat.pre)
 
   # Now get the influence function related to the estimation effect related to beta's
   inf.treat.or.post <- asy.lin.rep.ols.post %*% M1.post
@@ -204,15 +204,15 @@ drdid_rc1 <-function(y, post, D, covariates, i.weights = NULL,
 
   # Estimation effect from gamma hat (pscore)
   # Derivative matrix (k x 1 vector)
-  M2.pre <- base::colMeans(w.cont.pre *(y - out.y - att.cont.pre) * int.cov)/mean(w.cont.pre)
-  M2.post <- base::colMeans(w.cont.post *(y - out.y - att.cont.post) * int.cov)/mean(w.cont.post)
+  M2.pre <- as.vector(base::crossprod(w.cont.pre * (y - out.y - att.cont.pre), int.cov))/n/mean(w.cont.pre)
+  M2.post <- as.vector(base::crossprod(w.cont.post * (y - out.y - att.cont.post), int.cov))/n/mean(w.cont.post)
   # Now the influence function related to estimation effect of pscores
   inf.cont.ps <- asy.lin.rep.ps %*% (M2.post - M2.pre)
 
   # Estimation effect from beta hat from post and pre-periods
   # Derivative matrix (k x 1 vector)
-  M3.post <- - base::colMeans(w.cont.post * post * int.cov) / mean(w.cont.post)
-  M3.pre <- - base::colMeans(w.cont.pre * (1 - post) * int.cov) / mean(w.cont.pre)
+  M3.post <- - as.vector(base::crossprod(w.cont.post, int.cov))/n / mean(w.cont.post)
+  M3.pre <- - as.vector(base::crossprod(w.cont.pre, int.cov))/n / mean(w.cont.pre)
 
   # Now get the influence function related to the estimation effect related to beta's
   inf.cont.or.post <- asy.lin.rep.ols.post %*% M3.post
