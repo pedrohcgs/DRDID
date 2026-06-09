@@ -32,7 +32,8 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      containers: ${{ steps.rhub-setup.outputs.containers }}
+      # `containers` is filtered to drop rchk -- see the "Drop rchk" step below.
+      containers: ${{ steps.drop-rchk.outputs.containers }}
       platforms: ${{ steps.rhub-setup.outputs.platforms }}
 
     steps:
@@ -41,6 +42,21 @@ jobs:
       with:
         config: ${{ github.event.inputs.config }}
       id: rhub-setup
+    # --- local customization: never run rchk ---------------------------------
+    # rchk cannot analyze Rcpp's Shield/Armor protection templates, so it reports
+    # "unsupported form of unprotect" for EVERY Rcpp package and the run-check step
+    # fails on it. Those findings are in Rcpp's headers, not in this package, so we
+    # drop rchk from the container matrix here -- it will never run even if it is
+    # passed in the dispatch `config`. To restore the upstream default, delete this
+    # step and point `outputs.containers` back to `steps.rhub-setup.outputs.containers`
+    # (or re-run `rhub::rhub_setup(overwrite = TRUE)`).
+    - name: Drop rchk from the container matrix
+      id: drop-rchk
+      env:
+        CONTAINERS: ${{ steps.rhub-setup.outputs.containers }}
+      run: |
+        filtered=$(printf '%s' "$CONTAINERS" | jq -c '[.[] | select(((((.label // "") + " " + (.container // "")) | ascii_downcase) | contains("rchk")) | not)]')
+        echo "containers=$filtered" >> "$GITHUB_OUTPUT"
 
   linux-containers:
     needs: setup
