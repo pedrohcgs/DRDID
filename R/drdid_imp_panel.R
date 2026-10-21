@@ -27,9 +27,9 @@ NULL
 #'  \item{uci}{The upper bound of the 95\% CI for the ATT.}
 #'  \item{lci}{The lower bound of the 95\% CI for the ATT}
 #'  \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is \code{NULL}.}
-#'  \item{ps.flag}{Convergence Flag for the propensity score estimation: =0 if \code{trust} algorithm converged,
-#'    =1 if IPW algorithm converged (in case it was used), =2 if GLM logit estimator was used (i.e., if both \code{trust} and IPT
-#'    did not converged).}
+#'  \item{ps.flag}{Source of the verified IPT propensity-score fit: =0 for the \code{trust}
+#'    candidate, =1 for the secondary IPT candidate. A candidate must satisfy the original
+#'    exponential-IPT equations to numerical tolerance; optimizer status alone is insufficient.}
 #'  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
 #'  \item{call.param}{The matched call.}
 #'  \item{argu}{Some arguments used (explicitly or not) in the call (panel = TRUE, estMethod = "imp", boot, boot.type, nboot, type="dr")}
@@ -47,6 +47,13 @@ NULL
 #'
 #'
 #' @details
+#'
+#' Propensity-score fitting must satisfy the original exponential-IPT equations. If neither
+#' fitting route provides a verified solution, estimation stops rather than substituting
+#' a logit MLE. To explicitly use the traditional estimator, call \code{drdid_panel()}
+#' (or \code{drdid(..., estMethod = "trad")}). This changes both propensity-score and
+#' outcome-regression fitting. Each weighted-bootstrap replicate must also have a verified
+#' IPT fit; a failed replicate stops the bootstrap without skipping or redrawing it.
 #'
 #' The \code{drdid_imp_panel} function implements the locally efficient doubly robust difference-in-differences (DiD)
 #' estimator for the average treatment effect on the treated (ATT) defined in equation (3.1)
