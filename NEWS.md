@@ -1,5 +1,10 @@
 # DRDID (development version)
 
+  * `ipw_did_rc()` now includes the effect of sample-mean normalization of
+    observation weights in its influence function and the resulting analytic
+    and multiplier-bootstrap inference under iid sampling. The ATT point
+    estimate is unchanged.
+
   * `twfe_did_panel()` now accounts for dependence between each individual's
     pre/post observations in its analytical standard error. With covariates,
     the returned influence function now has one value per individual instead
