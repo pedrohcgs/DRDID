@@ -17,7 +17,7 @@ loss.ps.IPT <- function(gamma1, n, D, int.cov, iw){
   #phi2 <- (v<vstar) * (- exp(v)) + (v>=vstar) * cn
 
   # Minus is because nlm minimizes functions, and we aim to maximize!
-  res <- - sum(iw * (1 - D) * phi + v)
+  res <- - sum(iw * ((1 - D) * phi + v))
 
   attr(res, "gradient") <- - t(int.cov) %*% as.vector(iw * ((1-D) * phi1 + 1))
   attr(res, "hessian")  <-  - t(as.vector((1-D) * iw * phi2) * int.cov) %*% int.cov

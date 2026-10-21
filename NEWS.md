@@ -1,5 +1,11 @@
 # DRDID (development version)
 
+  * The IPT propensity-score fallback used by the improved DR estimators now
+    weights its full objective consistently with its gradient and Hessian.
+    This corrects optimization with unequal observation or bootstrap weights
+    when the primary `trust` fit does not converge. The primary fit and the
+    separate ordinary-logit fallback inference policy are unchanged.
+
   * The weighted bootstrap in `ipw_did_rc()` now refits the same statistic as
     the point estimator, including normalization of the combined observation
     and bootstrap weights and the full-sample pre/post time shares. Trimming
