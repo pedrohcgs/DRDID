@@ -7,6 +7,8 @@
     without small-sample corrections and the other panel estimators' convention.
     The point estimate and both bootstrap procedures are preserved, up to
     floating-point precision. The no-covariate inference path is unchanged.
+    Direct calls now reject missing or mismatched individual inputs before
+    fitting, preventing row omission from breaking pre/post alignment.
 
   * Panel preprocessing for `drdid()`, `ordid()`, and `ipwdid()` now removes
     both observations of a unit when either outcome is missing,

@@ -187,3 +187,60 @@ test_that("the no-covariate panel fallback retains its existing inference", {
   }
   expect_null(twfe_did_panel(d$y1, d$y0, d$D, d$X, d$w)$att.inf.func)
 })
+
+test_that("direct panel TWFE calls reject incomplete individuals before fitting", {
+  d <- make_twfe_inference_data()
+  original <- list(y1 = d$y1, y0 = d$y0, D = d$D, covariates = d$X,
+                   i.weights = d$w, inffunc = TRUE, nboot = 7)
+  for (component in c("y0", "y1", "D", "i.weights", "covariates")) {
+    args <- original
+    # An outcome NA removes just one stacked row in lm; an X NA removes both
+    # rows of that individual. Neither may silently change the pairing indices.
+    args[[component]][3] <- NA_real_
+    for (method in c("analytic", "weighted", "multiplier")) {
+      args$boot <- method != "analytic"
+      args$boot.type <- if (method == "analytic") "weighted" else method
+      expect_error(do.call(twfe_did_panel, args), "Panel inputs must be complete")
+    }
+  }
+})
+
+test_that("zero-weight individuals cannot have missing panel outcomes or covariates", {
+  d <- make_twfe_inference_data()
+  original <- list(y1 = d$y1, y0 = d$y0, D = d$D, covariates = d$X,
+                   i.weights = d$w, inffunc = TRUE)
+  original$i.weights[3] <- 0
+  for (component in c("y0", "y1", "covariates")) {
+    args <- original
+    args[[component]][3] <- NA_real_
+    expect_error(do.call(twfe_did_panel, args), "Panel inputs must be complete")
+  }
+})
+
+test_that("direct panel TWFE inputs must have one entry or row per individual", {
+  d <- make_twfe_inference_data()
+  original <- list(y1 = d$y1, y0 = d$y0, D = d$D, covariates = d$X,
+                   i.weights = d$w, inffunc = TRUE)
+  for (component in c("y0", "y1", "D")) {
+    for (size in c(d$n - 1, d$n + 1)) {
+      args <- original
+      args[[component]] <- rep(original[[component]], length.out = size)
+      expect_error(do.call(twfe_did_panel, args),
+                    "y0 and y1 must each have one outcome per individual in D")
+    }
+  }
+  for (size in c(d$n - 1, d$n + 1)) {
+    args <- original
+    args$i.weights <- rep(d$w, length.out = size)
+    expect_error(do.call(twfe_did_panel, args),
+                  "i.weights must have one weight per individual in D")
+
+    args <- original
+    args$covariates <- matrix(rep(d$X, length.out = 2 * size), nrow = size)
+    expect_error(do.call(twfe_did_panel, args),
+                  "covariates must have one row per individual in D")
+    args$covariates <- rep(d$X[, 1], length.out = size)
+    expect_error(do.call(twfe_did_panel, args),
+                  "covariates must have one row per individual in D")
+  }
+})

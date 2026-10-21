@@ -32,6 +32,11 @@ NULL
 #' The variance is the sum of squared centered individual influence values divided
 #' by \eqn{n^2}, without degrees-of-freedom or cluster-count corrections. Both
 #' bootstrap methods also apply a common random weight to an individual's two observations.
+#'
+#' Inputs must be complete and have one observation per individual: \code{y0},
+#' \code{y1}, \code{D}, and non-NULL weights must have the same length, and
+#' non-NULL covariates must have one row per individual. Remove incomplete
+#' individuals before calling this function; it does not drop observations internally.
 #' @examples
 #' # Form the Lalonde sample with CPS comparison group
 #' eval_lalonde_cps <- subset(nsw, nsw$treated == 0 | nsw$sample == 2)
@@ -59,6 +64,19 @@ twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   D <- as.vector(D)
   # Sample size
   n <- length(D)
+  # Positional pre/post pairing requires complete, conformable unit inputs.
+  if (length(y0) != n || length(y1) != n) {
+    stop("y0 and y1 must each have one outcome per individual in D.")
+  }
+  if (!is.null(covariates) && nrow(as.matrix(covariates)) != n) {
+    stop("covariates must have one row per individual in D.")
+  }
+  if (!is.null(i.weights) && length(i.weights) != n) {
+    stop("i.weights must have one weight per individual in D.")
+  }
+  if (anyNA(y0) || anyNA(y1) || anyNA(D) || anyNA(covariates) || anyNA(i.weights)) {
+    stop("Panel inputs must be complete. Remove individuals with missing outcomes, treatment, covariates, or weights before calling twfe_did_panel().")
+  }
   # Weights
   if(is.null(i.weights)) {
     i.weights <- as.vector(rep(1, n))
@@ -103,7 +121,8 @@ twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
     #---------------------------------------------------------------------------
     #Estimate TWFE regression
 
-    reg <- stats::lm(y ~  dd:post + post + dd + x, x = TRUE, weights = i.weights)
+    reg <- stats::lm(y ~  dd:post + post + dd + x, x = TRUE, weights = i.weights,
+                     na.action = stats::na.fail)
 
 
     twfe.att <- reg$coefficients["dd:post"]

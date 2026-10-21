@@ -56,6 +56,11 @@ Analytical inference clusters the two observations of each individual together.
 The variance is the sum of squared centered individual influence values divided
 by \eqn{n^2}, without degrees-of-freedom or cluster-count corrections. Both
 bootstrap methods also apply a common random weight to an individual's two observations.
+
+Inputs must be complete and have one observation per individual: \code{y0},
+\code{y1}, \code{D}, and non-NULL weights must have the same length, and
+non-NULL covariates must have one row per individual. Remove incomplete
+individuals before calling this function; it does not drop observations internally.
 }
 \examples{
 # Form the Lalonde sample with CPS comparison group
