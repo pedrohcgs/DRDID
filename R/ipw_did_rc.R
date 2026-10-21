@@ -170,6 +170,8 @@ ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   #get the influence function of the DR estimator (put all pieces together)
   att.inf.func <- (inf.treat.post - inf.treat.pret) - (inf.cont.post - inf.cont.pret) +
     inf.logit
+  # Effect of estimating the mean used to normalize the observation weights.
+  att.inf.func <- att.inf.func + ipw.att * (i.weights - 1)
   #-----------------------------------------------------------------------------
   if (boot == FALSE) {
     # Estimate of standard error
