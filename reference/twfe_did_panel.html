@@ -142,9 +142,21 @@ If <code>boot = TRUE</code>, default is "weighted".</p></dd>
 <dd><p>All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL</p></dd>
 
  <dt>att.inf.func</dt>
-<dd><p>Estimate of the influence function. Default is NULL</p></dd>
+<dd><p>A vector of \(n\) estimated influence values, one per individual,
+ in the same order as <code>y0</code> and <code>y1</code>. Default is NULL.</p></dd>
 
 </dl></div>
+    <div id="details">
+    <h2>Details</h2>
+    <p>Analytical inference clusters the two observations of each individual together.
+The variance is the sum of squared centered individual influence values divided
+by \(n^2\), without degrees-of-freedom or cluster-count corrections. Both
+bootstrap methods also apply a common random weight to an individual's two observations.</p>
+<p>Inputs must be complete and have one observation per individual: <code>y0</code>,
+<code>y1</code>, <code>D</code>, and non-NULL weights must have the same length, and
+non-NULL covariates must have one row per individual. Remove incomplete
+individuals before calling this function; it does not drop observations internally.</p>
+    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
@@ -168,15 +180,15 @@ If <code>boot = TRUE</code>, default is "weighted".</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  702.58 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $se</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 595.31</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 530.9239</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $uci</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  dd:post </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1869.388 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1743.191 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $lci</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   dd:post </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -464.2276 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -338.0308 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $boots</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
