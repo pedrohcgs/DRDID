@@ -1,5 +1,12 @@
 # DRDID (development version)
 
+  * The weighted bootstrap in `ipw_did_rc()` now refits the same statistic as
+    the point estimator, including normalization of the combined observation
+    and bootstrap weights and the full-sample pre/post time shares. Trimming
+    affects comparison contributions, as in the point estimator. Weighted
+    bootstrap draws, standard errors, and intervals can change; the original
+    ATT, analytic inference, and multiplier bootstrap are unchanged.
+
   * `ipw_did_rc()` now includes the effect of sample-mean normalization of
     observation weights in its influence function and the resulting analytic
     and multiplier-bootstrap inference under iid sampling. The ATT point
