@@ -24,7 +24,14 @@ NULL
 #'  \item{uci}{Estimate of the upper bound of a 95\% CI for the TWFE parameter.}
 #'  \item{lci}{Estimate of the lower bound of a 95\% CI for the TWFE parameter.}
 #'  \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
-#'  \item{att.inf.func}{Estimate of the influence function. Default is NULL}
+#'  \item{att.inf.func}{A vector of \eqn{n} estimated influence values, one per individual,
+#'  in the same order as \code{y0} and \code{y1}. Default is NULL.}
+#'
+#' @details
+#' Analytical inference clusters the two observations of each individual together.
+#' The variance is the sum of squared centered individual influence values divided
+#' by \eqn{n^2}, without degrees-of-freedom or cluster-count corrections. Both
+#' bootstrap methods also apply a common random weight to an individual's two observations.
 #' @examples
 #' # Form the Lalonde sample with CPS comparison group
 #' eval_lalonde_cps <- subset(nsw, nsw$treated == 0 | nsw$sample == 2)
@@ -118,12 +125,14 @@ twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
 
     sel.theta[index.theta, ] <- 1
     #-----------------------------------------------------------------------------
-    #get the influence function of the TWFE regression
-    att.inf.func <- as.vector(inf.reg %*% sel.theta)
+    # The row Hessian uses 2n observations. Average the two row contributions
+    # to obtain one influence value per independent panel unit.
+    row.inf.func <- as.vector(inf.reg %*% sel.theta)
+    att.inf.func <- (row.inf.func[seq_len(n)] + row.inf.func[n + seq_len(n)]) / 2
     #-----------------------------------------------------------------------------
     if (boot == FALSE) {
       # Estimate of standard error
-      se.twfe.att <- stats::sd(att.inf.func)/sqrt(length(att.inf.func))
+      se.twfe.att <- stats::sd(att.inf.func) * sqrt(n - 1) / n
       # Estimate of upper boudary of 95% CI
       uci <- twfe.att + 1.96 * se.twfe.att
       # Estimate of lower doundary of 95% CI
@@ -136,7 +145,7 @@ twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
       if (is.null(nboot) == TRUE) nboot = 999
       if(boot.type == "multiplier"){
         # do multiplier bootstrap
-        twfe.boot <- mboot.twfep.did(n, att.inf.func, nboot)
+        twfe.boot <- mboot.did(att.inf.func, nboot)
         # get bootstrap std errors based on IQR
         se.twfe.att <- stats::IQR(twfe.boot) / (stats::qnorm(0.75) - stats::qnorm(0.25))
         # get symmetric critical values
