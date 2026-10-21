@@ -219,6 +219,9 @@ pre_process_drdid <- function(yname,
     # make it a balanced data set
     dta <- BMisc::make_balanced_panel(dta, idname, tname)
 
+    # Keep IDs separate so they cannot enter the covariate matrix.
+    panel_ids <- dta[[idname]]
+
     # Only use this smaller dataset
     dta <- as.data.frame(cbind(y = dta$y,
                                D = dta$D,
@@ -233,39 +236,65 @@ pre_process_drdid <- function(yname,
     missing_y_flag <- base::anyNA(dta$y)
     missing_w_flag <- base::anyNA(dta$w)
 
-    # Warning messages
-    if(missing_X_flag) warning("Some covariates are missing (NA). We are dropping those observations")
-    if(missing_D_flag) warning("Some treatment indicators are missing (NA). We are dropping those observations")
-    if(missing_post_flag) warning("Some post-treatment indicators are missing (NA). We are dropping those observations")
-    if(missing_w_flag) warning("Some weights are missing (NA). We are dropping those observations")
-    if(missing_y_flag) warning("Some outcomes are missing (NA). We are dropping those observations")
+    # Missingness in either period excludes the whole panel unit. Removing
+    # individual rows would destroy the alignment of the pre/post outcomes.
+    incomplete_ids <- unique(panel_ids[!stats::complete.cases(dta)])
+    keep_rows <- !(panel_ids %in% incomplete_ids)
+    missing_message <- paste0(" We are dropping all observations for ",
+                              length(incomplete_ids), " affected panel unit(s).")
 
-    # Remove NAs
-    dta <- dta[stats::complete.cases(dta), ]
-    covariates <- base::as.matrix(dta[,-c(1:4)])
+    # Warning messages
+    if(missing_X_flag) warning("Some covariates are missing (NA).", missing_message)
+    if(missing_D_flag) warning("Some treatment indicators are missing (NA).", missing_message)
+    if(missing_post_flag) warning("Some post-treatment indicators are missing (NA).", missing_message)
+    if(missing_w_flag) warning("Some weights are missing (NA).", missing_message)
+    if(missing_y_flag) warning("Some outcomes are missing (NA).", missing_message)
+
+    dta <- dta[keep_rows, , drop = FALSE]
+    panel_ids <- panel_ids[keep_rows]
+
+    # Match by ID rather than relying on equal pre/post vector lengths.
+    pre_rows <- which(dta$post == 0)
+    post_rows <- which(dta$post == 1)
+    pre_match <- match(panel_ids[post_rows], panel_ids[pre_rows])
+    if (length(pre_rows) != length(post_rows) || anyNA(pre_match)) {
+      stop("Error: panel observations could not be matched by id across time periods.")
+    }
+    pre_rows <- pre_rows[pre_match]
+
+    # Count retained units, including groups that disappeared after filtering.
+    retained_gsize <- table(factor(dta$D[post_rows], levels = glist))
+    if (any(retained_gsize < reqsize)) {
+      stop("Either treatment or the comparison group in your dataset is very small after removing incomplete panel units. Inference is not feasible.")
+    }
+
+    covariates <- base::as.matrix(dta[, -c(1:4), drop = FALSE])
     # Drop collinear covariates
     qr.covariates <-  base::qr(covariates,
                                tol=1e-6,
                                LAPACK = FALSE)
     rnk_covariates <- qr.covariates$rank
+    if (rnk_covariates == 0L) {
+      stop("The covariate matrix has no linearly independent columns.")
+    }
     keep_x <- qr.covariates$pivot[seq_len(rnk_covariates)]
     # Check if any covariates were dropped due to collinearity
-    dropped_covariates <- setdiff(colnames(covariates), colnames(covariates[, keep_x]))
+    dropped_covariates <- setdiff(colnames(covariates), colnames(covariates)[keep_x])
     if (length(dropped_covariates) > 0) {
       warning("The following covariates were dropped due to collinearity: ", paste(dropped_covariates, collapse = ", "))
     }
 
-    covariates <- covariates[, keep_x]
+    covariates <- covariates[, keep_x, drop = FALSE]
 
 
 
 
-    out <- list(y1 = subset(dta$y, dta$post==1),
-                y0 = subset(dta$y, dta$post==0),
-                D = subset(dta$D, dta$post==1),
-                covariates = subset(covariates, dta$post==1),
+    out <- list(y1 = dta$y[post_rows],
+                y0 = dta$y[pre_rows],
+                D = dta$D[post_rows],
+                covariates = covariates[post_rows, , drop = FALSE],
                 # Normalize weights
-                i.weights = subset(dta$w, dta$post==1)/mean(subset(dta$w, dta$post==1)),
+                i.weights = dta$w[post_rows]/mean(dta$w[post_rows]),
                 panel = panel,
                 estMethod = estMethod,
                 normalized = normalized,

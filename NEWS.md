@@ -1,5 +1,12 @@
 # DRDID (development version)
 
+  * Panel preprocessing for `drdid()`, `ordid()`, and `ipwdid()` now removes
+    both observations of a unit when either outcome is missing,
+    matches pre/post outcomes by individual ID, and checks group sizes after
+    exclusions. Previously, dropping individual rows with missing outcomes could
+    silently pair different individuals and produce incorrect point estimates
+    and standard errors. Warnings now report the number of affected panel units.
+
   * `drdid_rc()` and `drdid_rc1()`: the estimation effect of the pre-period
     outcome regression for the comparison group now enters the influence function
     with the sign given in Appendix B of Sant'Anna and Zhao (2020). It previously
