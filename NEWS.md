@@ -1,3 +1,13 @@
+# DRDID (development version)
+
+  * `drdid_rc()` and `drdid_rc1()`: the estimation effect of the pre-period
+    outcome regression for the comparison group now enters the influence function
+    with the sign given in Appendix B of Sant'Anna and Zhao (2020). It previously
+    entered with the opposite sign. Point estimates are unchanged. Analytic and
+    multiplier-bootstrap standard errors change. The two versions agree
+    asymptotically when the propensity score model is correctly specified, but
+    not when only the outcome regressions are.
+
 # DRDID 1.3.0
 
 This release substantially speeds up the 2x2 estimators and tightens the handling
