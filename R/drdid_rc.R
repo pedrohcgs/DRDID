@@ -328,8 +328,9 @@ drdid_rc <-function(y, post, D, covariates, i.weights = NULL,
   # inf.or.post <- batch_results_post$inf_or
 
   # get the influence function related to the estimation effect related to beta's
-  inf.treat.or <- inf.treat.or.post + inf.treat.or.pre
-  inf.cont.or <- inf.cont.or.post + inf.cont.or.pre
+  # pre-period components enter the ATT with a minus sign
+  inf.treat.or <- inf.treat.or.post - inf.treat.or.pre
+  inf.cont.or <- inf.cont.or.post - inf.cont.or.pre
   # Now the estimation effect of the OR coefficients
   inf.or <- inf.or.post - inf.or.pre
 

@@ -192,7 +192,8 @@ drdid_rc1 <-function(y, post, D, covariates, i.weights = NULL,
   # Now get the influence function related to the estimation effect related to beta's
   inf.treat.or.post <- asy.lin.rep.ols.post %*% M1.post
   inf.treat.or.pre <- asy.lin.rep.ols.pre %*% M1.pre
-  inf.treat.or <- inf.treat.or.post + inf.treat.or.pre
+  # pre-period components enter the ATT with a minus sign
+  inf.treat.or <- inf.treat.or.post - inf.treat.or.pre
 
   # Influence function for the treated component
   inf.treat <- inf.treat.post - inf.treat.pre + inf.treat.or
@@ -217,7 +218,7 @@ drdid_rc1 <-function(y, post, D, covariates, i.weights = NULL,
   # Now get the influence function related to the estimation effect related to beta's
   inf.cont.or.post <- asy.lin.rep.ols.post %*% M3.post
   inf.cont.or.pre <- asy.lin.rep.ols.pre %*% M3.pre
-  inf.cont.or <- inf.cont.or.post + inf.cont.or.pre
+  inf.cont.or <- inf.cont.or.post - inf.cont.or.pre
 
   # Influence function for the control component
   inf.cont <- inf.cont.post - inf.cont.pre + inf.cont.ps + inf.cont.or
