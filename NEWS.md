@@ -1,5 +1,14 @@
 # DRDID (development version)
 
+  * IPT objectives now recover finite weighted nonlinear contributions when
+    unweighted exponentials or tail polynomials overflow or underflow.
+    Exceptional-range aggregation also avoids overflowing a
+    primary Hessian sum when its mean is finite. The secondary objective uses
+    the same quadratic continuation, centered at its original join, and avoids
+    cancellation in its exponential branch. Neither criterion, the fitting
+    policy, nor the validation of returned IPT candidates is changed. These
+    arithmetic safeguards do not guarantee every extreme fit will succeed.
+
   * Both IPT objective functions now exclude zero-weight rows before evaluating
     fitted indices, exponentials, and matrix products. Extreme covariates in
     those rows no longer produce undefined zero-times-infinity contributions.
