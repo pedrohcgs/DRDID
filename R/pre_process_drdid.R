@@ -91,9 +91,6 @@ pre_process_drdid <- function(yname,
   #}
 
 
-  # set weights if null
-  base::ifelse(is.null(weightsname), w <- rep(1,nrow(dta)), w <- dta[,weightsname])
-  dta$w <- w
 
 
   # make sure time periods are numeric
@@ -159,12 +156,12 @@ pre_process_drdid <- function(yname,
   }
 
 
-  # Outcome variable will be denoted by y
-  dta$y <- dta[, yname]
-  # group will be denoted by D
-  dta$D <- dta[, dname]
-  # Post dummy will be denoted by post
-  dta$post <- as.numeric(dta[,tname] == tlist[2])
+  # Keep estimator inputs separate from user columns. Formula evaluation must
+  # see the original data, including columns named y, D, post, or w.
+  y <- dta[[yname]]
+  D <- dta[[dname]]
+  post <- as.numeric(dta[[tname]] == tlist[2])
+  w <- if (is.null(weightsname)) rep(1, nrow(dta)) else dta[[weightsname]]
   # matrix of covariates
   covariates <- stats::model.matrix(xformla,
                                     stats::model.frame(xformla,
@@ -174,14 +171,14 @@ pre_process_drdid <- function(yname,
   #check if covariates and group are time invariant in the panel data case.
   # matrix of covariates for pre-period and post periods
   covariates_pre <- stats::model.matrix(xformla,
-                                        data=subset(dta, dta$post==0))
+                                        data=dta[post == 0, , drop = FALSE])
   covariates_post <- stats::model.matrix(xformla,
-                                         data=subset(dta, dta$post==1))
+                                         data=dta[post == 1, , drop = FALSE])
 
-  d_pre <- subset(dta$D, dta$post==0)
-  d_post <- subset(dta$D, dta$post==1)
-  w_pre <- subset(dta$w, dta$post==0)
-  w_post <- subset(dta$w, dta$post==1)
+  d_pre <- D[post == 0]
+  d_post <- D[post == 1]
+  w_pre <- w[post == 0]
+  w_post <- w[post == 1]
 
   if (panel) {
     if (!all(covariates_pre==covariates_post)) {
@@ -197,8 +194,8 @@ pre_process_drdid <- function(yname,
 
 
   # check against very small groups
-  gsize <- stats::aggregate(dta$D,
-                            by=list(dta$D),
+  gsize <- stats::aggregate(D,
+                            by=list(D),
                             function(x) length(x)/length(tlist))
 
   # how many in each group before give warning
@@ -223,10 +220,10 @@ pre_process_drdid <- function(yname,
     panel_ids <- dta[[idname]]
 
     # Only use this smaller dataset
-    dta <- as.data.frame(cbind(y = dta$y,
-                               D = dta$D,
-                               post = dta$post,
-                               w = dta$w,
+    dta <- as.data.frame(cbind(y = y,
+                               D = D,
+                               post = post,
+                               w = w,
                                covariates))
 
     # Check if we have missing values
@@ -307,10 +304,10 @@ pre_process_drdid <- function(yname,
   }
   else {
     # Only use this smaller dataset
-    dta <- as.data.frame(cbind(y = dta$y,
-                               D = dta$D,
-                               post = dta$post,
-                               w = dta$w,
+    dta <- as.data.frame(cbind(y = y,
+                               D = D,
+                               post = post,
+                               w = w,
                                covariates))
 
     # Check if we have missing values
