@@ -1,13 +1,52 @@
 # Exceptional-range arithmetic for the two IPT criteria. Reliable ordinary
 # products retain their mantissas; exceptional products retain binary scaling
 # until the complete signed sum and original divisor have been applied.
-ipt.loss.in.range <- function(index, control, X, iw, n) {
-  if (n < 2 || n > 1e50 || any(abs(iw) < 1e-50 | abs(iw) > 1e50)) return(FALSE)
+ipt.loss.prepare <- function(D, X, iw) {
+  n <- nrow(X)
+  active <- iw != 0
+  if (!all(active)) {
+    D <- D[active]
+    X <- X[active, , drop = FALSE]
+    iw <- iw[active]
+  }
   abs.X <- abs(X)
-  if (any(abs.X > 1e50 | (abs.X != 0 & abs.X < 1e-50))) return(FALSE)
+  nonzero.X <- abs.X[abs.X != 0]
+  X.range <- if (length(nonzero.X)) range(nonzero.X) else c(0, 0)
+  ordinary.range <- !any(abs(iw) < 1e-50 | abs(iw) > 1e50) &&
+    !any(abs.X > 1e50 | (abs.X != 0 & abs.X < 1e-50))
+  list(D = D, X = X, iw = iw, n = n, control = D == 0,
+       sample.fraction = length(iw) / n, ordinary.range = ordinary.range,
+       X.range = X.range)
+}
+
+ipt.loss.in.range <- function(index, control, prepared, n) {
+  if (n < 2 || n > 1e50 || !prepared$ordinary.range) return(FALSE)
   if (any(abs(index[control]) > 100)) return(FALSE)
   linear.index <- abs(index[!control])
   !any(linear.index > 1e100 | (linear.index != 0 & linear.index < 1e-100))
+}
+
+# Certify every nonzero derivative product with scalar magnitude bounds.
+# Both Hessian multiplication orders are covered by checking each successive
+# X factor. The margins keep a rounded bound away from the normal/finite
+# boundaries; underflow or overflow while forming a bound simply rejects it.
+ipt.loss.normal.products <- function(loading, X.range, degree) {
+  if (X.range[2] == 0) return(TRUE)
+  magnitude <- abs(loading[loading != 0])
+  if (!length(magnitude)) return(TRUE)
+  bounds <- range(magnitude)
+  for (i in seq_len(degree)) {
+    bounds <- bounds * X.range
+    if (any(!is.finite(bounds)) || bounds[1] < 4 * .Machine$double.xmin ||
+        bounds[2] > .Machine$double.xmax / 4) return(FALSE)
+  }
+  TRUE
+}
+
+ipt.loss.products.in.range <- function(terms, prepared) {
+  all(terms$value.safe) && all(terms$gradient.safe) && all(terms$hessian.safe) &&
+    ipt.loss.normal.products(terms$gradient, prepared$X.range, 1) &&
+    ipt.loss.normal.products(terms$hessian, prepared$X.range, 2)
 }
 
 # A product is reliable only if no earlier multiplication lost range.

@@ -1,6 +1,5 @@
 # Loss for the original exponential-IPT criterion, using trust (Tan, 2019).
-loss.ps.cal <- function(gam, D, int.cov, iw) {
-  n <- nrow(int.cov)
+loss.ps.cal <- function(gam, D, int.cov, iw, .ipt = NULL) {
   k <- ncol(int.cov)
   if (any(is.na(gam))) {
     return(list(value = Inf, gradient = rep(NA, k), hessian = matrix(NA, k, k)))
@@ -8,18 +7,17 @@ loss.ps.cal <- function(gam, D, int.cov, iw) {
 
   # Exclude zero weights before indices or nonlinear arithmetic; keep n in
   # the mean criterion. Treated rows require only their linear contribution.
-  active <- iw != 0
-  if (!any(active)) {
+  if (is.null(.ipt)) .ipt <- ipt.loss.prepare(D, int.cov, iw)
+  n <- .ipt$n
+  D <- .ipt$D
+  int.cov <- .ipt$X
+  iw <- .ipt$iw
+  if (!length(iw)) {
     return(list(value = 0, gradient = rep(0, k), hessian = matrix(0, k, k)))
   }
-  if (!all(active)) {
-    D <- D[active]
-    int.cov <- int.cov[active, , drop = FALSE]
-    iw <- iw[active]
-  }
-  sample.fraction <- length(iw) / n
+  sample.fraction <- .ipt$sample.fraction
   ps.ind <- as.vector(int.cov %*% gam)
-  control <- D == 0
+  control <- .ipt$control
   exp.ps.ind <- numeric(length(iw))
   exp.ps.ind[control] <- exp(ps.ind[control])
 
@@ -28,7 +26,7 @@ loss.ps.cal <- function(gam, D, int.cov, iw) {
   grad <- -apply(ifelse(D, 1, -exp.ps.ind) * iw * int.cov, 2, mean) * sample.fraction
   hess <- -(t(int.cov) %*% (ifelse(D, 0, -exp.ps.ind) * iw * int.cov)) / n
   if (all(is.finite(c(val, grad, hess))) &&
-      ipt.loss.in.range(ps.ind, control, int.cov, iw, n)) {
+      ipt.loss.in.range(ps.ind, control, .ipt, n)) {
     return(list(value = val, gradient = grad, hessian = hess))
   }
 
@@ -47,6 +45,9 @@ loss.ps.cal <- function(gam, D, int.cov, iw) {
                 gradient = loading, gradient.safe = loading.safe,
                 hessian = mass$value, hessian.safe = mass$safe,
                 hessian.column.first = TRUE)
+  if (all(is.finite(c(val, grad, hess))) && ipt.loss.products.in.range(terms, .ipt)) {
+    return(list(value = val, gradient = grad, hessian = hess))
+  }
   repair <- function(rows, j = NULL, l = NULL) {
     ipt.loss.recover(ps.ind, D, int.cov, iw, rows, j, l)
   }

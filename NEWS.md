@@ -22,7 +22,8 @@
     creating avoidable overflowing or underflowing intermediate exponentials.
     Weighted values, gradients, and Hessians retain representable terms and
     reject unresolved opposing overflow terms. The original criteria and
-    continuation rule are preserved.
+    continuation rule are preserved. Fitting reuses fixed-data checks and
+    avoids unnecessary exceptional arithmetic while retaining these safeguards.
 
   * Zero-weight rows no longer enter IPT objective, gradient, or Hessian
     arithmetic. Extreme finite covariates in those rows cannot create NaNs

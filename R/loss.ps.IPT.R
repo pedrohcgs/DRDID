@@ -1,13 +1,11 @@
 # Continued IPT criterion of Graham, Pinto and Egel (2012, 2016).
-loss.ps.IPT <- function(gamma1, n, D, int.cov, iw) {
+loss.ps.IPT <- function(gamma1, n, D, int.cov, iw, .ipt = NULL) {
   # The declared n determines the original continuation threshold, including
   # zero-weight rows excluded from arithmetic.
-  active <- iw != 0
-  if (!all(active)) {
-    D <- D[active]
-    int.cov <- int.cov[active, , drop = FALSE]
-    iw <- iw[active]
-  }
+  if (is.null(.ipt)) .ipt <- ipt.loss.prepare(D, int.cov, iw)
+  D <- .ipt$D
+  int.cov <- .ipt$X
+  iw <- .ipt$iw
   k <- ncol(int.cov)
   if (!length(iw)) {
     res <- 0
@@ -17,7 +15,7 @@ loss.ps.IPT <- function(gamma1, n, D, int.cov, iw) {
     return(res)
   }
   v <- as.vector(int.cov %*% gamma1)
-  control <- D == 0
+  control <- .ipt$control
   exponential <- control & v < log(n - 1)
   tail <- control & !exponential
   t <- v[tail] - log(n - 1)
@@ -39,7 +37,7 @@ loss.ps.IPT <- function(gamma1, n, D, int.cov, iw) {
   gradient <- t(int.cov) %*% score
   hessian <- t(curvature * int.cov) %*% int.cov
   if (all(is.finite(c(res, gradient, hessian))) &&
-      ipt.loss.in.range(v, control, int.cov, iw, n)) {
+      ipt.loss.in.range(v, control, .ipt, n)) {
     attr(res, "gradient") <- gradient
     attr(res, "hessian") <- hessian
     return(res)
@@ -63,6 +61,11 @@ loss.ps.IPT <- function(gamma1, n, D, int.cov, iw) {
   terms <- list(value = value, value.safe = value.safe,
                 gradient = score, gradient.safe = gradient.safe,
                 hessian = curvature, hessian.safe = hessian.safe)
+  if (all(is.finite(c(res, gradient, hessian))) && ipt.loss.products.in.range(terms, .ipt)) {
+    attr(res, "gradient") <- gradient
+    attr(res, "hessian") <- hessian
+    return(res)
+  }
   repair <- function(rows, j = NULL, l = NULL) {
     ipt.loss.recover(v, D, int.cov, iw, rows, j, l, continued.n = n)
   }
