@@ -148,9 +148,9 @@ If <code>boot = TRUE</code>, default is "weighted".</p></dd>
 <dd><p>All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is <code>NULL</code>.</p></dd>
 
  <dt>ps.flag</dt>
-<dd><p>Convergence Flag for the propensity score estimation: =0 if <code>trust</code> algorithm converged,
-   =1 if IPW algorithm converged (in case it was used), =2 if GLM logit estimator was used (i.e., if both <code>trust</code> and IPT
-   did not converged).</p></dd>
+<dd><p>Source of the verified IPT propensity-score fit: =0 for the <code>trust</code>
+   candidate, =1 for the secondary IPT candidate. A candidate must satisfy the original
+   exponential-IPT equations to numerical tolerance; optimizer status alone is insufficient.</p></dd>
 
  <dt>att.inf.func</dt>
 <dd><p>Estimate of the influence function. Default is NULL</p></dd>
@@ -164,7 +164,14 @@ If <code>boot = TRUE</code>, default is "weighted".</p></dd>
 </dl></div>
     <div id="details">
     <h2>Details</h2>
-    <p>The <code>drdid_imp_panel</code> function implements the locally efficient doubly robust difference-in-differences (DiD)
+    <p>Propensity-score fitting must satisfy the original exponential-IPT equations; numerically
+ill-conditioned designs are rejected. If neither
+fitting route provides a verified solution, estimation stops rather than substituting
+a logit MLE. To explicitly use the traditional estimator, call <code><a href="drdid_panel.html">drdid_panel()</a></code>
+(or <code>drdid(..., estMethod = "trad")</code>). This changes both propensity-score and
+outcome-regression fitting. Each weighted-bootstrap replicate must also have a verified
+IPT fit; a failed replicate stops the bootstrap without skipping or redrawing it.</p>
+<p>The <code>drdid_imp_panel</code> function implements the locally efficient doubly robust difference-in-differences (DiD)
 estimator for the average treatment effect on the treated (ATT) defined in equation (3.1)
 in Sant'Anna and Zhao (2020). This estimator makes use of a logistic propensity score model for the probability
 of being in the treated group, and of a linear regression model for the outcome evolution among the comparison units.</p>
