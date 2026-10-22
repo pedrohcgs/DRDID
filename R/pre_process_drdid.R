@@ -288,6 +288,8 @@ pre_process_drdid <- function(yname,
 
 
 
+    validate_sampling_weights(dta$w[post_rows], length(post_rows))
+
     out <- list(y1 = dta$y[post_rows],
                 y0 = dta$y[pre_rows],
                 D = dta$D[post_rows],
@@ -344,6 +346,8 @@ pre_process_drdid <- function(yname,
     }
     covariates <- covariates[,keep_x]
 
+
+    validate_sampling_weights(dta$w, nrow(dta))
 
     out <- list(y = dta$y,
                 D = dta$D,

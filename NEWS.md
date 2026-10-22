@@ -33,6 +33,10 @@
     This corrects optimization with unequal observation or bootstrap weights
     when the primary `trust` fit does not converge.
 
+  * Sampling weights are checked before normalization; negative, nonfinite,
+    all-zero, or incorrectly sized low-level weights now give a clear error.
+    Legitimate zero weights and existing missing-data exclusion are preserved.
+
   * The weighted bootstrap in `ipw_did_rc()` now refits the same statistic as
     the point estimator, including normalization of the combined observation
     and bootstrap weights and the full-sample pre/post time shares. Trimming

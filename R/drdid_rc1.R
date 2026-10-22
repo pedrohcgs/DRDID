@@ -85,7 +85,8 @@ drdid_rc1 <-function(y, post, D, covariates, i.weights = NULL,
   # Weights
   if(is.null(i.weights)) {
     i.weights <- as.vector(rep(1, n))
-  } else if(min(i.weights) < 0) stop("i.weights must be non-negative")
+  }
+  validate_sampling_weights(i.weights, n)
   # Normalize weights
   i.weights <- i.weights/mean(i.weights)
   #-----------------------------------------------------------------------------
