@@ -1,4 +1,4 @@
-# DRDID (development version)
+# DRDID 1.4.0
 
   * Panel preprocessing now excludes whole units with missing covariates or
     sampling weights before checking time invariance. Retained units remain

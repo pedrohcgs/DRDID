@@ -70,3 +70,10 @@ crossprod
 rcond
 initializer
 invariants
+exponentials
+Hessians
+nonfinite
+Nonfinite
+representable
+underflowing
+WLS
