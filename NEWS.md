@@ -1,5 +1,11 @@
 # DRDID (development version)
 
+  * Both IPT objective functions now exclude zero-weight rows before evaluating
+    fitted indices, exponentials, and matrix products. Extreme covariates in
+    those rows no longer produce undefined zero-times-infinity contributions.
+    The primary objective keeps its original sample-size normalization, and
+    the secondary objective keeps its original continuation threshold.
+
   * Improved DR estimators now require a numerically verified solution of the
     original exponential-IPT equations. Logit MLE is used only for initialization;
     failed IPT fits stop and suggest explicitly rerunning the traditional DR
