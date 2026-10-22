@@ -1,5 +1,9 @@
 # DRDID (development version)
 
+  * Sampling weights are checked before normalization; negative, nonfinite,
+    all-zero, or incorrectly sized low-level weights now give a clear error.
+    Legitimate zero weights and existing missing-data exclusion are preserved.
+
   * Improved DR estimators now require a numerically verified solution of the
     original exponential-IPT equations. Logit MLE is used only for initialization;
     failed IPT fits stop and suggest explicitly rerunning the traditional DR
