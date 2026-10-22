@@ -18,6 +18,12 @@
     draws, standard errors, and intervals can change;
     point estimates, analytic inference, and multiplier inference are unchanged.
 
+  * IPT criteria now evaluate weighted nonlinear contributions without first
+    creating avoidable overflowing or underflowing intermediate exponentials.
+    Weighted values, gradients, and Hessians retain representable terms and
+    reject unresolved opposing overflow terms. The original criteria and
+    continuation rule are preserved.
+
   * Zero-weight rows no longer enter IPT objective, gradient, or Hessian
     arithmetic. Extreme finite covariates in those rows cannot create NaNs
     through zero times an overflowing intermediate value. The original
