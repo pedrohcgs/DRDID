@@ -1,10 +1,5 @@
 # DRDID (development version)
 
-  * Bootstrap inference now returns a zero standard error and point interval when
-    every centered bootstrap draw is exactly zero. Nonfinite draws or a zero IQR
-    with nonzero draws stop with a clear error; no draws are removed or redrawn,
-    and positive-scale inference retains its existing arithmetic.
-
   * Improved DR estimators now require a numerically verified solution of the
     original exponential-IPT equations. Logit MLE is used only for initialization;
     failed IPT fits stop and suggest explicitly rerunning the traditional DR
@@ -39,6 +34,11 @@
     observation weights in its influence function and the resulting analytic
     and multiplier-bootstrap inference under iid sampling. The ATT point
     estimate is unchanged.
+
+  * Bootstrap inference now returns a zero standard error and point interval when
+    every centered bootstrap draw is exactly zero. Nonfinite draws or a zero IQR
+    with nonzero draws stop with a clear error; no draws are removed or redrawn,
+    and positive-scale inference retains its existing arithmetic.
 
   * `twfe_did_panel()` and `twfe_did_rc()` now preserve matrix dimensions when
     removing a supplied intercept. An intercept plus one covariate now fits
