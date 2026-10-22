@@ -2,7 +2,8 @@
 
   * `twfe_did_panel()` and `twfe_did_rc()` now preserve matrix dimensions when
     removing a supplied intercept. An intercept plus one covariate now fits
-    the same regression as supplying that covariate alone, instead of failing.
+    the same regression as supplying that covariate as a numeric vector or a
+    matrix with one column, instead of failing.
     Intercept-only inputs retain their existing no-covariate behavior.
 
   * The IPT propensity-score fallback used by the improved DR estimators now
