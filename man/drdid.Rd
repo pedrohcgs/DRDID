@@ -69,11 +69,10 @@ A list containing the following components:
 \item{lci}{Estimate of the lower bound of a 95\% CI for the ATT}
 \item{boots}{All Bootstrap draws of the ATT, in case bootstrap was used to conduct inference. Default is NULL}
 \item{att.inf.func}{Estimate of the influence function. Default is NULL}
- \item{ps.flag}{Convergence Flag for the propensity score estimation
- (only active if \code{estMethod = "imp"}.): =0 if \code{trust} algorithm converged,
-   =1 if IPT (original) algorithm converged (in case it was used), =2 if
-   GLM logit estimator was used (i.e., if both \code{trust} and IPT
-   did not converged).}
+ \item{ps.flag}{Source of the verified IPT propensity-score fit (only active for
+   \code{estMethod = "imp"}): =0 for the \code{trust} candidate, =1 for the secondary
+   IPT candidate. Both must satisfy the original exponential-IPT equations to numerical
+   tolerance; optimizer status alone is insufficient.}
 \item{call.param}{The matched call.}
 \item{argu}{Some arguments used in the call (panel, estMethod, boot, boot.type, nboot, type="dr")}
 }
@@ -104,6 +103,13 @@ Sant'Anna and Zhao (2020). In short, the propensity score parameters are estimat
 probability tilting estimator proposed by Graham, Pinto and Pinto (2012), and the outcome
 regression coefficients are estimated using weighted least squares,where the weights depend on
 the propensity score estimates; see Sant'Anna and Zhao (2020) for details.
+
+Improved estimation requires a verified solution of the original exponential-IPT
+equations; numerically ill-conditioned designs are rejected. If neither fitting route
+supplies a verified fit, estimation stops and suggests an
+explicit rerun with \code{estMethod = "trad"}. Every weighted-bootstrap replicate must
+also supply a verified IPT fit; a failed replicate stops the bootstrap without skipping
+or redrawing it.
 
 When one sets \code{estMethod = "trad"}, the propensity score parameters are estimated using maximum
 likelihood, and the outcome regression coefficients are estimated using ordinary least squares.

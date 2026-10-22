@@ -1,15 +1,20 @@
 # DRDID (development version)
 
-  * The internal GLM fitter now rejects designs with fewer rows than columns
-    before entering `fastglm`. Such designs cannot have full column rank.
-    Callers receive an ordinary R error when a regression cell is undersized;
-    supported fits retain the same calculations.
+  * Improved DR estimators now require a numerically verified solution of the
+    original exponential-IPT equations. Logit MLE is used only for initialization;
+    failed IPT fits stop and suggest explicitly rerunning the traditional DR
+    estimator. The secondary IPT candidate is checked against the original
+    equations even when its continued objective reports convergence. The returned
+    `ps.flag` identifies the verified fitting route (0 or 1); value 2 is removed.
+    Fitting normalizes the common scale of weights to avoid scale-dependent
+    optimizer stopping. Numerically ill-conditioned designs are rejected.
+    Every weighted-bootstrap replicate must pass the same check, and failures
+    stop with the replicate number without skipping or redrawing the fit.
 
   * The IPT propensity-score fallback used by the improved DR estimators now
     weights its full objective consistently with its gradient and Hessian.
     This corrects optimization with unequal observation or bootstrap weights
-    when the primary `trust` fit does not converge. The primary fit and the
-    separate ordinary-logit fallback inference policy are unchanged.
+    when the primary `trust` fit does not converge.
 
   * The weighted bootstrap in `ipw_did_rc()` now refits the same statistic as
     the point estimator, including normalization of the combined observation
@@ -47,6 +52,11 @@
     multiplier-bootstrap standard errors change. The two versions agree
     asymptotically when the propensity score model is correctly specified, but
     not when only the outcome regressions are.
+
+  * The internal GLM fitter now rejects designs with fewer rows than columns
+    before entering `fastglm`. Such designs cannot have full column rank.
+    Callers receive an ordinary R error when a regression cell is undersized;
+    supported fits retain the same calculations.
 
 # DRDID 1.3.0
 
