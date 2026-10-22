@@ -1,5 +1,9 @@
 # DRDID (development version)
 
+  * Panel preprocessing now excludes whole units with missing covariates or
+    sampling weights before checking time invariance. Retained units remain
+    matched by ID, and observed time-varying covariates or weights still fail.
+
   * Improved DR estimators now require a numerically verified solution of the
     original exponential-IPT equations. Logit MLE is used only for initialization;
     failed IPT fits stop and suggest explicitly rerunning the traditional DR

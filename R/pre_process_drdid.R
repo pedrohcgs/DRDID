@@ -171,31 +171,6 @@ pre_process_drdid <- function(yname,
                                                        data = dta,
                                                        na.action=na.pass) )
 
-  #check if covariates and group are time invariant in the panel data case.
-  # matrix of covariates for pre-period and post periods
-  covariates_pre <- stats::model.matrix(xformla,
-                                        data=subset(dta, dta$post==0))
-  covariates_post <- stats::model.matrix(xformla,
-                                         data=subset(dta, dta$post==1))
-
-  d_pre <- subset(dta$D, dta$post==0)
-  d_post <- subset(dta$D, dta$post==1)
-  w_pre <- subset(dta$w, dta$post==0)
-  w_post <- subset(dta$w, dta$post==1)
-
-  if (panel) {
-    if (!all(covariates_pre==covariates_post)) {
-      stop("Error: covariates should be time invariant, and there should be no missing data.")
-    }
-    if (!all(d_pre==d_post)) {
-      stop("Error: group indicator must be time invariant.")
-    }
-    if (!all(w_pre==w_post)) {
-      stop("Error: weights must be time invariant.")
-    }
-  }
-
-
   # check against very small groups
   gsize <- stats::aggregate(dta$D,
                             by=list(dta$D),
@@ -269,6 +244,19 @@ pre_process_drdid <- function(yname,
     }
 
     covariates <- base::as.matrix(dta[, -c(1:4), drop = FALSE])
+    # Check invariance only after removing incomplete units, and compare each
+    # retained unit with its matched observation in the other period. Building
+    # separate model matrices would omit missing rows before matching IDs.
+    if (!all(covariates[pre_rows, , drop = FALSE] ==
+             covariates[post_rows, , drop = FALSE])) {
+      stop("Error: covariates should be time invariant, and there should be no missing data.")
+    }
+    if (!all(dta$D[pre_rows] == dta$D[post_rows])) {
+      stop("Error: group indicator must be time invariant.")
+    }
+    if (!all(dta$w[pre_rows] == dta$w[post_rows])) {
+      stop("Error: weights must be time invariant.")
+    }
     # Drop collinear covariates
     qr.covariates <-  base::qr(covariates,
                                tol=1e-6,
