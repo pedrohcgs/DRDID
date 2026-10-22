@@ -1,5 +1,9 @@
 # DRDID (development version)
 
+  * Panel preprocessing now excludes whole units with missing covariates or
+    sampling weights before checking time invariance. Retained units remain
+    matched by ID, and observed time-varying covariates or weights still fail.
+
   * Formula-based estimators preserve user columns named `y`, `D`, `post`, or
     `w` when extracting outcomes, weights, and covariates. Renaming a variable
     no longer changes its meaning through internal preprocessing columns.
