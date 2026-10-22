@@ -22,7 +22,7 @@ Depends:
 Imports:
     stats,
     trust,
-    BMisc (>= 1.4.1),
+    BMisc (>= 1.4.8),
     Rcpp (>= 1.0.12),
     fastglm (>= 0.0.3)
 LinkingTo: 
