@@ -1,12 +1,5 @@
 # DRDID (development version)
 
-  * The weighted bootstrap in `drdid_imp_panel()` now uses the point estimator's
-    treated-weight denominator for its combined residual contributions. This
-    makes each draw refit the same implemented statistic, including active
-    trimming and supplied designs without an intercept. Weighted-bootstrap
-    draws, standard errors, and intervals can change;
-    point estimates, analytic inference, and multiplier inference are unchanged.
-
   * Improved DR estimators now require a numerically verified solution of the
     original exponential-IPT equations. Logit MLE is used only for initialization;
     failed IPT fits stop and suggest explicitly rerunning the traditional DR
@@ -17,6 +10,13 @@
     optimizer stopping. Numerically ill-conditioned designs are rejected.
     Every weighted-bootstrap replicate must pass the same check, and failures
     stop with the replicate number without skipping or redrawing the fit.
+
+  * The weighted bootstrap in `drdid_imp_panel()` now uses the point estimator's
+    treated-weight denominator for its combined residual contributions. This
+    makes each draw refit the same implemented statistic, including active
+    trimming and supplied designs without an intercept. Weighted-bootstrap
+    draws, standard errors, and intervals can change;
+    point estimates, analytic inference, and multiplier inference are unchanged.
 
   * The IPT propensity-score fallback used by the improved DR estimators now
     weights its full objective consistently with its gradient and Hessian.
