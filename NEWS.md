@@ -7,7 +7,7 @@
     equations even when its continued objective reports convergence. The returned
     `ps.flag` identifies the verified fitting route (0 or 1); value 2 is removed.
     Fitting normalizes the common scale of weights to avoid scale-dependent
-    optimizer stopping.
+    optimizer stopping. Numerically ill-conditioned designs are rejected.
     Every weighted-bootstrap replicate must pass the same check, and failures
     stop with the replicate number without skipping or redrawing the fit.
 

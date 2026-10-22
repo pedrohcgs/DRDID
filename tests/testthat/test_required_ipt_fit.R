@@ -97,6 +97,77 @@ test_that("IPT validation handles zero weights and rejects nonfinite or unidenti
                                  cbind(d$X, d$X[, 2]), d$w))
 })
 
+test_that("an inaccurate near-collinear SVD span cannot certify IPT balance", {
+  m <- 6
+  epsilon <- 1e-12
+  x <- rep(c(-0x1.e03cfe78p-2, -0x1.05e3e7a8p-2,
+              0x1.2a6849dp-3, 0x1.a201391p-1,
+             -0x1.317a4ab8p-1, 0x1.97f3773p-1), 2)
+  x3 <- rep(c(-0x1.e03cfe77fc16bp-2, -0x1.05e3e7a7fe95fp-2,
+               0x1.2a6849d002458p-3, 0x1.a201390ffe12ap-1,
+              -0x1.317a4ab8014b1p-1, 0x1.97f3772ffe93dp-1), 2)
+  D <- c(rep(1, m), rep(0, m))
+  X <- cbind(1, x, x3)
+  # Freeze the supplied doubles and positive weights from the counterexample.
+  # Hexadecimal literals retain their exact bits. They balanced an inaccurate U
+  # retained by the old rank cutoff; recomputing
+  # those weights here would make the test depend on platform SVD roundoff.
+  control_w <- c(0x1.000a2e143a372p+0, 0x1.0003595397054p+0,
+                 0x1.0006a81d2c2e2p+0, 0x1.fff748763c084p-1,
+                 0x1.ffe21a3752fedp-1, 0x1.fffe3e487623fp-1)
+  w <- c(rep(1, m), control_w)
+  expect_gt(min(w), 0)
+
+  # Use the contrast represented by the actual supplied doubles. This basis
+  # is well conditioned and exposes the candidate's material imbalance.
+  canonical <- cbind(1, x, (X[, 3] - X[, 2]) / epsilon)
+  score <- as.vector(crossprod(canonical, w * (2 * D - 1)))
+  control_X <- canonical[D == 0, , drop = FALSE]
+  H <- crossprod(control_X, w[D == 0] * control_X)
+  step <- solve(H, score)
+  expect_equal(qr(control_X)$rank, 3)
+  expect_gt(max(abs(canonical %*% step)), 1e-5)
+  expect_gt(sqrt(sum(score * step) / sum(w)), 1e-5)
+  expect_false(DRDID:::ipt.valid(c(0, 0, 0), D, X, w))
+  expect_false(DRDID:::ipt.valid(c(0, 0, 0), D, canonical, w))
+
+  # Uniform paired weights give an exact root in the represented model. The
+  # precision guard may refuse its ill-conditioned coding, not its stable span.
+  expect_true(DRDID:::ipt.valid(c(0, 0, 0), D, canonical, rep(1, 2 * m)))
+  expect_false(DRDID:::ipt.valid(c(0, 0, 0), D, X, rep(1, 2 * m)))
+})
+
+test_that("control curvature cannot amplify an unresolved span error into false success", {
+  # Frozen actual-double fixture near the design-rank cutoff. Both separate
+  # rank checks pass, but weak control curvature amplifies the span error.
+  x <- c(-0x1.cb38622a1f367p-1, 0x1.7a923596000cdp-3,
+          0x1.967d0818a5ef6p+0, -0x1.21604cd914ed6p+0,
+         -0x1.48b610dd542f3p-4, 0x1.0f325db5f3581p-3,
+         -0x1.0203d194498ap-2, -0x1.cc42092d1b3e1p-1,
+          0x1.ec46e2a29e18ep+0, -0x1.15cdbf6888aa2p+1,
+          0x1.04f2f53d47e0bp+0, 0x1.698adb97af65ep-3)
+  x3 <- c(-0x1.cb38622983882p-1, 0x1.7a9235952d35ap-3,
+           0x1.967d081980216p+0, -0x1.21604cd9242fep+0,
+          -0x1.48b610da7572p-4, 0x1.0f325db952e72p-3,
+          -0x1.0203d15ae7723p-2, -0x1.cc420b031d77dp-1,
+           0x1.ec46e47ff4ee4p+0, -0x1.15cdc13c8bde6p+1,
+           0x1.04f2f6435d46fp+0, 0x1.698ae8ae87cfdp-3)
+  X <- cbind(1, x, x3)
+  D <- c(rep(0, 6), rep(1, 6))
+  w <- c(0x1.00001575081a6p+0, 0x1.ffffb3ff42ea3p-1,
+         0x1.0000108b5670fp+0, rep(1, 9))
+  canonical <- cbind(1, x, (x3 - x) / 1e-7)
+  score <- as.vector(crossprod(canonical, w * (2 * D - 1)))
+  control_X <- canonical[D == 0, , drop = FALSE]
+  H <- crossprod(control_X, w[D == 0] * control_X)
+  step <- solve(H, score)
+  expect_gt(min(w), 0)
+  expect_equal(qr(control_X)$rank, 3)
+  expect_gt(max(abs(canonical %*% step)), 1e-3)
+  expect_false(DRDID:::ipt.valid(c(0, 0, 0), D, X, w))
+  expect_false(DRDID:::ipt.valid(c(0, 0, 0), D, canonical, w))
+})
+
 test_that("a verified primary candidate is accepted regardless of optimizer status", {
   d <- make_required_ipt_fixture()
   for (converged in c(TRUE, FALSE)) {

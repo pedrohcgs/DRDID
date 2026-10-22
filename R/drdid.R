@@ -83,7 +83,8 @@ NULL
 #' the propensity score estimates; see Sant'Anna and Zhao (2020) for details.
 #'
 #' Improved estimation requires a verified solution of the original exponential-IPT
-#' equations. If neither fitting route supplies one, estimation stops and suggests an
+#' equations; numerically ill-conditioned designs are rejected. If neither fitting route
+#' supplies a verified fit, estimation stops and suggests an
 #' explicit rerun with \code{estMethod = "trad"}. Every weighted-bootstrap replicate must
 #' also supply a verified IPT fit; a failed replicate stops the bootstrap without skipping
 #' or redrawing it.

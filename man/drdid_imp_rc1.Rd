@@ -61,7 +61,8 @@ A list containing the following components:
  though it is not locally efficient; see Section 3.2 of Sant'Anna and Zhao (2020).
 }
 \details{
-Propensity-score fitting must satisfy the original exponential-IPT equations. If neither
+Propensity-score fitting must satisfy the original exponential-IPT equations; numerically
+ill-conditioned designs are rejected. If neither
 fitting route provides a verified solution, estimation stops rather than substituting
 a logit MLE. To explicitly use the corresponding traditional estimator, call \code{drdid_rc1()}
 to preserve this estimator variant. This changes both propensity-score and
