@@ -30,9 +30,12 @@ pscore.cal <- function(D, int.cov, i.weights, n, bootstrap.index = NULL){
     init.gamma <- rep(0, ncol(int.cov))
   }
 
+  # The optimizer changes only gamma. Cache the filtered problem and immutable
+  # range facts once; direct calls to either criterion prepare their own state.
+  prepared <- ipt.loss.prepare(D, int.cov, fitting.weights)
   primary <- tryCatch(suppressWarnings(trust::trust(loss.ps.cal, parinit = init.gamma,
                         rinit = 1, rmax = 1000, iterlim = 1000,
-                        D = D, int.cov = int.cov, iw = fitting.weights)),
+                        D = D, int.cov = int.cov, iw = fitting.weights, .ipt = prepared)),
                       error = function(e) NULL)
   gamma.cal <- primary$argument
   flag <- 0
@@ -41,7 +44,8 @@ pscore.cal <- function(D, int.cov, i.weights, n, bootstrap.index = NULL){
   if (!ipt.valid(gamma.cal, D, int.cov, i.weights)) {
     secondary <- tryCatch(suppressWarnings(stats::nlm(loss.ps.IPT, init.gamma,
                           iterlim = 10000, gradtol = 1e-08, check.analyticals = FALSE,
-                          D = D, int.cov = int.cov, iw = fitting.weights, n = n)),
+                          D = D, int.cov = int.cov, iw = fitting.weights, n = n,
+                          .ipt = prepared)),
                         error = function(e) NULL)
     gamma.cal <- secondary$estimate
     if (!ipt.valid(gamma.cal, D, int.cov, i.weights)) fail()

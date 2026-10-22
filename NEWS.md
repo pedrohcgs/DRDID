@@ -4,6 +4,10 @@
     sampling weights before checking time invariance. Retained units remain
     matched by ID, and observed time-varying covariates or weights still fail.
 
+  * Formula-based estimators preserve user columns named `y`, `D`, `post`, or
+    `w` when extracting outcomes, weights, and covariates. Renaming a variable
+    no longer changes its meaning through internal preprocessing columns.
+
   * Improved DR estimators now require a numerically verified solution of the
     original exponential-IPT equations. Logit MLE is used only for initialization;
     failed IPT fits stop and suggest explicitly rerunning the traditional DR
@@ -22,6 +26,13 @@
     draws, standard errors, and intervals can change;
     point estimates, analytic inference, and multiplier inference are unchanged.
 
+  * IPT criteria now evaluate weighted nonlinear contributions without first
+    creating avoidable overflowing or underflowing intermediate exponentials.
+    Weighted values, gradients, and Hessians retain representable terms and
+    reject unresolved opposing overflow terms. The original criteria and
+    continuation rule are preserved. Fitting reuses fixed-data checks and
+    avoids unnecessary exceptional arithmetic while retaining these safeguards.
+
   * Zero-weight rows no longer enter IPT objective, gradient, or Hessian
     arithmetic. Extreme finite covariates in those rows cannot create NaNs
     through zero times an overflowing intermediate value. The original
@@ -32,6 +43,10 @@
     weights its full objective consistently with its gradient and Hessian.
     This corrects optimization with unequal observation or bootstrap weights
     when the primary `trust` fit does not converge.
+
+  * Sampling weights are checked before normalization; negative, nonfinite,
+    all-zero, or incorrectly sized low-level weights now give a clear error.
+    Legitimate zero weights and existing missing-data exclusion are preserved.
 
   * The weighted bootstrap in `ipw_did_rc()` now refits the same statistic as
     the point estimator, including normalization of the combined observation
@@ -44,6 +59,11 @@
     observation weights in its influence function and the resulting analytic
     and multiplier-bootstrap inference under iid sampling. The ATT point
     estimate is unchanged.
+
+  * Bootstrap inference now returns a zero standard error and point interval when
+    every centered bootstrap draw is exactly zero. Nonfinite draws or a zero IQR
+    with nonzero draws stop with a clear error; no draws are removed or redrawn,
+    and positive-scale inference retains its existing arithmetic.
 
   * `twfe_did_panel()` and `twfe_did_rc()` now preserve matrix dimensions when
     removing a supplied intercept. An intercept plus one covariate now fits
@@ -61,6 +81,10 @@
     Direct calls now reject missing or mismatched individual inputs before
     fitting, preventing row omission from breaking pre/post alignment.
 
+  * Bootstrap estimation now rejects `nboot` values that are not finite scalar
+    integers of at least 2 before fitting or drawing bootstrap weights. The
+    low-level `NULL` default remains 999; `boot = FALSE` continues to ignore it.
+
   * Panel preprocessing for `drdid()`, `ordid()`, and `ipwdid()` now removes
     both observations of a unit when either outcome is missing,
     matches pre/post outcomes by individual ID, and checks group sizes after
@@ -75,6 +99,9 @@
     multiplier-bootstrap standard errors change. The two versions agree
     asymptotically when the propensity score model is correctly specified, but
     not when only the outcome regressions are.
+
+  * Treatment indicators must use 0 for comparison and 1 for treated units.
+    Invalid coding is rejected explicitly rather than silently changing weights.
 
   * The internal GLM fitter now rejects designs with fewer rows than columns
     before entering `fastglm`. Such designs cannot have full column rank.

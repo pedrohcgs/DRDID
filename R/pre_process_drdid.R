@@ -91,9 +91,6 @@ pre_process_drdid <- function(yname,
   #}
 
 
-  # set weights if null
-  base::ifelse(is.null(weightsname), w <- rep(1,nrow(dta)), w <- dta[,weightsname])
-  dta$w <- w
 
 
   # make sure time periods are numeric
@@ -107,6 +104,8 @@ pre_process_drdid <- function(yname,
     stop("data[, dname] must be numeric. Please convert it.")
 
   }
+
+  validate_treatment_indicator(dta[, dname], allow_missing = TRUE)
 
   #  make sure id is numeric
   if (! is.null(idname)){
@@ -159,12 +158,12 @@ pre_process_drdid <- function(yname,
   }
 
 
-  # Outcome variable will be denoted by y
-  dta$y <- dta[, yname]
-  # group will be denoted by D
-  dta$D <- dta[, dname]
-  # Post dummy will be denoted by post
-  dta$post <- as.numeric(dta[,tname] == tlist[2])
+  # Keep estimator inputs separate from user columns. Formula evaluation must
+  # see the original data, including columns named y, D, post, or w.
+  y <- dta[[yname]]
+  D <- dta[[dname]]
+  post <- as.numeric(dta[[tname]] == tlist[2])
+  w <- if (is.null(weightsname)) rep(1, nrow(dta)) else dta[[weightsname]]
   # matrix of covariates
   covariates <- stats::model.matrix(xformla,
                                     stats::model.frame(xformla,
@@ -172,8 +171,8 @@ pre_process_drdid <- function(yname,
                                                        na.action=na.pass) )
 
   # check against very small groups
-  gsize <- stats::aggregate(dta$D,
-                            by=list(dta$D),
+  gsize <- stats::aggregate(D,
+                            by=list(D),
                             function(x) length(x)/length(tlist))
 
   # how many in each group before give warning
@@ -198,10 +197,10 @@ pre_process_drdid <- function(yname,
     panel_ids <- dta[[idname]]
 
     # Only use this smaller dataset
-    dta <- as.data.frame(cbind(y = dta$y,
-                               D = dta$D,
-                               post = dta$post,
-                               w = dta$w,
+    dta <- as.data.frame(cbind(y = y,
+                               D = D,
+                               post = post,
+                               w = w,
                                covariates))
 
     # Check if we have missing values
@@ -277,6 +276,8 @@ pre_process_drdid <- function(yname,
 
 
 
+    validate_sampling_weights(dta$w[post_rows], length(post_rows))
+
     out <- list(y1 = dta$y[post_rows],
                 y0 = dta$y[pre_rows],
                 D = dta$D[post_rows],
@@ -295,10 +296,10 @@ pre_process_drdid <- function(yname,
   }
   else {
     # Only use this smaller dataset
-    dta <- as.data.frame(cbind(y = dta$y,
-                               D = dta$D,
-                               post = dta$post,
-                               w = dta$w,
+    dta <- as.data.frame(cbind(y = y,
+                               D = D,
+                               post = post,
+                               w = w,
                                covariates))
 
     # Check if we have missing values
@@ -333,6 +334,8 @@ pre_process_drdid <- function(yname,
     }
     covariates <- covariates[,keep_x]
 
+
+    validate_sampling_weights(dta$w, nrow(dta))
 
     out <- list(y = dta$y,
                 D = dta$D,

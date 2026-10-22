@@ -28,12 +28,14 @@ and post = 0 if observation belongs to pre-treatment period.)}
 
 \item{i.weights}{An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights. The weights are normalized and therefore enforced to have mean 1 across all observations.}
 
-\item{boot}{Logical argument to whether bootstrap should be used for inference. Default is FALSE.}
+\item{boot}{Logical argument to whether bootstrap should be used for inference. Default is FALSE.
+Exactly zero centered bootstrap draws give a zero standard error and point interval.
+Nonfinite draws or a zero IQR with nonzero draws stop with an error.}
 
 \item{boot.type}{Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
 If \code{boot = TRUE}, default is "weighted".}
 
-\item{nboot}{Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.}
+\item{nboot}{A finite scalar integer of at least 2 giving the number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.}
 
 \item{inffunc}{Logical argument to whether influence function should be returned. Default is FALSE.}
 }

@@ -13,9 +13,11 @@ NULL
 #' If covariates = NULL, this leads to an unconditional DiD estimator.
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights. The weights are normalized and therefore enforced to have mean 1 across all observations.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
+#' Exactly zero centered bootstrap draws give a zero standard error and point interval.
+#' Nonfinite draws or a zero IQR with nonzero draws stop with an error.
 #' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
 #' If \code{boot = TRUE}, default is "weighted".
-#' @param nboot Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
+#' @param nboot A finite scalar integer of at least 2 giving the number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
 #'
 #' @return A list containing the following components:
@@ -62,9 +64,12 @@ NULL
 reg_did_rc <-function(y, post, D, covariates, i.weights = NULL,
                       boot = FALSE, boot.type = "weighted", nboot = NULL,
                       inffunc = FALSE){
+  if (boot) nboot <- validate_bootstrap_count(nboot)
+
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
+  validate_treatment_indicator(D)
   # post as vector
   post <- as.vector(post)
   # Sample size
@@ -81,7 +86,8 @@ reg_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   # Weights
   if(is.null(i.weights)) {
     i.weights <- as.vector(rep(1, n))
-  } else if(min(i.weights) < 0) stop("i.weights must be non-negative")
+  }
+  validate_sampling_weights(i.weights, n)
   # Normalize weights
   i.weights <- i.weights/mean(i.weights)
 
@@ -195,30 +201,23 @@ reg_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   }
 
   if (boot == TRUE) {
-    if (is.null(nboot) == TRUE) nboot = 999
     if(boot.type == "multiplier"){
       # do multiplier bootstrap
       reg.boot <- mboot.did(reg.att.inf.func, nboot)
       # get bootstrap std errors based on IQR
-      se.reg.att <- stats::IQR(reg.boot) / (stats::qnorm(0.75) - stats::qnorm(0.25))
-      # get symmetric critical values
-      cv <- stats::quantile(abs(reg.boot/se.reg.att), probs = 0.95)
-      # Estimate of upper boundary of 95% CI
-      uci <- reg.att + cv * se.reg.att
-      # Estimate of lower boundary of 95% CI
-      lci <- reg.att - cv * se.reg.att
+      boot.summary <- bootstrap_inference(reg.boot, reg.att)
+      se.reg.att <- boot.summary$se
+      uci <- boot.summary$uci
+      lci <- boot.summary$lci
     } else {
       # do weighted bootstrap
-      reg.boot <- unlist(lapply(1:nboot, wboot_reg_rc,
+      reg.boot <- unlist(lapply(seq_len(nboot), wboot_reg_rc,
                                 n = n, y = y, post = post, D = D, int.cov = int.cov, i.weights = i.weights))
       # get bootstrap std errors based on IQR
-      se.reg.att <- stats::IQR((reg.boot - reg.att)) / (stats::qnorm(0.75) - stats::qnorm(0.25))
-      # get symmetric critical values
-      cv <- stats::quantile(abs((reg.boot - reg.att)/se.reg.att), probs = 0.95)
-      # Estimate of upper boundary of 95% CI
-      uci <- reg.att + cv * se.reg.att
-      # Estimate of lower boundary of 95% CI
-      lci <- reg.att - cv * se.reg.att
+      boot.summary <- bootstrap_inference((reg.boot - reg.att), reg.att)
+      se.reg.att <- boot.summary$se
+      uci <- boot.summary$uci
+      lci <- boot.summary$lci
 
     }
   }

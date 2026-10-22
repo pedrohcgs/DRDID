@@ -16,9 +16,11 @@ NULL
 #' If covariates = NULL, this leads to an unconditional DiD estimator.
 #' @param i.weights An \eqn{n} x \eqn{1} vector of weights to be used. If NULL, then every observation has the same weights. The weights are normalized and therefore enforced to have mean 1 across all observations.
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
+#' Exactly zero centered bootstrap draws give a zero standard error and point interval.
+#' Nonfinite draws or a zero IQR with nonzero draws stop with an error.
 #' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
 #' If \code{boot = TRUE}, default is "weighted".
-#' @param nboot Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
+#' @param nboot A finite scalar integer of at least 2 giving the number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
 #' @param trim.level The level of trimming for the propensity score. Default is 0.995.
 #'
@@ -63,9 +65,12 @@ drdid_rc1 <-function(y, post, D, covariates, i.weights = NULL,
                      boot = FALSE, boot.type =  "weighted", nboot = NULL,
                      inffunc = FALSE,
                      trim.level = 0.995) {
+  if (boot) nboot <- validate_bootstrap_count(nboot)
+
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
+  validate_treatment_indicator(D)
   # Sample size
   n <- length(D)
   # y as vector
@@ -82,7 +87,8 @@ drdid_rc1 <-function(y, post, D, covariates, i.weights = NULL,
   # Weights
   if(is.null(i.weights)) {
     i.weights <- as.vector(rep(1, n))
-  } else if(min(i.weights) < 0) stop("i.weights must be non-negative")
+  }
+  validate_sampling_weights(i.weights, n)
   # Normalize weights
   i.weights <- i.weights/mean(i.weights)
   #-----------------------------------------------------------------------------
@@ -238,32 +244,25 @@ drdid_rc1 <-function(y, post, D, covariates, i.weights = NULL,
   }
 
   if (boot == TRUE) {
-    if (is.null(nboot) == TRUE) nboot = 999
     if(boot.type == "multiplier"){
       # do multiplier bootstrap
       dr.boot <- mboot.did(dr.att.inf.func, nboot)
       # get bootstrap std errors based on IQR
-      se.dr.att <- stats::IQR(dr.boot) / (stats::qnorm(0.75) - stats::qnorm(0.25))
-      # get symmtric critival values
-      cv <- stats::quantile(abs(dr.boot/se.dr.att), probs = 0.95)
-      # Estimate of upper boudary of 95% CI
-      uci <- dr.att + cv * se.dr.att
-      # Estimate of lower doundary of 95% CI
-      lci <- dr.att - cv * se.dr.att
+      boot.summary <- bootstrap_inference(dr.boot, dr.att)
+      se.dr.att <- boot.summary$se
+      uci <- boot.summary$uci
+      lci <- boot.summary$lci
     } else {
       # do weighted bootstrap
-      dr.boot <- unlist(lapply(1:nboot, wboot_drdid_rc1,
+      dr.boot <- unlist(lapply(seq_len(nboot), wboot_drdid_rc1,
                                n = n, y = y, post = post,
                                D = D, int.cov = int.cov, i.weights = i.weights,
                                trim.level = trim.level))
       # get bootstrap std errors based on IQR
-      se.dr.att <- stats::IQR((dr.boot - dr.att)) / (stats::qnorm(0.75) - stats::qnorm(0.25))
-      # get symmtric critival values
-      cv <- stats::quantile(abs((dr.boot - dr.att)/se.dr.att), probs = 0.95)
-      # Estimate of upper boudary of 95% CI
-      uci <- dr.att + cv * se.dr.att
-      # Estimate of lower doundary of 95% CI
-      lci <- dr.att - cv * se.dr.att
+      boot.summary <- bootstrap_inference((dr.boot - dr.att), dr.att)
+      se.dr.att <- boot.summary$se
+      uci <- boot.summary$uci
+      lci <- boot.summary$lci
 
     }
   }
