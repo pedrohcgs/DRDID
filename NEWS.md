@@ -1,9 +1,5 @@
 # DRDID (development version)
 
-  * Bootstrap estimation now rejects `nboot` values that are not finite scalar
-    integers of at least 2 before fitting or drawing bootstrap weights. The
-    low-level `NULL` default remains 999; `boot = FALSE` continues to ignore it.
-
   * Improved DR estimators now require a numerically verified solution of the
     original exponential-IPT equations. Logit MLE is used only for initialization;
     failed IPT fits stop and suggest explicitly rerunning the traditional DR
@@ -54,6 +50,10 @@
     floating-point precision. The no-covariate inference path is unchanged.
     Direct calls now reject missing or mismatched individual inputs before
     fitting, preventing row omission from breaking pre/post alignment.
+
+  * Bootstrap estimation now rejects `nboot` values that are not finite scalar
+    integers of at least 2 before fitting or drawing bootstrap weights. The
+    low-level `NULL` default remains 999; `boot = FALSE` continues to ignore it.
 
   * Panel preprocessing for `drdid()`, `ordid()`, and `ipwdid()` now removes
     both observations of a unit when either outcome is missing,
