@@ -21,7 +21,7 @@ NULL
 #' Nonfinite draws or a zero IQR with nonzero draws stop with an error.
 #' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
 #' If \code{boot = TRUE}, default is "weighted".
-#' @param nboot Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
+#' @param nboot A finite scalar integer of at least 2 giving the number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
 #' @param trim.level The level of trimming for the propensity score. Default is 0.995.
 #'
@@ -70,6 +70,8 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
                          boot = FALSE, boot.type = "weighted", nboot = NULL,
                          inffunc = FALSE,
                          trim.level= 0.995){
+  if (boot) nboot <- validate_bootstrap_count(nboot)
+
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
@@ -158,7 +160,6 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
     ipw.boot <- NULL
   }
   if (boot == TRUE) {
-    if (is.null(nboot) == TRUE) nboot = 999
     if(boot.type == "multiplier"){
       # do multiplier bootstrap
       ipw.boot <- mboot.did(att.inf.func, nboot)
@@ -169,7 +170,7 @@ ipw_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
       lci <- boot.summary$lci
     } else {
       # do weighted bootstrap
-      ipw.boot <- unlist(lapply(1:nboot, wboot.ipw.panel,
+      ipw.boot <- unlist(lapply(seq_len(nboot), wboot.ipw.panel,
                                 n = n, deltaY = deltaY, D = D, int.cov = int.cov,
                                 i.weights = i.weights,
                                 trim.level = trim.level))

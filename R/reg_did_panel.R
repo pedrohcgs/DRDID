@@ -17,7 +17,7 @@ NULL
 #' Nonfinite draws or a zero IQR with nonzero draws stop with an error.
 #' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
 #' If \code{boot = TRUE}, default is "weighted".
-#' @param nboot Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
+#' @param nboot A finite scalar integer of at least 2 giving the number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
 #'
 #' @return A list containing the following components:
@@ -76,6 +76,8 @@ NULL
 reg_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
                          boot = FALSE, boot.type = "weighted", nboot = NULL,
                          inffunc = FALSE){
+  if (boot) nboot <- validate_bootstrap_count(nboot)
+
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
@@ -180,7 +182,6 @@ reg_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   }
 
   if (boot == TRUE) {
-    if (is.null(nboot) == TRUE) nboot = 999
     if(boot.type == "multiplier"){
       # do multiplier bootstrap
       reg.boot <- mboot.did(reg.att.inf.func, nboot)
@@ -191,7 +192,7 @@ reg_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
       lci <- boot.summary$lci
     } else {
       # do weighted bootstrap
-      reg.boot <- unlist(lapply(1:nboot, wboot.reg.panel,
+      reg.boot <- unlist(lapply(seq_len(nboot), wboot.reg.panel,
                                 n = n, deltaY = deltaY, D = D, int.cov = int.cov, i.weights = i.weights))
       # get bootstrap std errors based on IQR
       boot.summary <- bootstrap_inference((reg.boot - reg.att), reg.att)

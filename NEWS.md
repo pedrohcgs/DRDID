@@ -70,6 +70,10 @@
     Direct calls now reject missing or mismatched individual inputs before
     fitting, preventing row omission from breaking pre/post alignment.
 
+  * Bootstrap estimation now rejects `nboot` values that are not finite scalar
+    integers of at least 2 before fitting or drawing bootstrap weights. The
+    low-level `NULL` default remains 999; `boot = FALSE` continues to ignore it.
+
   * Panel preprocessing for `drdid()`, `ordid()`, and `ipwdid()` now removes
     both observations of a unit when either outcome is missing,
     matches pre/post outcomes by individual ID, and checks group sizes after
