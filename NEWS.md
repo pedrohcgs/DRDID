@@ -1,5 +1,9 @@
 # DRDID (development version)
 
+  * Formula-based estimators preserve user columns named `y`, `D`, `post`, or
+    `w` when extracting outcomes, weights, and covariates. Renaming a variable
+    no longer changes its meaning through internal preprocessing columns.
+
   * Improved DR estimators now require a numerically verified solution of the
     original exponential-IPT equations. Logit MLE is used only for initialization;
     failed IPT fits stop and suggest explicitly rerunning the traditional DR
