@@ -11,8 +11,9 @@ loss.ps.IPT <- function(gamma1, n, D, int.cov, iw) {
   k <- ncol(int.cov)
   if (!length(iw)) {
     res <- 0
-    attr(res, "gradient") <- matrix(0, k, 1)
-    attr(res, "hessian") <- matrix(0, k, k)
+    # Empty products retain the ordinary derivative column-name conventions.
+    attr(res, "gradient") <- crossprod(int.cov, numeric(0))
+    attr(res, "hessian") <- crossprod(int.cov)
     return(res)
   }
   v <- as.vector(int.cov %*% gamma1)

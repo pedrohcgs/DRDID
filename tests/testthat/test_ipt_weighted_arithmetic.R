@@ -6,6 +6,23 @@ expect_ipt_arithmetic_ratio <- function(actual, expected, tolerance = 1e-10) {
                rep(1, length(expected)), tolerance = tolerance)
 }
 
+test_that("all-zero continued derivatives preserve named and unnamed attributes", {
+  named <- matrix(c(1, 1, -1, 1), 2, 2,
+                   dimnames = list(c("pre", "post"), c("intercept", "trend")))
+  for (X in list(named, unname(named))) {
+    result <- DRDID:::loss.ps.IPT(c(0.2, 0.4), 2, c(1, 0), X, c(0, 0))
+    expected_gradient <- matrix(0, 2, 1)
+    expected_hessian <- matrix(0, 2, 2)
+    if (!is.null(colnames(X))) {
+      dimnames(expected_gradient) <- list(colnames(X), NULL)
+      dimnames(expected_hessian) <- list(colnames(X), colnames(X))
+    }
+    expect_identical(as.numeric(result), 0)
+    expect_identical(attr(result, "gradient"), expected_gradient)
+    expect_identical(attr(result, "hessian"), expected_hessian)
+  }
+})
+
 test_that("primary weighted exponentials survive intermediate overflow and underflow", {
   X <- matrix(1, 1, 1)
   overflow <- DRDID:::loss.ps.cal(720, 0, X, 2 * exp(-720))
