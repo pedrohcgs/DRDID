@@ -168,6 +168,29 @@ test_that("control curvature cannot amplify an unresolved span error into false 
   expect_false(DRDID:::ipt.valid(c(0, 0, 0), D, canonical, w))
 })
 
+test_that("forward error in fitted indices cannot hide original IPT imbalance", {
+  B <- rbind(c(0x1.0000000000000p+0, -0x1.0000000000000p+0),
+             c(-0x1.9eec65c113c0ep-1, 0x1.9eec689879bd2p-1))
+  X <- rbind(B, B)
+  D <- c(1, 1, 0, 0)
+  gamma <- c(0x1.5522d378d8387p+33, 0x1.5522d28512c5ap+33)
+  w <- c(1, 1, 0x1.8abd5530ac208p-704, 0x1.84f869f9b9084p-829)
+  canonical <- rbind(diag(2), diag(2))
+  # Frozen correctly rounded exact-binary products B %*% gamma. The ordinary
+  # matrix product can lose enough accuracy through cancellation to hide the
+  # imbalance. The reference does not depend on the platform's BLAS dot product.
+  canonical_gamma <- c(0x1.e78ae5a000000p+8, 0x1.1f19b010c7043p+9)
+  control_mass <- exp(log(w[3:4]) + canonical_gamma)
+  # Each coordinate has one unit-weight treated row and one control, so the
+  # independent index Newton correction is (1-control_mass)/control_mass.
+  expect_gt(max(abs((1 - control_mass) / control_mass)), 1e-6)
+  expect_false(DRDID:::ipt.valid(gamma, D, X, w))
+  expect_false(DRDID:::ipt.valid(canonical_gamma, D, canonical, w))
+  # Tiny positive weights are acceptable when indices and weighted masses can
+  # be evaluated accurately in the specified well-conditioned model.
+  expect_true(DRDID:::ipt.valid(-log(w[3:4]), D, canonical, w))
+})
+
 test_that("a verified primary candidate is accepted regardless of optimizer status", {
   d <- make_required_ipt_fixture()
   for (converged in c(TRUE, FALSE)) {

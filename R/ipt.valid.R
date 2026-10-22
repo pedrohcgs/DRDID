@@ -51,10 +51,30 @@ ipt.valid <- function(gamma, D, int.cov, i.weights){
 
   # Evaluate only positive-weight controls' exponentials, on a common log scale.
   # This avoids 0 * Inf and overflow in exp(eta) when the effective mass is finite.
-  log.mass <- log(i.weights[active])
+  log.weights <- log(i.weights[active])
+  log.mass <- log.weights
   log.mass[d == 0] <- log.mass[d == 0] + eta[d == 0]
   if (any(!is.finite(log.mass))) return(FALSE)
-  mass <- exp(log.mass - max(log.mass))
+  common.scale <- max(log.mass)
+  shifted <- log.mass - common.scale
+  mass <- exp(shifted)
+
+  # Cancellation in X gamma can corrupt the exponential score even when its
+  # span is accurately represented. Bound control index arithmetic before
+  # exponentiating. Treated indices do not enter their score masses.
+  absolute.index <- as.vector(abs(x[d == 0, , drop = FALSE]) %*% abs(gamma))
+  if (any(!is.finite(absolute.index))) return(FALSE)
+  log.error <- product.factor * (1 + abs(log.weights) +
+                                  abs(log.mass) + abs(common.scale))
+  log.error[d == 0] <- log.error[d == 0] +
+    product.factor * (absolute.index / (1 - product.factor) +
+                        abs(log.weights[d == 0]) + abs(eta[d == 0]))
+  # The computed common scale is an arbitrary shared normalization, so its
+  # own error need not be propagated. Include log/add/subtract/exp roundoff;
+  # the normal minimum is a conservative absolute allowance for underflow.
+  mass.error <- (mass * (expm1(log.error) + product.factor) +
+                   .Machine$double.xmin * exp(log.error)) / (1 - product.factor)
+  if (any(!is.finite(mass.error))) return(FALSE)
   score <- as.vector(crossprod(z, ifelse(d == 1, mass, -mass)))
   controls <- z[d == 0, , drop = FALSE] * sqrt(mass[d == 0])
   curvature <- tryCatch(basis(controls), error = function(e) NULL)
@@ -74,9 +94,18 @@ ipt.valid <- function(gamma, D, int.cov, i.weights){
   # Weyl's bound controls its curvature; perturbing H b = S controls the change
   # in fitted-index steps. Include practical dot-product/SVD/solve allowances.
   dot.factor <- (nrow(z) + k + 2) * eps / (1 - (nrow(z) + k + 2) * eps)
-  score.error <- span.error * sqrt(sum(mass^2)) +
-    dot.factor * sqrt(sum(colSums(abs(z) * mass)^2))
-  control.error <- sqrt(max(mass[d == 0])) * span.error +
+  score.error <- span.error * sqrt(sum((mass + mass.error)^2)) +
+    sqrt(sum(colSums(abs(z) * mass.error)^2)) +
+    dot.factor * sqrt(sum(colSums(abs(z) * (mass + mass.error))^2))
+  control.mass <- mass[d == 0]
+  control.mass.error <- mass.error[d == 0]
+  root.mass.error <- sqrt(control.mass.error)
+  positive <- control.mass > 0
+  root.mass.error[positive] <- control.mass.error[positive] /
+    (sqrt(pmax(control.mass[positive] - control.mass.error[positive], 0)) +
+       sqrt(control.mass[positive]))
+  control.error <- sqrt(max(control.mass + control.mass.error)) * span.error +
+    norm(z[d == 0, , drop = FALSE] * root.mass.error, "F") +
     dot.factor * norm(controls, "F")
   lower <- min(curvature$d) - control.error
   if (!is.finite(lower) || lower <= 0) return(FALSE)
