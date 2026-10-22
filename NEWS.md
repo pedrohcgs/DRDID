@@ -18,6 +18,12 @@
     draws, standard errors, and intervals can change;
     point estimates, analytic inference, and multiplier inference are unchanged.
 
+  * Zero-weight rows no longer enter IPT objective, gradient, or Hessian
+    arithmetic. Extreme finite covariates in those rows cannot create NaNs
+    through zero times an overflowing intermediate value. The original
+    objective divisor, model dimension, and secondary continuation threshold
+    are preserved.
+
   * The IPT propensity-score fallback used by the improved DR estimators now
     weights its full objective consistently with its gradient and Hessian.
     This corrects optimization with unequal observation or bootstrap weights
