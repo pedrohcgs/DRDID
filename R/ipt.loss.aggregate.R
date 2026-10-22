@@ -10,31 +10,6 @@ ipt.loss.in.range <- function(index, control, X, iw, n) {
   !any(linear.index > 1e100 | (linear.index != 0 & linear.index < 1e-100))
 }
 
-ipt.loss.needs.log <- function(log.value, sign.value, log.gradient,
-                               sign.gradient, log.hessian, sign.hessian, X) {
-  lower <- log(.Machine$double.xmin)
-  upper <- log(.Machine$double.xmax)
-  outside <- function(x, direction) {
-    result <- direction != 0 & (x < lower | x > upper)
-    anyNA(result) || any(result)
-  }
-  smallest <- rep(Inf, nrow(X))
-  largest <- rep(-Inf, nrow(X))
-  for (j in seq_len(ncol(X))) {
-    log.column <- log(abs(X[, j]))
-    smallest <- pmin(smallest, ifelse(X[, j] == 0, Inf, log.column))
-    largest <- pmax(largest, log.column)
-  }
-  has.X <- largest != -Inf
-  sign.gradient <- sign.gradient * has.X
-  sign.hessian <- sign.hessian * has.X
-  outside(log.value, sign.value) ||
-    outside(log.gradient + smallest, sign.gradient) ||
-    outside(log.gradient + largest, sign.gradient) ||
-    outside(log.hessian + 2 * smallest, sign.hessian) ||
-    outside(log.hessian + 2 * largest, sign.hessian)
-}
-
 # A product is reliable only if no earlier multiplication lost range.
 # An exact zero factor annihilates even an out-of-range nonlinear loading.
 ipt.loss.product <- function(a, b, safe.a = TRUE, safe.b = TRUE) {

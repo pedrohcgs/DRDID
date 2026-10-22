@@ -61,7 +61,7 @@ test_that("ordinary no-intercept zero rows keep the ordinary calculation path", 
   ordinary <- DRDID:::loss.ps.cal
   private <- new.env(parent = environment(ordinary))
   private$ipt.loss.aggregate <- function(...) stop("unnecessary fallback")
-  private$ipt.loss.needs.log <- function(...) stop("unnecessary rowwise logarithms")
+  private$ipt.loss.product <- function(...) stop("unnecessary reliability masks")
   environment(ordinary) <- private
   result <- ordinary(gamma, D, X, w)
   mass <- w * (1 - D) * exp(as.vector(X * gamma))
@@ -135,6 +135,39 @@ test_that("continued controls avoid cancellation and overflowing tail polynomial
   expect_equal(primary$hessian, matrix(0, 1, 1))
 })
 
+test_that("subnormal tail scores cannot erase a representable gradient contrast", {
+  tiny <- 2^-1074
+  X <- matrix(c(2^27, 1), ncol = 1)
+  gamma <- 1 + 2^-28
+  # The exact control score is tiny*(2^27+1.5). Rounding it before X
+  # changes its complete gradient to the treated term, falsely yielding zero.
+  result <- DRDID:::loss.ps.IPT(gamma, 2, c(0, 1), X,
+                               c(tiny, 0x1.0000004p-1020))
+  expect_identical(as.numeric(attr(result, "gradient")), -2^-1048)
+})
+
+test_that("continued Hessians recover subnormal intermediates in either column order", {
+  tiny <- 2^-1074
+  X <- rbind(c(2^27 + 0.5, 2^27), c(-1, 1))
+  gamma <- c(0, 1)
+  # The positive off-diagonal term is 2^-1020 + 2^-1048. The second
+  # row subtracts 2^-1020. Both complete row terms are ordinary-range numbers.
+  for (order in list(1:2, 2:1)) {
+    result <- DRDID:::loss.ps.IPT(gamma[order], 2, c(0, 0), X[, order],
+                                 c(tiny, 2^-1020))
+    expect_identical(attr(result, "hessian")[1, 2], 2^-1048)
+    expect_identical(attr(result, "hessian")[2, 1], 2^-1048)
+  }
+
+  # The same loss of precision also matters without cancellation. Applying
+  # the large X factor first supplies an independent representable reference.
+  X <- rbind(c(1e8 + 0.5, 1e100), c(1e8 + 0.5, 1e100))
+  expected <- 2 * (tiny * X[1, 2]) * X[1, 1]
+  result <- DRDID:::loss.ps.IPT(c(1e92, 0), 2, c(0, 0), X, rep(tiny, 2))
+  expect_ipt_arithmetic_ratio(attr(result, "hessian")[1, 2], expected, 1e-12)
+  expect_ipt_arithmetic_ratio(attr(result, "hessian")[2, 1], expected, 1e-12)
+})
+
 test_that("continued control values preserve the original join and declared n", {
   for (n in c(2, 4, 12)) {
     for (offset in c(-0.01, 0, 0.01, 1)) {
@@ -156,7 +189,7 @@ test_that("continued control values preserve the original join and declared n", 
 
 test_that("extreme-range values and derivatives describe the same criteria", {
   # Finite differences of the scalar objective and of its supplied gradient
-  # exercise the fallback, independently of its internal log aggregation.
+  # exercise the fallback, independently of its internal binary aggregation.
   cases <- list(
     list(gamma = 720, h = 1e-4, n = 4, w = 2 * exp(-720), secondary = FALSE),
     list(gamma = -1000, h = 1e-4, n = 4, w = 1e300, secondary = FALSE),
@@ -290,16 +323,22 @@ test_that("recovered tiny terms combine with cancellation before the original di
   expect_null(names(primary$value))
 })
 
-test_that("primary Hessian reliability follows its actual multiplication order", {
+test_that("exponential Hessian reliability follows the actual multiplication order", {
   X <- matrix(c(1e300, 1e-100), nrow = 1)
   gamma <- c(log(1e-300) / 1e300, 0)
   eta <- as.numeric(X %*% gamma)
   expected <- (exp(eta / 2) * X[1, 1]) * (exp(eta / 2) * X[1, 2])
-  result <- DRDID:::loss.ps.cal(gamma, 0, X, 1)
   # mass*X2 underflows before multiplication by X1, while the reverse order
-  # is representable. Both off-diagonal entries describe the same curvature.
-  expect_ipt_arithmetic_ratio(result$hessian[1, 2], expected)
-  expect_ipt_arithmetic_ratio(result$hessian[2, 1], expected)
+  # is representable. Column permutations and both criteria must retain the
+  # same curvature, despite their different crossproduct operand order.
+  for (order in list(1:2, 2:1)) {
+    primary <- DRDID:::loss.ps.cal(gamma[order], 0, X[, order, drop = FALSE], 1)
+    secondary <- DRDID:::loss.ps.IPT(gamma[order], 4, 0, X[, order, drop = FALSE], 1)
+    expect_ipt_arithmetic_ratio(primary$hessian[1, 2], expected)
+    expect_ipt_arithmetic_ratio(primary$hessian[2, 1], expected)
+    expect_ipt_arithmetic_ratio(attr(secondary, "hessian")[1, 2], expected)
+    expect_ipt_arithmetic_ratio(attr(secondary, "hessian")[2, 1], expected)
+  }
 })
 
 test_that("exceptional objectives remain nonflat inside a rounded-log bin", {

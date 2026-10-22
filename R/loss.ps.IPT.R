@@ -45,56 +45,33 @@ loss.ps.IPT <- function(gamma1, n, D, int.cov, iw) {
     return(res)
   }
 
-  log.iw <- log(abs(iw))
-  log.value <- log.iw + log(abs(v))
-  sign.value <- -sign(iw) * sign(v)
-  log.gradient <- log.iw
-  sign.gradient <- -sign(iw)
-  log.hessian <- rep(-Inf, length(iw))
-  sign.hessian <- numeric(length(iw))
-  log.value[exponential] <- log.gradient[exponential] <-
-    log.hessian[exponential] <- log.iw[exponential] + v[exponential]
-  sign.value[control] <- sign.gradient[control] <- sign.hessian[control] <- sign(iw[control])
-  # log(1+t+t^2/2), without squaring a large t first.
-  log.polynomial <- numeric(length(t))
-  small <- t <= 1
-  log.polynomial[small] <- log1p(t[small] + 0.5 * t[small]^2)
-  log.polynomial[!small] <- 2 * log(t[!small]) +
-    log(0.5 + 1 / t[!small] + (1 / t[!small])^2)
-  log.value[tail] <- log.iw[tail] + log(n - 1) + log.polynomial
-  log.gradient[tail] <- log.iw[tail] + log(n - 1) + log1p(t)
-  log.hessian[tail] <- log.iw[tail] + log(n - 1)
-
-  if (any(!is.finite(c(res, gradient, hessian))) ||
-      any(!is.finite(ev) | ev < .Machine$double.xmin) ||
-      ipt.loss.needs.log(log.value, sign.value, log.gradient, sign.gradient,
-                         log.hessian, sign.hessian, int.cov)) {
-    value.safe <- ipt.loss.product(-iw, v)$safe
-    gradient.safe <- hessian.safe <- rep(TRUE, length(iw))
-    mass <- ipt.loss.product(iw[exponential], ev,
-                             safe.b = is.finite(ev) & ev >= .Machine$double.xmin)
-    value.safe[exponential] <- gradient.safe[exponential] <-
-      hessian.safe[exponential] <- mass$safe
-    coefficient <- ipt.loss.product(iw[tail], n - 1)
-    polynomial <- 1 + t + 0.5 * t^2
-    value.safe[tail] <- ipt.loss.product(coefficient$value, polynomial,
-                                         coefficient$safe)$safe
-    gradient.safe[tail] <- ipt.loss.product(coefficient$value, 1 + t,
-                                            coefficient$safe)$safe
-    hessian.safe[tail] <- coefficient$safe
-    terms <- list(value = value, value.safe = value.safe,
-                  gradient = score, gradient.safe = gradient.safe,
-                  hessian = curvature, hessian.safe = hessian.safe)
-    repair <- function(rows, j = NULL, l = NULL) {
-      ipt.loss.recover(v, D, int.cov, iw, rows, j, l, continued.n = n)
-    }
-    stable <- ipt.loss.aggregate(list(value = res, gradient = gradient, hessian = hessian),
-                                  terms, int.cov, repair)
-    res <- stable$value
-    gradient <- matrix(stable$gradient, k, 1)
-    if (!is.null(colnames(int.cov))) dimnames(gradient) <- list(colnames(int.cov), NULL)
-    hessian <- stable$hessian
+  # Complete products can be normal even after an intermediate lost range.
+  # Build their reliability masks whenever the safe fast path was unavailable.
+  value.safe <- ipt.loss.product(-iw, v)$safe
+  gradient.safe <- hessian.safe <- rep(TRUE, length(iw))
+  mass <- ipt.loss.product(iw[exponential], ev,
+                           safe.b = is.finite(ev) & ev >= .Machine$double.xmin)
+  value.safe[exponential] <- gradient.safe[exponential] <-
+    hessian.safe[exponential] <- mass$safe
+  coefficient <- ipt.loss.product(iw[tail], n - 1)
+  polynomial <- 1 + t + 0.5 * t^2
+  value.safe[tail] <- ipt.loss.product(coefficient$value, polynomial,
+                                       coefficient$safe)$safe
+  gradient.safe[tail] <- ipt.loss.product(coefficient$value, 1 + t,
+                                          coefficient$safe)$safe
+  hessian.safe[tail] <- coefficient$safe
+  terms <- list(value = value, value.safe = value.safe,
+                gradient = score, gradient.safe = gradient.safe,
+                hessian = curvature, hessian.safe = hessian.safe)
+  repair <- function(rows, j = NULL, l = NULL) {
+    ipt.loss.recover(v, D, int.cov, iw, rows, j, l, continued.n = n)
   }
+  stable <- ipt.loss.aggregate(list(value = res, gradient = gradient, hessian = hessian),
+                                terms, int.cov, repair)
+  res <- stable$value
+  gradient <- matrix(stable$gradient, k, 1)
+  if (!is.null(colnames(int.cov))) dimnames(gradient) <- list(colnames(int.cov), NULL)
+  hessian <- stable$hessian
   attr(res, "gradient") <- gradient
   attr(res, "hessian") <- hessian
   res

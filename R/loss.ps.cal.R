@@ -32,37 +32,24 @@ loss.ps.cal <- function(gam, D, int.cov, iw) {
     return(list(value = val, gradient = grad, hessian = hess))
   }
 
-  log.iw <- log(abs(iw))
-  log.mass <- log.iw + ps.ind
-  log.value <- ifelse(control, log.mass, log.iw + log(abs(ps.ind)))
-  sign.value <- ifelse(control, sign(iw), -sign(iw) * sign(ps.ind))
-  log.gradient <- ifelse(control, log.mass, log.iw)
-  sign.gradient <- ifelse(control, sign(iw), -sign(iw))
-  log.hessian <- ifelse(control, log.mass, -Inf)
-  sign.hessian <- ifelse(control, sign(iw), 0)
-  if (any(!is.finite(c(val, grad, hess))) ||
-      any(!is.finite(exp.ps.ind[control]) |
-            exp.ps.ind[control] < .Machine$double.xmin) ||
-      ipt.loss.needs.log(log.value, sign.value, log.gradient, sign.gradient,
-                         log.hessian, sign.hessian, int.cov)) {
-    exp.safe <- !control | (is.finite(exp.ps.ind) &
-                             exp.ps.ind >= .Machine$double.xmin)
-    mass <- ipt.loss.product(iw, exp.ps.ind, safe.b = exp.safe)
-    value <- ipt.loss.product(-iw, ps.ind)
-    value$value[control] <- mass$value[control]
-    value$safe[control] <- mass$safe[control]
-    loading <- -iw
-    loading[control] <- mass$value[control]
-    loading.safe <- !control | mass$safe
-    terms <- list(value = value$value, value.safe = value$safe,
-                  gradient = loading, gradient.safe = loading.safe,
-                  hessian = mass$value, hessian.safe = mass$safe,
-                  hessian.column.first = TRUE)
-    repair <- function(rows, j = NULL, l = NULL) {
-      ipt.loss.recover(ps.ind, D, int.cov, iw, rows, j, l)
-    }
-    return(ipt.loss.aggregate(list(value = val, gradient = grad, hessian = hess),
-                               terms, int.cov, repair, divisor = n))
+  # Outside the safe box, check the multiplications themselves. A rounded
+  # subnormal intermediate can precede an ordinary-range complete product.
+  exp.safe <- !control | (is.finite(exp.ps.ind) &
+                           exp.ps.ind >= .Machine$double.xmin)
+  mass <- ipt.loss.product(iw, exp.ps.ind, safe.b = exp.safe)
+  value <- ipt.loss.product(-iw, ps.ind)
+  value$value[control] <- mass$value[control]
+  value$safe[control] <- mass$safe[control]
+  loading <- -iw
+  loading[control] <- mass$value[control]
+  loading.safe <- !control | mass$safe
+  terms <- list(value = value$value, value.safe = value$safe,
+                gradient = loading, gradient.safe = loading.safe,
+                hessian = mass$value, hessian.safe = mass$safe,
+                hessian.column.first = TRUE)
+  repair <- function(rows, j = NULL, l = NULL) {
+    ipt.loss.recover(ps.ind, D, int.cov, iw, rows, j, l)
   }
-  list(value = val, gradient = grad, hessian = hess)
+  ipt.loss.aggregate(list(value = val, gradient = grad, hessian = hess),
+                     terms, int.cov, repair, divisor = n)
 }
