@@ -1,5 +1,10 @@
 # DRDID (development version)
 
+  * `twfe_did_panel()` and `twfe_did_rc()` now preserve matrix dimensions when
+    removing a supplied intercept. An intercept plus one covariate now fits
+    the same regression as supplying that covariate alone, instead of failing.
+    Intercept-only inputs retain their existing no-covariate behavior.
+
   * The IPT propensity-score fallback used by the improved DR estimators now
     weights its full objective consistently with its gradient and Hessian.
     This corrects optimization with unequal observation or bootstrap weights

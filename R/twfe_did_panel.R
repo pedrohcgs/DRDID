@@ -91,7 +91,7 @@ twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
     if(all(as.matrix(covariates)[,1] == rep(1,n))) {
       # Remove intercept if you include it
       covariates <- as.matrix(covariates)
-      covariates <- covariates[,-1]
+      covariates <- covariates[, -1, drop = FALSE]
       if(dim(covariates)[2]==0) {
         covariates = NULL
         x = NULL
