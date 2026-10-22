@@ -15,7 +15,7 @@ NULL
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
 #' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
 #' If \code{boot = TRUE}, default is "weighted".
-#' @param nboot Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
+#' @param nboot A finite scalar integer of at least 2 giving the number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
 #'
 #' @return A list containing the following components:
@@ -59,6 +59,8 @@ NULL
 twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
                           boot = FALSE, boot.type = "weighted", nboot = NULL,
                           inffunc = FALSE){
+  if (boot) nboot <- validate_bootstrap_count(nboot)
+
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
@@ -161,7 +163,6 @@ twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
     }
 
     if (boot == TRUE) {
-      if (is.null(nboot) == TRUE) nboot = 999
       if(boot.type == "multiplier"){
         # do multiplier bootstrap
         twfe.boot <- mboot.did(att.inf.func, nboot)
@@ -175,7 +176,7 @@ twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
         lci <- twfe.att - cv * se.twfe.att
       } else {
         # do weighted bootstrap
-        twfe.boot <- unlist(lapply(1:nboot, wboot.twfe.panel,
+        twfe.boot <- unlist(lapply(seq_len(nboot), wboot.twfe.panel,
                                    n = n, y = y, dd = dd, post = post, x = x, i.weights = i.weights))
         # get bootstrap std errors based on IQR
         se.twfe.att <- stats::IQR((twfe.boot - twfe.att)) / (stats::qnorm(0.75) - stats::qnorm(0.25))

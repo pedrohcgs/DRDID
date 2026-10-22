@@ -22,7 +22,7 @@ NULL
 #'  standard errors are reported.
 #' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
 #' If \code{boot = TRUE}, default is "weighted".
-#' @param nboot Number of bootstrap repetitions (not relevant if boot = \code{FALSE}). Default is 999.
+#' @param nboot A finite scalar integer of at least 2 giving the number of bootstrap repetitions (not relevant if boot = \code{FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is \code{FALSE}.
 #'
 #' @return A list containing the following components:

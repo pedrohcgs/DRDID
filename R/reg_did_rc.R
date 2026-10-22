@@ -15,7 +15,7 @@ NULL
 #' @param boot Logical argument to whether bootstrap should be used for inference. Default is FALSE.
 #' @param boot.type Type of bootstrap to be performed (not relevant if \code{boot = FALSE}). Options are "weighted" and "multiplier".
 #' If \code{boot = TRUE}, default is "weighted".
-#' @param nboot Number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
+#' @param nboot A finite scalar integer of at least 2 giving the number of bootstrap repetitions (not relevant if \code{boot = FALSE}). Default is 999.
 #' @param inffunc Logical argument to whether influence function should be returned. Default is FALSE.
 #'
 #' @return A list containing the following components:
@@ -62,6 +62,8 @@ NULL
 reg_did_rc <-function(y, post, D, covariates, i.weights = NULL,
                       boot = FALSE, boot.type = "weighted", nboot = NULL,
                       inffunc = FALSE){
+  if (boot) nboot <- validate_bootstrap_count(nboot)
+
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
@@ -195,7 +197,6 @@ reg_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   }
 
   if (boot == TRUE) {
-    if (is.null(nboot) == TRUE) nboot = 999
     if(boot.type == "multiplier"){
       # do multiplier bootstrap
       reg.boot <- mboot.did(reg.att.inf.func, nboot)
@@ -209,7 +210,7 @@ reg_did_rc <-function(y, post, D, covariates, i.weights = NULL,
       lci <- reg.att - cv * se.reg.att
     } else {
       # do weighted bootstrap
-      reg.boot <- unlist(lapply(1:nboot, wboot_reg_rc,
+      reg.boot <- unlist(lapply(seq_len(nboot), wboot_reg_rc,
                                 n = n, y = y, post = post, D = D, int.cov = int.cov, i.weights = i.weights))
       # get bootstrap std errors based on IQR
       se.reg.att <- stats::IQR((reg.boot - reg.att)) / (stats::qnorm(0.75) - stats::qnorm(0.25))

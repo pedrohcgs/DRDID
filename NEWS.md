@@ -1,5 +1,9 @@
 # DRDID (development version)
 
+  * Bootstrap estimation now rejects `nboot` values that are not finite scalar
+    integers of at least 2 before fitting or drawing bootstrap weights. The
+    low-level `NULL` default remains 999; `boot = FALSE` continues to ignore it.
+
   * Improved DR estimators now require a numerically verified solution of the
     original exponential-IPT equations. Logit MLE is used only for initialization;
     failed IPT fits stop and suggest explicitly rerunning the traditional DR
