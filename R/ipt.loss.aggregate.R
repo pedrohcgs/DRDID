@@ -98,7 +98,10 @@ ipt.loss.binary.sum <- function(binary, divisor = 1) {
   exponent <- unname(binary[, 2])
   infinite <- is.infinite(mantissa)
   if (any(infinite)) {
-    directions <- unique(sign(mantissa[infinite]))
+    # A cutoff infinity has unknown magnitude relative to other extended
+    # overflowing terms. Opposite signs are unresolved, not a signed infinity.
+    overflowing <- infinite | (exponent > 1023 & mantissa != 0)
+    directions <- unique(sign(mantissa[overflowing]))
     if (length(directions) > 1) return(NaN)
     return(directions[1] * Inf)
   }

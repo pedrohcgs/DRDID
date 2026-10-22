@@ -367,3 +367,33 @@ test_that("far-out-of-range indices have bounded recovery and exact zero derivat
   expect_equal(negative$gradient, c(0, 0))
   expect_equal(negative$hessian, matrix(0, 2, 2))
 })
+
+test_that("opposing extended overflow terms do not produce a false signed infinity", {
+  hi <- 0x1.0000000000001p+12
+  lo <- 0x1.fffffffffffffp+11
+  # 2*exp(lo) dominates exp(hi), but the latter crosses the bounded
+  # exponential-recovery cutoff. Refuse to assign a sign to unresolved
+  # opposing overflow terms rather than claiming the smaller term dominates.
+  for (orientation in c(1, -1)) {
+    X <- rbind(c(hi, -orientation), c(lo, orientation))
+    for (order in list(1:2, 2:1)) {
+      result <- DRDID:::loss.ps.cal(c(1, 0), c(0, 0), X[order, ], c(1, 2)[order])
+      expect_identical(result$value, Inf)
+      expect_true(is.nan(result$gradient[2]))
+      expect_true(all(is.nan(result$hessian[c(2, 3)])))
+      expect_identical(result$hessian[c(1, 4)], c(Inf, Inf))
+    }
+  }
+})
+
+test_that("cutoff infinities retain known same-sign and bounded-opposition results", {
+  for (direction in c(1, -1)) {
+    # A finite mantissa with an extended exponent can represent a term beyond
+    # double range. Same signs remain unambiguous; bounded ordinary terms
+    # cannot reverse an exponential product beyond the far-out cutoff.
+    same_sign <- rbind(c(direction * Inf, 0), c(direction, 5910))
+    bounded_opposition <- rbind(c(direction * Inf, 0), c(-direction, 1023))
+    expect_identical(DRDID:::ipt.loss.binary.sum(same_sign), direction * Inf)
+    expect_identical(DRDID:::ipt.loss.binary.sum(bounded_opposition), direction * Inf)
+  }
+})
