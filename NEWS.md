@@ -1,5 +1,10 @@
 # DRDID (development version)
 
+  * The internal GLM fitter now rejects designs with fewer rows than columns
+    before entering `fastglm`. Such designs cannot have full column rank.
+    Callers receive an ordinary R error when a regression cell is undersized;
+    supported fits retain the same calculations.
+
   * The IPT propensity-score fallback used by the improved DR estimators now
     weights its full objective consistently with its gradient and Hessian.
     This corrects optimization with unequal observation or bootstrap weights

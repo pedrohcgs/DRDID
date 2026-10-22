@@ -14,6 +14,9 @@
 # The returned fastglmPure list exposes $coefficients, $fitted.values and
 # $converged, which replace the previous coef() / fitted() / $converged accessors.
 fastglm_fit <- function(x, y, family, weights = NULL, method = 0L) {
+  if (nrow(x) < ncol(x)) {
+    stop("The regression design matrix is singular: fewer observations than covariates. Consider removing some covariates.")
+  }
   fastglm::fastglmPure(x = x, y = y, family = family, weights = weights,
                        method = method, tol = 1e-8, maxit = 100L)
 }
