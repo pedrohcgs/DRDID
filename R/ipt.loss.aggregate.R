@@ -24,6 +24,11 @@ ipt.loss.prepare <- function(D, X, iw) {
 
 ipt.loss.in.range <- function(index, control, prepared, n) {
   if (n < 2 || n > 1e50 || !prepared$ordinary.range) return(FALSE)
+  if (!length(index)) return(TRUE)
+  bounds <- range(abs(index))
+  # These global bounds imply both group-specific checks below. All-zero
+  # indices are safe; mixed zero/nonzero or wider ranges use the exact checks.
+  if (isTRUE(bounds[2] <= 100 && (bounds[1] >= 1e-100 || bounds[2] == 0))) return(TRUE)
   if (any(abs(index[control]) > 100)) return(FALSE)
   linear.index <- abs(index[!control])
   !any(linear.index > 1e100 | (linear.index != 0 & linear.index < 1e-100))
