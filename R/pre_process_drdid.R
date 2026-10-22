@@ -105,6 +105,8 @@ pre_process_drdid <- function(yname,
 
   }
 
+  validate_treatment_indicator(dta[, dname], allow_missing = TRUE)
+
   #  make sure id is numeric
   if (! is.null(idname)){
     #  make sure id is numeric

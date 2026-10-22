@@ -76,6 +76,9 @@
     asymptotically when the propensity score model is correctly specified, but
     not when only the outcome regressions are.
 
+  * Treatment indicators must use 0 for comparison and 1 for treated units.
+    Invalid coding is rejected explicitly rather than silently changing weights.
+
   * The internal GLM fitter now rejects designs with fewer rows than columns
     before entering `fastglm`. Such designs cannot have full column rank.
     Callers receive an ordinary R error when a regression cell is undersized;

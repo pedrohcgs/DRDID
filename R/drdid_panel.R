@@ -74,6 +74,7 @@ drdid_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
+  validate_treatment_indicator(D)
   # Sample size
   n <- length(D)
   # generate deltaY

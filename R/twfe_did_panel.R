@@ -77,6 +77,7 @@ twfe_did_panel <-function(y1, y0, D, covariates, i.weights = NULL,
   if (anyNA(y0) || anyNA(y1) || anyNA(D) || anyNA(covariates) || anyNA(i.weights)) {
     stop("Panel inputs must be complete. Remove individuals with missing outcomes, treatment, covariates, or weights before calling twfe_did_panel().")
   }
+  validate_treatment_indicator(D)
   # Weights
   if(is.null(i.weights)) {
     i.weights <- as.vector(rep(1, n))

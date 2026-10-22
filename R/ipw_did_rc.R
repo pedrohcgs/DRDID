@@ -58,6 +58,7 @@ ipw_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
+  validate_treatment_indicator(D)
   # Sample size
   n <- length(D)
   # y as vector
