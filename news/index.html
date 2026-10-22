@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DRDID</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.0</span>
       </span>
     </div>
 
@@ -60,7 +60,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="development version" id="drdid-development-version">DRDID (development version)<a class="anchor" aria-label="anchor" href="#drdid-development-version"></a></h2>
+<h2 class="page-header" data-toc-text="1.4.0" id="drdid-140">DRDID 1.4.0<a class="anchor" aria-label="anchor" href="#drdid-140"></a></h2>
 <ul><li><p>Panel preprocessing now excludes whole units with missing covariates or sampling weights before checking time invariance. Retained units remain matched by ID, and observed time-varying covariates or weights still fail.</p></li>
 <li><p>Formula-based estimators preserve user columns named <code>y</code>, <code>D</code>, <code>post</code>, or <code>w</code> when extracting outcomes, weights, and covariates. Renaming a variable no longer changes its meaning through internal preprocessing columns.</p></li>
 <li><p>Improved DR estimators now require a numerically verified solution of the original exponential-IPT equations. Logit MLE is used only for initialization; failed IPT fits stop and suggest explicitly rerunning the traditional DR estimator. The secondary IPT candidate is checked against the original equations even when its continued objective reports convergence. The returned <code>ps.flag</code> identifies the verified fitting route (0 or 1); value 2 is removed. Fitting normalizes the common scale of weights to avoid scale-dependent optimizer stopping. Numerically ill-conditioned designs are rejected. Every weighted-bootstrap replicate must pass the same check, and failures stop with the replicate number without skipping or redrawing the fit.</p></li>
