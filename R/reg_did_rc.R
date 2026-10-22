@@ -65,6 +65,7 @@ reg_did_rc <-function(y, post, D, covariates, i.weights = NULL,
   #-----------------------------------------------------------------------------
   # D as vector
   D <- as.vector(D)
+  validate_treatment_indicator(D)
   # post as vector
   post <- as.vector(post)
   # Sample size

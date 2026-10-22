@@ -18,6 +18,9 @@
     draws, standard errors, and intervals can change;
     point estimates, analytic inference, and multiplier inference are unchanged.
 
+  * Treatment indicators must use 0 for comparison and 1 for treated units.
+    Invalid coding is rejected explicitly rather than silently changing weights.
+
   * The IPT propensity-score fallback used by the improved DR estimators now
     weights its full objective consistently with its gradient and Hessian.
     This corrects optimization with unequal observation or bootstrap weights
