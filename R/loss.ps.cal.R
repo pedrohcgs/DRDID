@@ -45,8 +45,24 @@ loss.ps.cal <- function(gam, D, int.cov, iw) {
             exp.ps.ind[control] < .Machine$double.xmin) ||
       ipt.loss.needs.log(log.value, sign.value, log.gradient, sign.gradient,
                          log.hessian, sign.hessian, int.cov)) {
-    return(ipt.loss.aggregate(log.value, sign.value, log.gradient, sign.gradient,
-                               log.hessian, sign.hessian, int.cov, divisor = n))
+    exp.safe <- !control | (is.finite(exp.ps.ind) &
+                             exp.ps.ind >= .Machine$double.xmin)
+    mass <- ipt.loss.product(iw, exp.ps.ind, safe.b = exp.safe)
+    value <- ipt.loss.product(-iw, ps.ind)
+    value$value[control] <- mass$value[control]
+    value$safe[control] <- mass$safe[control]
+    loading <- -iw
+    loading[control] <- mass$value[control]
+    loading.safe <- !control | mass$safe
+    terms <- list(value = value$value, value.safe = value$safe,
+                  gradient = loading, gradient.safe = loading.safe,
+                  hessian = mass$value, hessian.safe = mass$safe,
+                  hessian.column.first = TRUE)
+    repair <- function(rows, j = NULL, l = NULL) {
+      ipt.loss.recover(ps.ind, D, int.cov, iw, rows, j, l)
+    }
+    return(ipt.loss.aggregate(list(value = val, gradient = grad, hessian = hess),
+                               terms, int.cov, repair, divisor = n))
   }
   list(value = val, gradient = grad, hessian = hess)
 }

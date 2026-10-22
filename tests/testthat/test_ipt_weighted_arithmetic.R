@@ -37,6 +37,7 @@ test_that("primary weighted exponentials survive intermediate overflow and under
   expect_ipt_arithmetic_ratio(as.numeric(secondary), expected)
   expect_ipt_arithmetic_ratio(attr(secondary, "gradient"), expected)
   expect_ipt_arithmetic_ratio(attr(secondary, "hessian"), expected)
+  expect_null(dimnames(attr(secondary, "gradient")))
 
   # A positive subnormal exponential has already lost precision before a large
   # weight restores an ordinary-range contribution. Rescue partial underflow,
@@ -204,4 +205,126 @@ test_that("real optimizers can use the repaired positive-weight criteria", {
   expect_true(secondary$code %in% c(1L, 2L))
   expect_equal(as.numeric(secondary$estimate), -50, tolerance = 1e-6)
   expect_lt(max(abs(secondary$gradient)), 1e-8)
+})
+
+test_that("an unrelated subnormal row cannot erase finite ordinary value differences", {
+  q2 <- 0x1.d945df4f8ee2ep+1009
+  X <- diag(3)
+  D <- c(0, 1, 0)
+  primary_values <- secondary_values <- numeric(2)
+  control <- sqrt(exp(700))
+  offset <- control - log(2)
+  secondary_reference <- 2 * (1 + offset + 0.5 * offset^2) - q2
+  for (i in seq_along(c(-700, -740))) {
+    third <- c(-700, -740)[i]
+    primary <- DRDID:::loss.ps.cal(c(700, q2, third), D, X, rep(1, 3))
+    secondary <- DRDID:::loss.ps.IPT(c(control, q2, third), 3, D, X, rep(1, 3))
+    primary_values[i] <- primary$value
+    secondary_values[i] <- as.numeric(secondary)
+    expect_lt(primary$value, 0)
+    expect_lt(as.numeric(secondary), 0)
+    # The surviving differences are hundreds of ulps. Ordinary reductions
+    # differ slightly near cancellation; zero is not an acceptable answer.
+    expect_ipt_arithmetic_ratio(primary$value, (exp(700) - q2) / 3, 0.01)
+    expect_ipt_arithmetic_ratio(as.numeric(secondary), secondary_reference, 0.01)
+    expect_null(names(primary$value))
+    expect_null(names(secondary))
+  }
+  expect_equal(primary_values[2] / primary_values[1], 1, tolerance = 0.01)
+  expect_equal(secondary_values[2] / secondary_values[1], 1, tolerance = 0.01)
+})
+
+test_that("ordinary value and derivative contrasts retain the actual weight mantissas", {
+  q <- c(0x1.d945df4f8ec8ep+1009, 0x1.d945df4f8ee2ep+1009, 1)
+  for (scale in c(1, exp(-600))) {
+    w <- scale * q
+    # References use the actual represented scaled weights, rather than
+    # assuming multiplication by a common floating-point scale is exact.
+    difference <- w[1] - w[2]
+    X <- matrix(c(0, 1, -740), ncol = 1)
+    primary <- DRDID:::loss.ps.cal(1, c(0, 1, 0), X, w)
+    secondary <- DRDID:::loss.ps.IPT(1, 3, c(0, 1, 0), X, w)
+    expect_ipt_arithmetic_ratio(primary$value, difference / 3, 0.01)
+    expect_ipt_arithmetic_ratio(as.numeric(secondary), difference, 0.01)
+
+    X <- rbind(c(1, 1, 0), c(1, -1, 0), c(0, 0, 1))
+    primary <- DRDID:::loss.ps.cal(c(0, 0, -740), rep(0, 3), X, w)
+    secondary <- DRDID:::loss.ps.IPT(c(0, 0, -740), 3, rep(0, 3), X, w)
+    expect_ipt_arithmetic_ratio(primary$gradient[2], difference / 3, 0.01)
+    expect_ipt_arithmetic_ratio(primary$hessian[1, 2], difference / 3, 0.01)
+    expect_ipt_arithmetic_ratio(attr(secondary, "gradient")[2], difference, 0.01)
+    expect_ipt_arithmetic_ratio(attr(secondary, "hessian")[1, 2], difference, 0.01)
+  }
+})
+
+test_that("two exceptional products retain differences in their weight mantissas", {
+  q <- c(0x1.d945df4f8ec8ep+1009, 0x1.d945df4f8ee2ep+1009)
+  X <- rbind(c(1, 1), c(1, -1))
+  for (scale in c(1, exp(-600))) {
+    w <- scale * q
+    # Both control exponentials are subnormal. Compute their common factor
+    # without first rounding exp(-740), and subtract represented weights first.
+    difference <- (w[1] - w[2]) * exp(-370) * exp(-370)
+    primary <- DRDID:::loss.ps.cal(c(-740, 0), c(0, 0), X, w)
+    secondary <- DRDID:::loss.ps.IPT(c(-740, 0), 2, c(0, 0), X, w)
+    expect_ipt_arithmetic_ratio(primary$gradient[2], difference / 2, 0.01)
+    expect_ipt_arithmetic_ratio(primary$hessian[1, 2], difference / 2, 0.01)
+    expect_ipt_arithmetic_ratio(attr(secondary, "gradient")[2], difference, 0.01)
+    expect_ipt_arithmetic_ratio(attr(secondary, "hessian")[1, 2], difference, 0.01)
+  }
+})
+
+test_that("recovered tiny terms combine with cancellation before the original divisor", {
+  X <- diag(3)
+  w <- rep(1e300, 3)
+  expected <- exp(-500) * 1e300 * exp(-500)
+  primary <- DRDID:::loss.ps.cal(c(0, 1, -1000), c(0, 1, 0), X, w)
+  secondary <- DRDID:::loss.ps.IPT(c(0, 1, -1000), 3, c(0, 1, 0), X, w)
+  expect_ipt_arithmetic_ratio(primary$value, expected / 3)
+  expect_ipt_arithmetic_ratio(as.numeric(secondary), expected)
+
+  tiny <- .Machine$double.xmin * .Machine$double.eps
+  # Individually dividing tiny and 0.49*tiny by two would round both to zero.
+  primary <- DRDID:::loss.ps.cal(c(0, log(0.49)), c(0, 0), diag(2), rep(tiny, 2))
+  expect_identical(as.numeric(primary$value) / tiny, 1)
+  expect_null(names(primary$value))
+})
+
+test_that("primary Hessian reliability follows its actual multiplication order", {
+  X <- matrix(c(1e300, 1e-100), nrow = 1)
+  gamma <- c(log(1e-300) / 1e300, 0)
+  eta <- as.numeric(X %*% gamma)
+  expected <- (exp(eta / 2) * X[1, 1]) * (exp(eta / 2) * X[1, 2])
+  result <- DRDID:::loss.ps.cal(gamma, 0, X, 1)
+  # mass*X2 underflows before multiplication by X1, while the reverse order
+  # is representable. Both off-diagonal entries describe the same curvature.
+  expect_ipt_arithmetic_ratio(result$hessian[1, 2], expected)
+  expect_ipt_arithmetic_ratio(result$hessian[2, 1], expected)
+})
+
+test_that("exceptional objectives remain nonflat inside a rounded-log bin", {
+  q2 <- 0x1.d945df4f8ee2ep+1009
+  gamma <- c(700, q2, -740)
+  plus <- minus <- gamma
+  plus[2] <- plus[2] + 16 * 2^(1009 - 52)
+  minus[2] <- minus[2] - 16 * 2^(1009 - 52)
+  expect_identical(log(plus[2]), 700)
+  expect_identical(log(minus[2]), 700)
+  evaluate <- function(g) DRDID:::loss.ps.cal(g, c(0, 1, 0), diag(3), rep(1, 3))
+  numerical <- (evaluate(plus)$value - evaluate(minus)$value) / (plus[2] - minus[2])
+  expect_gt(abs(numerical), 0.1)
+  # Use the represented step and allow ordinary cancellation quantization.
+  expect_equal(as.numeric(numerical) / evaluate(gamma)$gradient[2], 1, tolerance = 0.1)
+})
+
+test_that("far-out-of-range indices have bounded recovery and exact zero derivatives", {
+  X <- matrix(c(0, 1), nrow = 1)
+  positive <- DRDID:::loss.ps.cal(c(0, 1e308), 0, X, 1)
+  negative <- DRDID:::loss.ps.cal(c(0, -1e308), 0, X, 1)
+  expect_equal(positive$value, Inf)
+  expect_equal(positive$gradient, c(0, Inf))
+  expect_equal(positive$hessian, matrix(c(0, 0, 0, Inf), 2, 2))
+  expect_equal(negative$value, 0)
+  expect_equal(negative$gradient, c(0, 0))
+  expect_equal(negative$hessian, matrix(0, 2, 2))
 })
