@@ -10,10 +10,13 @@ ipt.loss.prepare <- function(D, X, iw) {
     iw <- iw[active]
   }
   abs.X <- abs(X)
-  nonzero.X <- abs.X[abs.X != 0]
-  X.range <- if (length(nonzero.X)) range(nonzero.X) else c(0, 0)
+  X.range <- if (length(abs.X)) range(abs.X) else c(0, 0)
+  if (isTRUE(X.range[1] == 0 && X.range[2] > 0)) {
+    X.range[1] <- min(abs.X[abs.X != 0])
+  }
   ordinary.range <- !any(abs(iw) < 1e-50 | abs(iw) > 1e50) &&
-    !any(abs.X > 1e50 | (abs.X != 0 & abs.X < 1e-50))
+    all(is.finite(X.range)) && X.range[2] <= 1e50 &&
+    (X.range[1] == 0 || X.range[1] >= 1e-50)
   list(D = D, X = X, iw = iw, n = n, control = D == 0,
        sample.fraction = length(iw) / n, ordinary.range = ordinary.range,
        X.range = X.range)
