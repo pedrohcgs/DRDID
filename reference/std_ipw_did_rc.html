@@ -110,7 +110,9 @@ If covariates = NULL, this leads to an unconditional DID estimator.</p></dd>
 
 
 <dt id="arg-boot">boot<a class="anchor" aria-label="anchor" href="#arg-boot"></a></dt>
-<dd><p>Logical argument to whether bootstrap should be used for inference. Default is FALSE.</p></dd>
+<dd><p>Logical argument to whether bootstrap should be used for inference. Default is FALSE.
+Exactly zero centered bootstrap draws give a zero standard error and point interval.
+Nonfinite draws or a zero IQR with nonzero draws stop with an error.</p></dd>
 
 
 <dt id="arg-boot-type">boot.type<a class="anchor" aria-label="anchor" href="#arg-boot-type"></a></dt>
