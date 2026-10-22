@@ -28,6 +28,12 @@
     and multiplier-bootstrap inference under iid sampling. The ATT point
     estimate is unchanged.
 
+  * `twfe_did_panel()` and `twfe_did_rc()` now preserve matrix dimensions when
+    removing a supplied intercept. An intercept plus one covariate now fits
+    the same regression as supplying that covariate as a numeric vector or a
+    matrix with one column, instead of failing.
+    Intercept-only inputs retain their existing no-covariate behavior.
+
   * `twfe_did_panel()` now accounts for dependence between each individual's
     pre/post observations in its analytical standard error. With covariates,
     the returned influence function now has one value per individual instead
