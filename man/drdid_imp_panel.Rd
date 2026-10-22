@@ -81,8 +81,13 @@ regression coefficients are estimated using weighted least squares,where the wei
 the propensity score estimates; see Sant'Anna and Zhao (2020) for details.
 
 
-The resulting estimator is not only locally efficient and doubly robust for the ATT,
-but it is also doubly robust for inference; see Sant'Anna and Zhao (2020) for details.
+Under the conditions in Sant'Anna and Zhao (2020), with trimming and
+propensity-score clipping inactive, the resulting estimator is locally efficient,
+doubly robust for the ATT, and doubly robust for inference.
+The weighted bootstrap refits the implemented point statistic. After active
+trimming or clipping, the IPT/WLS balance identities need not hold for the
+modified statistic; matching bootstrap refits alone does not establish these
+double-robustness or influence-function guarantees.
 }
 \examples{
 # Form the Lalonde sample with CPS comparison group

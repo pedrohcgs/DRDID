@@ -15,8 +15,10 @@ wboot.dr.imp.panel <- function(nn, n, deltaY, D, int.cov, i.weights,
   trim.ps[D==0] <- (ps.b[D==0] < trim.level)
   #Compute the Outcome regression for the control group
   out.reg.b <- wols.br.panel(deltaY, D, int.cov, ps.b, i.weights = b.weights)$out.reg
-  # Compute AIPW estimator
-  att.b <- aipw.did.panel(deltaY, D, ps.b, out.reg.b, b.weights, trim.ps)
+  # Refit drdid_imp_panel's combined residual numerator. After trimming,
+  # control odds weights need not sum to the treated weights.
+  att.summand <- trim.ps * (1 - (1 - D) / (1 - ps.b)) * (deltaY - out.reg.b)
+  att.b <- mean(b.weights * att.summand) / mean(b.weights * D)
   #-----------------------------------------------------------------------------
   return(att.b)
 }
