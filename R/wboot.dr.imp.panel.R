@@ -9,7 +9,7 @@ wboot.dr.imp.panel <- function(nn, n, deltaY, D, int.cov, i.weights,
   #weights for the bootstrap
   b.weights <- as.vector(i.weights * v)
   # Propensity score estimation
-  ps.b <- pscore.cal(D, int.cov, b.weights, n)$pscore
+  ps.b <- pscore.cal(D, int.cov, b.weights, n, bootstrap.index = nn)$pscore
   ps.b <- pmin(ps.b, 1 - 1e-6)
   trim.ps <- (ps.b < 1.01)
   trim.ps[D==0] <- (ps.b[D==0] < trim.level)

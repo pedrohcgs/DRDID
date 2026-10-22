@@ -9,7 +9,7 @@ wboot_drdid_imp_rc1 <- function(nn, n, y, post, D, int.cov, i.weights,
   #weights for the bootstrap
   b.weights <- as.vector(i.weights * v)
   #Compute the Pscore using the pscore.cal
-  ps.b <- pscore.cal(D, int.cov, i.weights = b.weights, n = n)
+  ps.b <- pscore.cal(D, int.cov, i.weights = b.weights, n = n, bootstrap.index = nn)
   ps.b <- as.vector(ps.b$pscore)
   ps.b <- pmin(ps.b, 1 - 1e-6)
   trim.ps <- (ps.b < 1.01)

@@ -1,16 +1,20 @@
 # DRDID (development version)
 
-  * `twfe_did_panel()` and `twfe_did_rc()` now preserve matrix dimensions when
-    removing a supplied intercept. An intercept plus one covariate now fits
-    the same regression as supplying that covariate as a numeric vector or a
-    matrix with one column, instead of failing.
-    Intercept-only inputs retain their existing no-covariate behavior.
+  * Improved DR estimators now require a numerically verified solution of the
+    original exponential-IPT equations. Logit MLE is used only for initialization;
+    failed IPT fits stop and suggest explicitly rerunning the traditional DR
+    estimator. The secondary IPT candidate is checked against the original
+    equations even when its continued objective reports convergence. The returned
+    `ps.flag` identifies the verified fitting route (0 or 1); value 2 is removed.
+    Fitting normalizes the common scale of weights to avoid scale-dependent
+    optimizer stopping. Numerically ill-conditioned designs are rejected.
+    Every weighted-bootstrap replicate must pass the same check, and failures
+    stop with the replicate number without skipping or redrawing the fit.
 
   * The IPT propensity-score fallback used by the improved DR estimators now
     weights its full objective consistently with its gradient and Hessian.
     This corrects optimization with unequal observation or bootstrap weights
-    when the primary `trust` fit does not converge. The primary fit and the
-    separate ordinary-logit fallback inference policy are unchanged.
+    when the primary `trust` fit does not converge.
 
   * The weighted bootstrap in `ipw_did_rc()` now refits the same statistic as
     the point estimator, including normalization of the combined observation
@@ -23,6 +27,12 @@
     observation weights in its influence function and the resulting analytic
     and multiplier-bootstrap inference under iid sampling. The ATT point
     estimate is unchanged.
+
+  * `twfe_did_panel()` and `twfe_did_rc()` now preserve matrix dimensions when
+    removing a supplied intercept. An intercept plus one covariate now fits
+    the same regression as supplying that covariate as a numeric vector or a
+    matrix with one column, instead of failing.
+    Intercept-only inputs retain their existing no-covariate behavior.
 
   * `twfe_did_panel()` now accounts for dependence between each individual's
     pre/post observations in its analytical standard error. With covariates,
