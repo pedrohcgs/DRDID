@@ -9,14 +9,26 @@ loss.ps.cal <- function(gam, D, int.cov, iw){
   k <- dim(int.cov)[2]
 
   if (!any(is.na(gam))) {
+    # Zero-weight rows contribute nothing. Exclude them before indices,
+    # exponentials and matrix products can create 0 * Inf or 0 * NaN.
+    active <- iw != 0
+    if (!any(active)) {
+      return(list(value = 0, gradient = rep(0, k), hessian = matrix(0, k, k)))
+    }
+    if (!all(active)) {
+      D <- D[active]
+      int.cov <- int.cov[active, , drop = FALSE]
+      iw <- iw[active]
+    }
+    sample.fraction <- length(iw) / n
     ps.ind <- as.vector(int.cov %*% gam)
     #exp.ps.ind <- exp(-ps.ind)
     exp.ps.ind <- exp(ps.ind)
     #val <- base::mean(ifelse(D, exp.ps.ind, ps.ind) * iw)
-    val <- - base::mean(ifelse(D, ps.ind, -exp.ps.ind) * iw)
+    val <- - base::mean(ifelse(D, ps.ind, -exp.ps.ind) * iw) * sample.fraction
 
     #grad <- apply(ifelse(D, -exp.ps.ind, 1) * iw * int.cov, 2, mean)
-    grad <- - apply(ifelse(D, 1, -exp.ps.ind) * iw * int.cov, 2, mean)
+    grad <- - apply(ifelse(D, 1, -exp.ps.ind) * iw * int.cov, 2, mean) * sample.fraction
 
     #hess <- (t(int.cov) %*% (ifelse(D, exp.ps.ind, 0) * iw * int.cov))/n
     hess <- - (t(int.cov) %*% (ifelse(D, 0, -exp.ps.ind) * iw * int.cov))/n

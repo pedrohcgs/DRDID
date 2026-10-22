@@ -1,6 +1,15 @@
 #Loss function for estimation of the Bias reduced PS, based on Graham, Pinton and Egel (2012, 2016)
 
 loss.ps.IPT <- function(gamma1, n, D, int.cov, iw){
+  # Exclude zero-weight rows before evaluating nonlinear terms. Keep the
+  # declared n: it determines the original quadratic continuation threshold.
+  active <- iw != 0
+  if (!all(active)) {
+    D <- D[active]
+    int.cov <- int.cov[active, , drop = FALSE]
+    iw <- iw[active]
+  }
+
   #Coefficients for quadratic extrapolation
   cn <- -(n - 1)
   bn <- -n + (n - 1) * log(n - 1)
