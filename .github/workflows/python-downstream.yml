@@ -1,0 +1,23 @@
+name: Python downstream compatibility
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  csdid:
+    if: github.repository == 'pedrohcgs/DRDID'
+    # Check the exact R revision against current Python packages; no publishing.
+    uses: d2cml-ai/csdid/.github/workflows/r-upstream-parity.yml@main
+    with:
+      r-drdid-ref: ${{ github.sha }}
+
+  drdidpy:
+    if: github.repository == 'pedrohcgs/DRDID'
+    uses: d2cml-ai/DRDIDpy/.github/workflows/tests.yml@main
+    with:
+      r-drdid-ref: ${{ github.sha }}
