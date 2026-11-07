@@ -84,13 +84,15 @@ test_that("rank-deficient designs are rejected by every core estimator (incl. st
   D <- rbinom(n, 1, plogis(x)); w <- rep(1, n)
   y0 <- x + rnorm(n); y1 <- y0 + D + rnorm(n)
   post <- rbinom(n, 1, 0.5); y <- x + D * post + rnorm(n)
-  expect_error(drdid_panel(y1, y0, D, Xrd, w),       "singular")
-  expect_error(std_ipw_did_panel(y1, y0, D, Xrd, w), "singular")
-  expect_error(reg_did_panel(y1, y0, D, Xrd, w),     "singular")
-  expect_error(drdid_rc(y, post, D, Xrd, w),         "singular")
+  # fastglm >= 0.1.3 reports aliased coefficients as NA instead of zero.
+  # Both diagnostics below must continue to reject the rank-deficient design.
+  expect_error(drdid_panel(y1, y0, D, Xrd, w),       "singular|NA components")
+  expect_error(std_ipw_did_panel(y1, y0, D, Xrd, w), "singular|NA components")
+  expect_error(reg_did_panel(y1, y0, D, Xrd, w),     "singular|NA components")
+  expect_error(drdid_rc(y, post, D, Xrd, w),         "singular|NA components")
   # std_ipw_did_rc previously SILENTLY returned a corrupted SE here; now it errors.
-  expect_error(std_ipw_did_rc(y, post, D, Xrd, w),   "singular")
-  expect_error(reg_did_rc(y, post, D, Xrd, w),       "singular")
+  expect_error(std_ipw_did_rc(y, post, D, Xrd, w),   "singular|NA components")
+  expect_error(reg_did_rc(y, post, D, Xrd, w),       "singular|NA components")
 })
 
 test_that("negative weights are rejected", {
