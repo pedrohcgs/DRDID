@@ -1,3 +1,10 @@
+# DRDID 1.4.1
+
+  * Test-only compatibility update for fastglm 0.1.3, which reports aliased
+    coefficients of rank-deficient designs as `NA` instead of zero. DRDID
+    still rejects these designs; the regression tests now accept either
+    diagnostic. Estimator behavior and results are unchanged.
+
 # DRDID 1.4.0
 
   * Panel preprocessing now excludes whole units with missing covariates or
